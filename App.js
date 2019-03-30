@@ -1,11 +1,31 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import HeadingText from './src/components/UI/HeadingText/HeadingText';
+import MainText from './src/components/UI/MainText/MainText';
+import DefaultInput from './src/components/UI/DefaultInput/DefaultInput';
 
 export default class App extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text style={styles.welcome}>Chime</Text>
+				<View style={styles.titleContainer}>
+					<MainText>
+						<HeadingText style={styles.title}>Chime</HeadingText>
+					</MainText>
+				</View>
+				<View style={styles.loginForm}>
+					<DefaultInput 
+						placeholder="Email"
+						valid={true}
+						touched={true}
+					/>
+					<DefaultInput 
+						placeholder="Password"
+						valid={true}
+						touched={true}
+					/>
+				</View>
 			</View>
 		);
 	}
@@ -14,13 +34,19 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#F5FCFF',
+		backgroundColor: '#ADD8E6'
 	},
-	welcome: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10,
+	titleContainer: {
+		paddingTop: 50,
+		paddingBottom: 50
+	},
+	title: {
+		color: 'white'
+	},
+	loginForm: {
+		width: '80%',
+		borderWidth: 1,
+		borderColor: 'black'
 	}
 });
