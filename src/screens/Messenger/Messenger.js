@@ -10,7 +10,6 @@ import {
 
 const mapStateToProps = (state) => {
     return {
-
     };
 }
 
@@ -51,7 +50,6 @@ class MessengerScreen extends React.Component {
         return (
             <View>
                 <Text>
-                    
                 </Text>
             </View>
         )

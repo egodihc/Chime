@@ -5,7 +5,7 @@ import {
     View,
     Dimensions,
     StyleSheet, 
-    KeyboardAvoidingView,
+    ActivityIndicator,
     Keyboard,
     TouchableWithoutFeedback
 } from 'react-native';
@@ -15,21 +15,25 @@ import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import MainText from '../../components/UI/MainText/MainText';
 import Button from '../../components/UI/Button/Button';
 import startMainTabs from '../mainTabs/startMainTabs';
-
 import validate from '../../utility/validation';
 
-// import { tryAuth } from '../../store/actions/index';
+import { login } from '../../store/actions/auth';
+import { SET_TRANSITIONED } from '../../store/constants';
+
 
 const mapStateToProps = (state) => {
     return {
-
+        isLoading: state.ui.isLoading,
+        isLoggedIn: state.auth.isLoggedIn,
+        alreadyTransitioned : state.auth.alreadyTransitioned
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
 
     return {
-        
+        login : (authData) => dispatch(login(authData)),
+        setTransition : () => dispatch({ type : SET_TRANSITIONED })
     };
 }
 
@@ -74,6 +78,13 @@ class LoginScreen extends React.Component {
         Dimensions.addEventListener('change',this.updateStyles);
     }
 
+    componentDidUpdate() {
+        if (this.props.isLoggedIn && !this.props.alreadyTransitioned) {
+            this.props.setTransition();
+            startMainTabs();
+        }
+    }
+
     componentWillUnmount() {
         Dimensions.removeEventListener('change',this.updateStyles);
     }
@@ -89,6 +100,10 @@ class LoginScreen extends React.Component {
             email: this.state.controls.email.value,
             password: this.state.controls.password.value
         }
+        this.props.login(authData);
+    }
+
+    skip = () => {
         startMainTabs();
     }
 
@@ -172,6 +187,18 @@ class LoginScreen extends React.Component {
                     </HeadingText>
                 </MainText>
         }
+
+        let loginButton = 
+                            <Button 
+                                onPress = { this.onLogin }
+                                color = 'transparent'
+                            >
+                            { (this.state.authMode==='signUp') ? 'Create account' : 'Login' }
+                            </Button>;
+
+        if (this.props.isLoading) {
+            loginButton = <ActivityIndicator />
+        }
  
         return (
 
@@ -226,15 +253,10 @@ class LoginScreen extends React.Component {
 
 
 				
-				<Button 
-					onPress = { this.onLogin }
-					color = 'transparent'
-				>
-					{ (this.state.authMode==='signUp') ? 'Create account' : 'Login' }
-				</Button>
+                { loginButton }
 
 				<Button 
-					onPress = { this.onLogin }
+					onPress = { this.skip }
 					color = 'transparent'
 				>
 					Skip

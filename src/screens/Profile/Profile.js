@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 
 import { 
     View,
-    Text
+    Image,
+    StyleSheet
 } from 'react-native';
 
-
+import MainText from '../../components/UI/MainText/MainText';
 
 const mapStateToProps = (state) => {
     return {
-
+        user: state.auth.user
     };
 }
 
@@ -49,13 +50,36 @@ class ProfileScreen extends React.Component {
     render() {
 
         return (
-            <View>
-                <Text>
-                    
-                </Text>
+            <View style = { styles.container }>
+                <View style = { styles.avatarBox }>
+                    <Image source = { { uri : this.props.user.picture } } style = { styles.previewImage } />
+                </View>
+                <MainText>
+                    { `${this.props.user.first} ${this.props.user.last}` }
+                </MainText>
+
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        width: '100%',
+        alignItems: 'center'
+    },
+    avatarBox: {
+        margin: 5,
+        borderWidth: 1,
+        borderColor: 'black',
+        backgroundColor: '#eee',
+        width: '80%',
+        height: 150
+    },
+    previewImage: {
+        width: '100%',
+        height: '100%'
+    }
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
