@@ -45,12 +45,11 @@ const styles = StyleSheet.create({
     button: {
         padding: 10,
         margin: 5,
-        borderRadius: 5,
         borderWidth: 1,
-        borderColor: 'white'
+        borderColor: 'black'
     },
     text: {
-        color: 'white'
+        color: 'black'
     },
     disabled: {
         backgroundColor: '#eee',

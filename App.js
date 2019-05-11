@@ -1,52 +1,31 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Navigation } from 'react-native-navigation';
+import { Provider } from 'react-redux';
 
-import HeadingText from './src/components/UI/HeadingText/HeadingText';
-import MainText from './src/components/UI/MainText/MainText';
-import DefaultInput from './src/components/UI/DefaultInput/DefaultInput';
+import LoginScreen from './src/screens/Login/Login';
 
-export default class App extends React.Component {
-	render() {
-		return (
-			<View style={styles.container}>
-				<View style={styles.titleContainer}>
-					<MainText>
-						<HeadingText style={styles.title}>Chime</HeadingText>
-					</MainText>
-				</View>
-				<View style={styles.loginForm}>
-					<DefaultInput 
-						placeholder="Email"
-						valid={true}
-						touched={true}
-					/>
-					<DefaultInput 
-						placeholder="Password"
-						valid={true}
-						touched={true}
-					/>
-				</View>
-			</View>
-		);
-	}
-}
+import configureStore from './src/store/configureStore';
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		backgroundColor: '#ADD8E6'
-	},
-	titleContainer: {
-		paddingTop: 50,
-		paddingBottom: 50
-	},
-	title: {
-		color: 'white'
-	},
-	loginForm: {
-		width: '80%',
-		borderWidth: 1,
-		borderColor: 'black'
+import MessengerScreen from './src/screens/Messenger/Messenger';
+import SideDrawer from './src/screens/SideDrawer/SideDrawer';
+import ProfileScreen from './src/screens/Profile/Profile';
+
+const store = configureStore();
+
+/* Register screens */
+Navigation.registerComponent("chime.LoginScreen", () => LoginScreen, store, Provider);
+// Navigation.registerComponent("chidme.MessengerScreen", () => MessengerScreen, store, Provider);
+// Navigation.registerComponent("chime.OtherScreen", () => OtherScreen, store, Provider);
+
+Navigation.registerComponent("chime.MessengerScreen", () => MessengerScreen, store, Provider);
+Navigation.registerComponent("chime.ProfileScreen", () => ProfileScreen, store, Provider);
+
+Navigation.registerComponent("chime.SideDrawer", () => SideDrawer, store, Provider);
+
+/* Start app */
+Navigation.startSingleScreenApp({
+
+	screen : {
+		screen: "chime.LoginScreen",
+		title : "Login"
 	}
 });
