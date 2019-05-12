@@ -36,7 +36,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-class LoginScreen extends React.Component {
+class Register extends React.Component {
 
 
     constructor(props) {
@@ -93,7 +93,7 @@ class LoginScreen extends React.Component {
         })
     }
 
-    onLogin = () => {
+    onRegister = () => {
         const authData = {
             email: this.state.controls.email.value,
             password: this.state.controls.password.value
@@ -101,14 +101,6 @@ class LoginScreen extends React.Component {
         this.props.login(authData);
     }
 
-    /* Login with default account for testing */
-    skip = () => {
-        const authData = {
-            email: 'a',
-            password: 'a'
-        }
-        this.props.login(authData);
-    }
 
     updateInputState = (key, value) => {
 
@@ -155,13 +147,14 @@ class LoginScreen extends React.Component {
     render() {
 
 
-        let mainButton = 
+        let mainButton =               
         <Button 
-            onPress = { this.onLogin }
+            onPress = { this.onRegister }
             color = 'transparent'
         >
-            Login
-        </Button>
+            Create account
+        </Button>;
+
         if (this.props.isLoading) {
             mainButton = <ActivityIndicator />
         }
@@ -197,20 +190,24 @@ class LoginScreen extends React.Component {
 									secureTextEntry
 									/>
 							</View>
+                            <View style = { this.state.viewMode === 'portrait' ? styles.portraitPasswordWrapper : styles.landscapePasswordWrapper }>
+                                <DefaultInput 
+                                    style = {styles.input} 
+                                    placeholder = 'Confirm password' 
+                                    value = {this.state.controls.confirmPassword.value}
+                                    onChangeText = { (val) => {this.updateInputState('confirmPassword', val)}}
+                                    valid = {this.state.controls.confirmPassword.valid}
+                                    touched = {this.state.controls.confirmPassword.touched}
+                                    secureTextEntry
+                                    />
+                            </View>
+
 						</View>
 
 					</View>
 				</TouchableWithoutFeedback>
-
+                
                 { mainButton }
-
-                {/* TODO: REMOVE AT END */}
-				<Button 
-					onPress = { this.skip }
-					color = 'transparent'
-				>
-					Login with default
-				</Button>
             </View>
 
         );
@@ -221,7 +218,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+		alignItems: 'center',
+        backgroundColor: '#ADD8E6',
         width: '100%'
     },
     inputContainer: {
@@ -248,4 +246,4 @@ const styles = StyleSheet.create({
     }
 
 });
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
