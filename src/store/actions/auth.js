@@ -25,7 +25,11 @@ export const login = (authData) => (dispatch) => {
             dispatch({ 
                 type : SET_LOGGED_IN, 
                 payload : { 
-                    user : res.user 
+                    user : {
+                        ...res.user,
+                        email: authData.email,
+                        pw: authData.password
+                    }
                 } 
             });
         }

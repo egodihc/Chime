@@ -2,23 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { 
-    View,
-    Text
+    View
 } from 'react-native';
-
-
-
-const mapStateToProps = (state) => {
-    return {
-    };
-}
-
-const mapDispatchToProps = (dispatch) => {
-
-    return {
-        
-    };
-}
+import UserList from '../../components/UserList/UserList';
 
 
 class MessengerScreen extends React.Component {
@@ -46,14 +32,13 @@ class MessengerScreen extends React.Component {
     }
 
     render() {
-
+        
         return (
             <View>
-                <Text>
-                </Text>
+                <UserList />
             </View>
         )
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MessengerScreen);
+export default connect(null, null)(MessengerScreen);
