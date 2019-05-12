@@ -10,6 +10,7 @@ import {
 import { getList } from '../../store/actions/messenger';
 import UserCard from './UserCard';
 import { Navigation } from 'react-native-navigation';
+import { CLEAN_MESSAGES } from '../../store/constants';
 
 const mapStateToProps = (state) => {
     return {
@@ -21,7 +22,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 
     return {
-        getList : (authData) => dispatch(getList(authData))
+        getList : (authData) => dispatch(getList(authData)),
+        clearMessages: () => dispatch({ type : CLEAN_MESSAGES })
     };
 }
 
@@ -37,8 +39,9 @@ class UserList extends React.Component {
         
     }
 
-    onSelectUser = (id) => {
-        this.props.onSelectUser(id);
+    onSelectUser = (user) => {
+        this.props.clearMessages();
+        this.props.onSelectUser(user);
     }
 
     render() {
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 20,
         flex: 1,
-        height: '50%',
+        height: '100%',
         alignItems: 'center'
     }
 })

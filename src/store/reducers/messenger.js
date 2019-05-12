@@ -1,8 +1,10 @@
-import { LOAD_LIST } from "../constants";
+import { LOAD_LIST, LOAD_MESSAGES, CLEAR_MESSAGES, CLEAN_MESSAGES } from "../constants";
 
 
 const initialState = {
-    list: []
+    list: [],
+    messages: [],
+    messagesLoaded : true
 }
 
 const reducer = (state = initialState, action) => {
@@ -12,6 +14,22 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 list: action.payload
+            }
+        case LOAD_MESSAGES:
+            return {
+                ...state,
+                messages: action.payload,
+                messagesLoaded: false
+            }
+        case CLEAR_MESSAGES:
+            return {
+                ...state,
+                messagesLoaded: true
+            }
+        case CLEAN_MESSAGES: 
+            return {
+                ...state,
+                messages: []
             }
         default:
             return state;

@@ -20,9 +20,15 @@ class UsersScreen extends React.Component {
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
-    onSelectUser = (id) => {
+    onSelectUser = (user) => {
+        let name =  `${user.first} ${user.last}`;
         this.props.navigator.push({
-            screen: 'chime.Messenger'
+            screen: 'chime.Messenger',
+            title: name,
+            passProps: {
+                target: user,
+                isGroup: false
+            }
         })
     }
 

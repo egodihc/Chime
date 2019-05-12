@@ -19,7 +19,7 @@ class UserCard extends React.Component {
 	render() {
         return (
 
-				<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user.id)}}>
+				<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user)}}>
 					<View style = {styles.card}>
 						<View style = {styles.dpContainer}>
 							<Image source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>

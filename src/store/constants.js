@@ -5,3 +5,6 @@ export const SET_CODE = 'SET_CODE';
 export const SET_LOGGED_IN = 'SET_LOGGED_IN';
 export const SET_TRANSITIONED = 'SET_TRANSITIONED';
 export const LOAD_LIST = 'LOAD_LIST';
+export const LOAD_MESSAGES = 'LOAD_MESSAGES';
+export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
+export const CLEAN_MESSAGES = 'CLEAN_MESSAGES';
