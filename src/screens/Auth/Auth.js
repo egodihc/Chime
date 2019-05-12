@@ -100,7 +100,7 @@ class LoginScreen extends React.Component {
                 <View style = {styles.button}>
                     <Button 
                         onPress = { this.switchMode }
-                        color = 'transparent'
+                        color = 'yellow'
                     >
                         { (this.state.authMode === 'login' ? 'Don\'t have an account? Click here to create one.' : 'Already have an account? Click here to login') }
                     </Button>  

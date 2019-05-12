@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 
 import { 
     View,
-    Text,
     StyleSheet
 } from 'react-native';
+import UserList from '../../components/UserList/UserList';
 
 
-
-class MessengerScreen extends React.Component {
+class UsersScreen extends React.Component {
 
 
     static navigatorStyle = {
@@ -19,6 +18,12 @@ class MessengerScreen extends React.Component {
     constructor(props) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    onSelectUser = (id) => {
+        this.props.navigator.push({
+            screen: 'chime.Messenger'
+        })
     }
 
     onNavigatorEvent = (event) => {
@@ -37,9 +42,7 @@ class MessengerScreen extends React.Component {
         
         return (
             <View style = {styles.container}>
-                <Text>
-                    Messages
-                </Text>
+                <UserList onSelectUser = {this.onSelectUser}/>
             </View>
         )
     }
@@ -51,4 +54,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default connect(null, null)(MessengerScreen);
+export default connect(null, null)(UsersScreen);

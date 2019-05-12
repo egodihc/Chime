@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, Text } from 'react-native';
+import { View, Text, TouchableNativeFeedback, Image, StyleSheet } from 'react-native';
 
 import { connect } from 'react-redux';
 
@@ -15,14 +15,40 @@ class UserCard extends React.Component {
 		}
 	}
 
-
+	
 	render() {
         return (
-            <View>
-                <Text> { `${this.props.user.first} ${this.props.user.last}` }</Text>
-            </View>
+
+				<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user.id)}}>
+					<View style = {styles.card}>
+						<View style = {styles.dpContainer}>
+							<Image source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>
+						</View>
+						<View>
+							<Text> { `${this.props.user.first} ${this.props.user.last}` }</Text>
+						</View>
+					</View>
+				</TouchableNativeFeedback>
         )
 	} 
 }
+
+const styles = StyleSheet.create({
+    card: {
+			height: '10%',
+			borderColor: '#ADD8E6',
+			borderWidth: 1,
+			width: '100%',
+			flexDirection: 'row'
+		},
+		dpContainer: {
+			width: 50
+		},
+		dp: {
+			width: '100%',
+			height: '100%'
+	}
+})
+
 
 export default connect(null, null)(UserCard);

@@ -16,7 +16,7 @@ const startTabs = () => {
 
                 tabs: [
                     {
-                        screen: "chime.MessengerScreen",
+                        screen: "chime.UsersScreen",
                         label: "Messenger",
                         title: "Messenger",
                         icon: icons[0],

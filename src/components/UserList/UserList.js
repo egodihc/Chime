@@ -3,10 +3,13 @@ import { connect } from 'react-redux';
 
 import { 
     View,
-    Text
+    Text,
+    StyleSheet
 } from 'react-native';
+
 import { getList } from '../../store/actions/messenger';
 import UserCard from './UserCard';
+import { Navigation } from 'react-native-navigation';
 
 const mapStateToProps = (state) => {
     return {
@@ -31,27 +34,40 @@ class UserList extends React.Component {
             id: user.id,
             pw: user.pw
         })
+        
+    }
+
+    onSelectUser = (id) => {
+        this.props.onSelectUser(id);
     }
 
     render() {
 
         let userList = null;
-
+        
         userList = this.props.list.map((user,i) => {
             return <UserCard key = {i}
+                            onSelectUser = {this.onSelectUser}
                             user = { user }
                              />
         });
 
         
         return (
-            <View>
+            <View style = {styles.container}>
                 { userList }
-                <Text>
-                </Text>
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        paddingTop: 20,
+        flex: 1,
+        height: '50%',
+        alignItems: 'center'
+    }
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserList);

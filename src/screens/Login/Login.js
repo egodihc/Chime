@@ -156,12 +156,24 @@ class LoginScreen extends React.Component {
 
 
         let mainButton = 
-        <Button 
-            onPress = { this.onLogin }
+        <View>
+            <Button 
+                onPress = { this.onLogin }
+                color = 'transparent'
+            >
+                Login
+            </Button>
+        
+            <Button 
+            onPress = { this.skip }
             color = 'transparent'
-        >
-            Login
-        </Button>
+            >
+                Login with default
+            </Button>
+        </View>
+
+
+
         if (this.props.isLoading) {
             mainButton = <ActivityIndicator />
         }
@@ -204,13 +216,6 @@ class LoginScreen extends React.Component {
 
                 { mainButton }
 
-                {/* TODO: REMOVE AT END */}
-				<Button 
-					onPress = { this.skip }
-					color = 'transparent'
-				>
-					Login with default
-				</Button>
             </View>
 
         );
