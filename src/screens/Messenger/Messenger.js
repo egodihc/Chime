@@ -3,12 +3,16 @@ import { connect } from 'react-redux';
 
 import { 
     View,
-    StyleSheet
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity
 } from 'react-native';
 
 import { getMessages } from '../../store/actions/messenger';
 import { CLEAR_MESSAGES } from '../../store/constants';
 import { MessageCard } from './MessageCard';
+import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const mapStateToProps = (state) => {
     return {
@@ -89,8 +93,25 @@ class MessengerScreen extends React.Component {
 			});
         }
         return (
+            
             <View style = {styles.container}>
-                { conversation }
+                <ScrollView 
+                    ref = {ref => this.scrollView = ref}
+                    onContentSizeChange={(contentWidth, contentHeight)=>{        
+                        this.scrollView.scrollToEnd({animated: true});
+                    }}>
+    
+                    { conversation }
+                </ScrollView>
+                
+                <View style = {styles.input}>
+                    <DefaultInput style = {styles.messageInput}/>
+                    <TouchableOpacity >
+                        <Icon name = { 'md-send' } color = "#ADD8E6" size = {30}/>
+                    </TouchableOpacity>
+                   
+                </View>
+
             </View>
         )
     }
@@ -99,7 +120,23 @@ class MessengerScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'space-between'
+    },
+    conversation: {
+        justifyContent: 'flex-start'
+    },
+    messageInput: {
+        borderRadius: 5,
+        backgroundColor: '#E9E9E9',
+        width: '80%'
+    },
+    input: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginLeft: 10,
     }
 })
 

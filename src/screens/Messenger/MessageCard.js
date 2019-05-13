@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 
 export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, consecutiveMessage }) => {
 
@@ -12,33 +12,54 @@ export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, 
             </Text>
         </View>
  
+    let chatHead = <View style = {styles.padView}></View>;
 
+    if (!consecutiveMessage) {
+        chatHead = <Image source = { { uri : ((isSending) ? userPic : targetPic) }} style = {styles.chatHead} />;
+    }
 
     return (
-        <View>
+        <View style = { (!isSending) ? styles.container: styles.reverseContainer }>
+            {chatHead}
             {finalMessage}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row'
+    },
+    reverseContainer: {
+        flexDirection: 'row-reverse'
+    },
+    padView: {
+        padding: 25
+    },
     card: {
-        flex: 1,
         flexDirection: 'row',
         marginTop: 5,
         marginBottom: 5,
-        padding: 20,
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingRight: 10,
+        paddingLeft: 10,
         borderRadius: 10,
         justifyContent: 'center'
     },
     sender: {
         backgroundColor: '#ADD8E6',
-        alignSelf: 'flex-end',
-        alignItems: 'flex-end'
+        alignSelf: 'flex-end'
+    },
+    chatHead: {
+        width: 50,
+        height: 50,
+        borderRadius: 50/2,
+        marginLeft: 5,
+        marginRight: 5
     },
     receiver: {
         backgroundColor: '#DEDEDE',
-        alignSelf: 'flex-start',
-        alignItems: 'flex-start'
+        alignSelf: 'flex-start'
     }
 })

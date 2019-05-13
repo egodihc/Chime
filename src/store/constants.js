@@ -8,3 +8,4 @@ export const LOAD_LIST = 'LOAD_LIST';
 export const LOAD_MESSAGES = 'LOAD_MESSAGES';
 export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 export const CLEAN_MESSAGES = 'CLEAN_MESSAGES';
+export const CHANGE_THEME = 'CHANGE_THEME';

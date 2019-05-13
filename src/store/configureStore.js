@@ -4,11 +4,13 @@ import thunk from 'redux-thunk';
 import uiReducer from './reducers/ui';
 import authReducer from './reducers/auth';
 import messengerReducer from './reducers/messenger';
+import themeReducer from './reducers/theme';
 
 const rootReducer = combineReducers({
     ui : uiReducer,
     auth : authReducer,
-    messenger: messengerReducer
+    messenger: messengerReducer,
+    theme: themeReducer
 });
 
 const configureStore = () => {
