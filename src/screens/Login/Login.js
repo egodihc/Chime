@@ -21,22 +21,19 @@ import { SET_TRANSITIONED } from '../../store/constants';
 
 const mapStateToProps = (state) => {
     return {
-        isLoading: state.ui.isLoading,
-        isLoggedIn: state.auth.isLoggedIn,
-        alreadyTransitioned : state.auth.alreadyTransitioned
+        isLoading: state.ui.isLoading
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
 
     return {
-        login : (authData) => dispatch(login(authData)),
-        setTransition : () => dispatch({ type : SET_TRANSITIONED })
+        login : (authData) => dispatch(login(authData))
     };
 }
 
 
-class LoginScreen extends React.Component {
+class Login extends React.Component {
 
 
     constructor(props) {
@@ -76,22 +73,18 @@ class LoginScreen extends React.Component {
         Dimensions.addEventListener('change',this.updateStyles);
     }
 
-    componentDidUpdate() {
-        if (this.props.isLoggedIn && !this.props.alreadyTransitioned) {
-            this.props.setTransition();
-            startMainTabs();
-        }
-    }
 
     componentWillUnmount() {
         Dimensions.removeEventListener('change',this.updateStyles);
     }
+
 
     updateStyles = (dims) => {
         this.setState({
             viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
         })
     }
+
 
     onLogin = () => {
         const authData = {
@@ -100,6 +93,7 @@ class LoginScreen extends React.Component {
         }
         this.props.login(authData);
     }
+
 
     /* Login with default account for testing */
     skip = () => {
@@ -110,6 +104,7 @@ class LoginScreen extends React.Component {
         this.props.login(authData);
     }
 
+    
     updateInputState = (key, value) => {
 
         /* If the equalTo rule exists */
@@ -151,6 +146,7 @@ class LoginScreen extends React.Component {
             }
         })
     }
+    
 
     render() {
 
@@ -222,6 +218,7 @@ class LoginScreen extends React.Component {
     }
 }
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -251,6 +248,7 @@ const styles = StyleSheet.create({
     portraitPasswordWrapper: {
         width: '100%',
     }
-
 });
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

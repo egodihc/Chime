@@ -31,6 +31,7 @@ export const getList = (authData) => (dispatch) => {
 
 
 export const getMessages = (config) => (dispatch) => {
+    
     dispatch(uiStartLoading());
 
     fetch('https://chat-time-api.herokuapp.com/getMessages', {
@@ -48,9 +49,7 @@ export const getMessages = (config) => (dispatch) => {
         if (res.code === 0) {
             dispatch({ type: LOAD_MESSAGES, payload: res.messages });
         }
-        else {
-            dispatch(uiStopLoading());
-        }
+        dispatch(uiStopLoading());
     })
     .catch(err => {
         dispatch(uiStopLoading());

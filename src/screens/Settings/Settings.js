@@ -5,13 +5,17 @@ import {
     View,
     Dimensions,
     StyleSheet, 
+    ActivityIndicator,
+    Keyboard,
+    TouchableWithoutFeedback
 } from 'react-native';
 
-
+import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import MainText from '../../components/UI/MainText/MainText';
 import Button from '../../components/UI/Button/Button';
 import startMainTabs from '../mainTabs/startMainTabs';
+import validate from '../../utility/validation';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
 import { login } from '../../store/actions/auth';
@@ -36,7 +40,8 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-class Auth extends React.Component {
+class Settings extends React.Component {
+
 
     constructor(props) {
         super(props);
@@ -49,38 +54,6 @@ class Auth extends React.Component {
         Dimensions.addEventListener('change',this.updateStyles);
     }
 
-    componentDidUpdate() {
-
-        /* Condition prevents this lifecycle hook from retriggering itself */
-        if (this.props.isLoggedIn && !this.props.alreadyTransitioned) {
-            this.props.setTransition();
-            startMainTabs();
-        }
-    }
-
-
-    componentWillUnmount() {
-    
-        /* Prevent memory leak */
-        Dimensions.removeEventListener('change',this.updateStyles);
-    }
-
-
-    updateStyles = (dims) => {
-        this.setState({
-            viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
-        })
-    }
-
-
-    switchMode = () => {
-        this.setState(prevState => {
-            return {
-                ...prevState,
-                authMode: prevState.authMode === 'login' ? 'signUp' : 'login'
-            }
-        })
-    }
 
     render() {
 
@@ -92,22 +65,13 @@ class Auth extends React.Component {
         else {
             mainSection = <Login />;
         }
-
         return (
             <View style = {styles.container}>
                 <View style={styles.titleContainer}>
                     <MainText>
-                        <HeadingText style={styles.title}>Chime</HeadingText>
+                        <HeadingText style={styles.title}>Settings</HeadingText>
                     </MainText>
                 </View>
-                <View style = {styles.button}>
-                    <Button 
-                        onPress = { this.switchMode }
-                    >
-                        { (this.state.authMode === 'login' ? 'Don\'t have an account? Click here to create one.' : 'Already have an account? Click here to login') }
-                    </Button>  
-                </View>
-                { mainSection }
             </View>
         );
     }
@@ -135,4 +99,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);

@@ -17,21 +17,19 @@ import validate from '../../utility/validation';
 
 import { login } from '../../store/actions/auth';
 import { SET_TRANSITIONED } from '../../store/constants';
+import { getDefaultTheme } from '../../utility/theme';
 
 
 const mapStateToProps = (state) => {
     return {
-        isLoading: state.ui.isLoading,
-        isLoggedIn: state.auth.isLoggedIn,
-        alreadyTransitioned : state.auth.alreadyTransitioned
+        isLoading: state.ui.isLoading
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
 
     return {
-        login : (authData) => dispatch(login(authData)),
-        setTransition : () => dispatch({ type : SET_TRANSITIONED })
+        login : (authData) => dispatch(login(authData))
     };
 }
 
@@ -76,22 +74,18 @@ class Register extends React.Component {
         Dimensions.addEventListener('change',this.updateStyles);
     }
 
-    componentDidUpdate() {
-        if (this.props.isLoggedIn && !this.props.alreadyTransitioned) {
-            this.props.setTransition();
-            startMainTabs();
-        }
-    }
 
     componentWillUnmount() {
         Dimensions.removeEventListener('change',this.updateStyles);
     }
+
 
     updateStyles = (dims) => {
         this.setState({
             viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
         })
     }
+
 
     onRegister = () => {
         const authData = {
@@ -214,12 +208,13 @@ class Register extends React.Component {
     }
 }
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
 		alignItems: 'center',
-        backgroundColor: '#ADD8E6',
+        backgroundColor: getDefaultTheme(),
         width: '100%'
     },
     inputContainer: {
@@ -244,6 +239,7 @@ const styles = StyleSheet.create({
     portraitPasswordWrapper: {
         width: '100%',
     }
-
 });
+
+
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

@@ -1,6 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 import { Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { getDefaultTheme } from '../../utility/theme';
 
 const startTabs = () => {
 
@@ -50,11 +51,11 @@ const startTabs = () => {
                 ],
                 /* IOS only */
                 tabsStyle: {
-                    tabBarSelectedButtonColor: '#ADD8E6'
+                    tabBarSelectedButtonColor: getDefaultTheme()
                 },
                 /* Android only */
                 appStyle: {
-                    tabBarSelectedButtonColor: '#ADD8E6'
+                    tabBarSelectedButtonColor: getDefaultTheme()
                 },
                 drawer: {
                     left: {
@@ -66,5 +67,6 @@ const startTabs = () => {
     )
 
 }
+
 
 export default startTabs;

@@ -12,3 +12,7 @@ export const getColor = (theme) => {
             return '#ADD8E6';
     }
 }
+
+export const getDefaultTheme = () => {
+    return '#ADD8E6';
+}

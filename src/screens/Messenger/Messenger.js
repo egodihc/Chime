@@ -5,7 +5,8 @@ import {
     View,
     StyleSheet,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native';
 
 import { getMessages, sendMessage } from '../../store/actions/messenger';
@@ -13,12 +14,14 @@ import { CLEAR_MESSAGES } from '../../store/constants';
 import { MessageCard } from './MessageCard';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { getDefaultTheme } from '../../utility/theme';
 
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
         messages: state.messenger.messages,
-        messagesLoaded: state.messenger.messagesLoaded
+        messagesLoaded: state.messenger.messagesLoaded,
+        isLoading: state.ui.isLoading
     };
 }
 
@@ -48,9 +51,11 @@ class MessengerScreen extends React.Component {
         }
     }
 
+    
     componentDidMount() {
         this.props.getMessages(this.state.config);
     }
+
 
     componentDidUpdate() {
 
@@ -75,27 +80,37 @@ class MessengerScreen extends React.Component {
 
 
     sendMessage = () => {
-
+        
         /* Get configs for this chat session */
         const { config, messageField } = this.state;
-        this.props.sendMessage({
-            ...config,
-            message: messageField
-        });
-        this.setState(prevState => {
-            return {
-                ...prevState,
-                messageField: null
-            }
-        })
+        
+        if (messageField) {
+            this.props.sendMessage({
+                ...config,
+                message: messageField
+            });
+            this.setState(prevState => {
+                return {
+                    ...prevState,
+                    messageField: null
+                }
+            })
+        }
+
     }
 
 
     render() {
         
-        let conversation;
+        //TODO:
+        // The activity indicator should only show on first load 
+        let conversation = <ActivityIndicator />;
+
         const { target, messages, user } = this.props;
-		if (messages) {
+
+
+        /* If messages are loaded */
+		if (!this.props.isLoading) {
 			conversation = messages.map((message,i) => {
 
 				/* Determine if chathead avatar should be displayed,
@@ -128,6 +143,8 @@ class MessengerScreen extends React.Component {
 								fileCode = { message.filecode } />
 			});
         }
+
+
         return (
             
             <View style = {styles.container}>
@@ -141,9 +158,13 @@ class MessengerScreen extends React.Component {
                 </ScrollView>
                 
                 <View style = {styles.input}>
-                    <DefaultInput style = {styles.messageInput} onChangeText = { (text) => { this.updateMessageField(text) }}/>
+                    <DefaultInput 
+                        style = {styles.messageInput} 
+                        onChangeText = { (text) => { this.updateMessageField(text) }}
+                        value = { this.state.messageField }
+                    />
                     <TouchableOpacity onPress = {this.sendMessage}>
-                        <Icon name = { 'md-send' } color = "#ADD8E6" size = {30}/>
+                        <Icon name = { 'md-send' } color = { getDefaultTheme() } size = {30}/>
                     </TouchableOpacity>
                    
                 </View>

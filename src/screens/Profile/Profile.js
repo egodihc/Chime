@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import MainText from '../../components/UI/MainText/MainText';
+import { getDefaultTheme } from '../../utility/theme';
 
 const mapStateToProps = (state) => {
     return {
@@ -15,25 +16,18 @@ const mapStateToProps = (state) => {
     };
 }
 
-const mapDispatchToProps = (dispatch) => {
-
-    return {
-        
-    };
-}
-
-
 class ProfileScreen extends React.Component {
 
 
     static navigatorStyle = {
-        navBarButtonColor: '#ADD8E6'
+        navBarButtonColor: getDefaultTheme()
     };
 
     constructor(props) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
+
 
     onNavigatorEvent = (event) => {
         if (event.type === 'NavBarButtonPress') {
@@ -46,6 +40,7 @@ class ProfileScreen extends React.Component {
             }
         }
     }
+
 
     render() {
 
@@ -63,6 +58,7 @@ class ProfileScreen extends React.Component {
     }
 }
 
+
 const styles = StyleSheet.create({
     container: {
         width: '100%',
@@ -71,10 +67,10 @@ const styles = StyleSheet.create({
     avatarBox: {
         margin: 5,
         borderWidth: 1,
-        borderColor: 'black',
+        borderColor: getDefaultTheme(),
         backgroundColor: '#eee',
-        width: '80%',
-        height: 150
+        width: 200,
+        height: 200
     },
     previewImage: {
         width: '100%',
@@ -82,4 +78,5 @@ const styles = StyleSheet.create({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
+
+export default connect(mapStateToProps, null)(ProfileScreen);

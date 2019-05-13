@@ -7,8 +7,8 @@ import AuthScreen from './src/screens/Auth/Auth';
 import UsersScreen from './src/screens/UsersScreen/UsersScreen';
 import ProfileScreen from './src/screens/Profile/Profile';
 import SideDrawer from './src/screens/SideDrawer/SideDrawer';
-import Messenger from './src/screens/Messenger/Messenger';
-
+import MessengerScreen from './src/screens/Messenger/Messenger';
+import SettingsScreen from './src/screens/Settings/Settings';
 
 
 const store = configureStore();
@@ -18,8 +18,8 @@ Navigation.registerComponent("chime.AuthScreen", () => AuthScreen, store, Provid
 Navigation.registerComponent("chime.UsersScreen", () => UsersScreen, store, Provider);
 Navigation.registerComponent("chime.ProfileScreen", () => ProfileScreen, store, Provider);
 Navigation.registerComponent("chime.SideDrawer", () => SideDrawer, store, Provider);
-
-Navigation.registerComponent("chime.Messenger", () => Messenger, store, Provider);
+Navigation.registerComponent("chime.MessengerScreen", () => MessengerScreen, store, Provider);
+Navigation.registerComponent("chime.SettingsScreen", () => SettingsScreen, store, Provider);
 
 
 /* Start app */

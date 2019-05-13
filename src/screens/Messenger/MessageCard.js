@@ -1,13 +1,14 @@
 import React from 'react';
 
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { getDefaultTheme } from '../../utility/theme';
 
 export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, consecutiveMessage }) => {
 
     let finalMessage =       
    
         <View style = { [ styles.card, (isSending) ? styles.sender : styles.receiver] }>
-            <Text>
+            <Text style = { (isSending ? { color: 'white'} : { color: 'black' })}>
                 { message }
             </Text>
         </View>
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     sender: {
-        backgroundColor: '#ADD8E6',
+        backgroundColor: getDefaultTheme(),
         alignSelf: 'flex-end'
     },
     chatHead: {

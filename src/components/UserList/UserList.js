@@ -39,10 +39,12 @@ class UserList extends React.Component {
         
     }
 
+    
     onSelectUser = (user) => {
         this.props.clearMessages();
         this.props.onSelectUser(user);
     }
+
 
     render() {
 
@@ -64,6 +66,7 @@ class UserList extends React.Component {
     }
 }
 
+
 const styles = StyleSheet.create({
     container: {
         paddingTop: 20,
@@ -72,5 +75,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 })
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserList);

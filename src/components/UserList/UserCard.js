@@ -1,11 +1,19 @@
 import React from 'react';
 
-import { View, Text, TouchableNativeFeedback, Image, StyleSheet } from 'react-native';
+import { 
+	View, 
+	Text, 
+	TouchableNativeFeedback, 
+	Image, 
+	StyleSheet
+} from 'react-native';
 
 import { connect } from 'react-redux';
+import { getDefaultTheme } from '../../utility/theme';
 
 class UserCard extends React.Component {
 
+	
 	constructor(props) {
 
 		super(props);
@@ -14,7 +22,7 @@ class UserCard extends React.Component {
 			selected : false
 		}
 	}
-
+	
 	
 	render() {
         return (
@@ -33,10 +41,11 @@ class UserCard extends React.Component {
 	} 
 }
 
+
 const styles = StyleSheet.create({
     card: {
 			height: '10%',
-			borderColor: '#ADD8E6',
+			borderColor: getDefaultTheme(),
 			borderWidth: 1,
 			width: '100%',
 			flexDirection: 'row'
