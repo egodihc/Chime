@@ -29,6 +29,7 @@ export const getList = (authData) => (dispatch) => {
 
 }
 
+
 export const getMessages = (config) => (dispatch) => {
     dispatch(uiStartLoading());
 
@@ -53,6 +54,41 @@ export const getMessages = (config) => (dispatch) => {
     })
     .catch(err => {
         dispatch(uiStopLoading());
+    });
+
+}
+
+
+export const sendMessage = (config) => (dispatch) => {
+
+
+    fetch('https://chat-time-api.herokuapp.com/sendMessage', {
+        method :'post',
+		headers: {'Content-Type' : 'application/json'},
+		body: JSON.stringify({
+            sender: config.sender,
+            destination: config.destination,
+            message: config.message,
+            isGroup: config.isGroup,
+            pw: config.pw,
+            isFile: false
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.code === 0) {
+            dispatch(getMessages(config));
+        }
+        else {
+            // TODO:
+            // Handle message not sent error in the UI
+            alert(res.code);
+        }
+    })
+    .catch(err => {
+        // TODO:
+        // Replace this error notification with more elegant UI solution
+        alert('Error: Message not sent');
     });
 
 }

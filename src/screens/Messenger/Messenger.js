@@ -8,7 +8,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-import { getMessages } from '../../store/actions/messenger';
+import { getMessages, sendMessage } from '../../store/actions/messenger';
 import { CLEAR_MESSAGES } from '../../store/constants';
 import { MessageCard } from './MessageCard';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
@@ -26,6 +26,7 @@ const mapDispatchToProps = (dispatch) => {
 
     return {
         getMessages : (config) => dispatch(getMessages(config)),
+        sendMessage: (config) => dispatch(sendMessage(config)),
         clearMessages : () => dispatch({ type : CLEAR_MESSAGES })
     };
 }
@@ -36,25 +37,60 @@ class MessengerScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            messages: []
+            messages: [],
+            messageField: null,
+            config: {
+                sender: this.props.user.id,
+                destination: this.props.target.id,
+                isGroup: this.props.isGroup,
+                pw: this.props.user.pw
+            }
         }
     }
 
     componentDidMount() {
-        this.props.getMessages({
-            sender: this.props.user.id,
-            destination: this.props.target.id,
-            isGroup: this.props.isGroup,
-            pw: this.props.user.pw
-        })
+        this.props.getMessages(this.state.config);
     }
 
     componentDidUpdate() {
+
+        /* Update the component every time new messages are fetched */
         if (!this.props.messagesLoaded) {
             this.state.messages = this.props.messages;
+            /* Lock this loop */
             this.props.clearMessages();
         }
     }
+
+
+    /* Input field handler */
+    updateMessageField = (text) => {
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                messageField: text
+            }
+        })
+    }
+
+
+    sendMessage = () => {
+
+        /* Get configs for this chat session */
+        const { config, messageField } = this.state;
+        this.props.sendMessage({
+            ...config,
+            message: messageField
+        });
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                messageField: null
+            }
+        })
+    }
+
+
     render() {
         
         let conversation;
@@ -105,8 +141,8 @@ class MessengerScreen extends React.Component {
                 </ScrollView>
                 
                 <View style = {styles.input}>
-                    <DefaultInput style = {styles.messageInput}/>
-                    <TouchableOpacity >
+                    <DefaultInput style = {styles.messageInput} onChangeText = { (text) => { this.updateMessageField(text) }}/>
+                    <TouchableOpacity onPress = {this.sendMessage}>
                         <Icon name = { 'md-send' } color = "#ADD8E6" size = {30}/>
                     </TouchableOpacity>
                    
