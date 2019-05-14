@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { 
-    View,
-    Text,
+    ScrollView,
     StyleSheet
 } from 'react-native';
 
@@ -59,20 +58,19 @@ class UserList extends React.Component {
 
         
         return (
-            <View style = {styles.container}>
+            <ScrollView style = {styles.container}>
                 { userList }
-            </View>
+            </ScrollView>
         )
     }
 }
 
 
+
 const styles = StyleSheet.create({
     container: {
         paddingTop: 20,
-        flex: 1,
-        height: '100%',
-        alignItems: 'center'
+        height: '100%'
     }
 })
 

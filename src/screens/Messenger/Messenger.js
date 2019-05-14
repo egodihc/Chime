@@ -6,6 +6,7 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
+    Text,
     ActivityIndicator
 } from 'react-native';
 
@@ -42,6 +43,7 @@ class MessengerScreen extends React.Component {
         this.state = {
             messages: [],
             messageField: null,
+            firstLoad: true,
             config: {
                 sender: this.props.user.id,
                 destination: this.props.target.id,
@@ -49,6 +51,7 @@ class MessengerScreen extends React.Component {
                 pw: this.props.user.pw
             }
         }
+        
     }
 
     
@@ -61,7 +64,13 @@ class MessengerScreen extends React.Component {
 
         /* Update the component every time new messages are fetched */
         if (!this.props.messagesLoaded) {
-            this.state.messages = this.props.messages;
+            this.setState(prevState => {
+                return {
+                    ...prevState,
+                    messages: this.props.messages,
+                    firstLoad: false
+                }
+            })
             /* Lock this loop */
             this.props.clearMessages();
         }
@@ -104,57 +113,65 @@ class MessengerScreen extends React.Component {
         
         //TODO:
         // The activity indicator should only show on first load 
-        let conversation = <ActivityIndicator />;
+        
 
-        const { target, messages, user } = this.props;
+        const { target, messages, user, isLoading } = this.props;
 
-
+        if (this.state.firstLoad) {
+            this.conversation = <ActivityIndicator />;
+        }
         /* If messages are loaded */
-		if (!this.props.isLoading) {
-			conversation = messages.map((message,i) => {
+		if (!isLoading) {
+            if (messages.length > 0) {
+                this.conversation = messages.map((message,i) => {
 
-				/* Determine if chathead avatar should be displayed,
-					based off consecutive messages  */
-				let consecutiveMessage = false;
-				if (i > 0) {
-					if (messages[i-1].sender === messages[i].sender) {
-						consecutiveMessage = true;
-					}
-				}
+                    /* Determine if chathead avatar should be displayed,
+                        based off consecutive messages  */
+                    let consecutiveMessage = false;
+                    if (i > 0) {
+                        if (messages[i-1].sender === messages[i].sender) {
+                            consecutiveMessage = true;
+                        }
+                    }
+    
+                    let isSending = (message.sender === user.id);
+                    let targetPic = target.picture;
+                    
+                    /* Change target picture according to group chat */
+                    if (target.isGroup) {
+                        for (var j = 0; j < members.length; j++) {
+                            if (members[j].id === message.sender) {
+                                targetPic = members[j].picture;
+                            }
+                        }
+                    }
+    
+                    return <MessageCard key = {i}
+                                    userPic = { user.picture } 
+                                    targetPic = { targetPic } 
+                                    isSending = { isSending }
+                                    consecutiveMessage = { consecutiveMessage } 
+                                    message = { message.message } 
+                                    fileCode = { message.filecode } />
+                });
+            }
+            else {
+                this.conversation = <Text style = {styles.intro}>This is the beginning of your chat history with { `${this.props.target.first} ${this.props.target.last}`}</Text>
+            }
 
-				let isSending = (message.sender === user.id);
-				let targetPic = target.picture;
-				
-				/* Change target picture according to group chat */
-				if (target.isGroup) {
-					for (var j = 0; j < members.length; j++) {
-						if (members[j].id === message.sender) {
-							targetPic = members[j].picture;
-						}
-					}
-				}
-
-				return <MessageCard key = {i}
-								userPic = { user.picture } 
-								targetPic = { targetPic } 
-								isSending = { isSending }
-								consecutiveMessage = { consecutiveMessage } 
-								message = { message.message } 
-								fileCode = { message.filecode } />
-			});
         }
 
 
         return (
             
             <View style = {styles.container}>
-                <ScrollView 
+                <ScrollView style = {styles.scrollView}
                     ref = {ref => this.scrollView = ref}
                     onContentSizeChange={(contentWidth, contentHeight)=>{        
                         this.scrollView.scrollToEnd({animated: true});
                     }}>
     
-                    { conversation }
+                    { this.conversation }
                 </ScrollView>
                 
                 <View style = {styles.input}>
@@ -181,9 +198,15 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'space-between'
     },
+    scrollView: {
+        marginTop: 10
+    },
     conversation: {
         justifyContent: 'flex-start'
     },
+    intro: {
+        textAlign: 'center'
+    },  
     messageInput: {
         borderRadius: 5,
         backgroundColor: '#E9E9E9',

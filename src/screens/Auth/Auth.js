@@ -104,7 +104,7 @@ class Auth extends React.Component {
                     <Button 
                         onPress = { this.switchMode }
                     >
-                        { (this.state.authMode === 'login' ? 'Don\'t have an account? Click here to create one.' : 'Already have an account? Click here to login') }
+                        { (this.state.authMode === 'login' ? 'Click here to create an account.' : 'Click here to login.') }
                     </Button>  
                 </View>
                 { mainSection }

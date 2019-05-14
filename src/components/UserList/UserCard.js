@@ -5,7 +5,8 @@ import {
 	Text, 
 	TouchableNativeFeedback, 
 	Image, 
-	StyleSheet
+	StyleSheet,
+	Dimensions
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -19,32 +20,48 @@ class UserCard extends React.Component {
 		super(props);
 
 		this.state = {
-			selected : false
+			selected : false,
+			viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
 		}
+
+		Dimensions.addEventListener('change',this.updateStyles);
 	}
+
+	updateStyles = (dims) => {
+        this.setState({
+            viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
+        })
+    }
+
 	
+	componentWillUnmount() {
+    
+        /* Prevent memory leak */
+        Dimensions.removeEventListener('change',this.updateStyles);
+    }
+
 	
 	render() {
-        return (
+		return (
 
-				<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user)}}>
-					<View style = {styles.card}>
-						<View style = {styles.dpContainer}>
-							<Image resizeMode="cover" source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>
-						</View>
-						<View>
-							<Text> { `${this.props.user.first} ${this.props.user.last}` }</Text>
-						</View>
+			<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user)}}>
+				<View style = {styles.card}>
+					<View style = {styles.dpContainer}>
+						<Image resizeMode="cover" source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>
 					</View>
-				</TouchableNativeFeedback>
-        )
+					<View>
+						<Text> { `${this.props.user.first} ${this.props.user.last}` }</Text>
+					</View>
+				</View>
+			</TouchableNativeFeedback>
+		)
 	} 
 }
 
 
 const styles = StyleSheet.create({
-    card: {
-			height: '10%',
+		card: {
+			height: 50,
 			borderColor: getDefaultTheme(),
 			borderWidth: 1,
 			width: '100%',

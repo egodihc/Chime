@@ -46,7 +46,8 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         paddingLeft: 10,
         borderRadius: 10,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        maxWidth: '50%'
     },
     sender: {
         backgroundColor: getDefaultTheme(),
