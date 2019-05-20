@@ -1,4 +1,5 @@
 export const BLUE = 'BLUE';
+export const ORANGE = 'ORANGE';
 export const DARK = 'DARK';
 
 export const getColor = (theme) => {
@@ -13,6 +14,13 @@ export const getColor = (theme) => {
     }
 }
 
-export const getDefaultTheme = () => {
-    return '#ADD8E6';
+export const getTheme = (theme) => {
+    if (theme === BLUE) {
+        return '#ADD8E6';
+    }
+    else {
+        return 'orange';
+    }
+    
+    
 }

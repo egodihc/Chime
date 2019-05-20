@@ -12,12 +12,8 @@ import {
 
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import Button from '../../components/UI/Button/Button';
-import startMainTabs from '../mainTabs/startMainTabs';
 import validate from '../../utility/validation';
-
 import { login } from '../../store/actions/auth';
-import { SET_TRANSITIONED } from '../../store/constants';
-import { getDefaultTheme } from '../../utility/theme';
 
 
 const mapStateToProps = (state) => {
@@ -154,7 +150,7 @@ class Register extends React.Component {
         }
  
         return (
-            <View style = {styles.container}>
+            <View style = {[styles.container]}>
 				<TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
 					<View style = {styles.inputContainer}>
 						<DefaultInput 
@@ -214,7 +210,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
 		alignItems: 'center',
-        backgroundColor: getDefaultTheme(),
         width: '100%'
     },
     inputContainer: {

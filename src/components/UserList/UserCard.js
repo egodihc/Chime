@@ -10,8 +10,13 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux';
-import { getDefaultTheme } from '../../utility/theme';
+import { getTheme } from '../../utility/theme';
 
+const mapStateToProps = (state) => {
+	return {
+		theme: state.settings.theme
+	}
+}
 class UserCard extends React.Component {
 
 	
@@ -45,7 +50,7 @@ class UserCard extends React.Component {
 		return (
 
 			<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user)}}>
-				<View style = {styles.card}>
+				<View style = {[styles.card, { borderColor: getTheme(this.props.theme) } ]}>
 					<View style = {styles.dpContainer}>
 						<Image resizeMode="cover" source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>
 					</View>
@@ -62,7 +67,6 @@ class UserCard extends React.Component {
 const styles = StyleSheet.create({
 		card: {
 			height: 50,
-			borderColor: getDefaultTheme(),
 			borderWidth: 1,
 			width: '100%',
 			flexDirection: 'row'
@@ -77,4 +81,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default connect(null, null)(UserCard);
+export default connect(mapStateToProps, null)(UserCard);

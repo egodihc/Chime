@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { View, Text, Image, StyleSheet } from 'react-native';
-import { getDefaultTheme } from '../../utility/theme';
+import { getTheme } from '../../utility/theme';
 
-export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, consecutiveMessage }) => {
+export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, consecutiveMessage, theme }) => {
 
     let finalMessage =       
    
-        <View style = { [ styles.card, (isSending) ? styles.sender : styles.receiver] }>
+        <View style = { [ styles.card, (isSending) ? styles.sender : styles.receiver, (isSending) ? { backgroundColor: getTheme(theme)} :null ] }>
             <Text style = { (isSending ? { color: 'white'} : { color: 'black' })}>
                 { message }
             </Text>
@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
         maxWidth: '50%'
     },
     sender: {
-        backgroundColor: getDefaultTheme(),
         alignSelf: 'flex-end'
     },
     chatHead: {

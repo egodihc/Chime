@@ -16,14 +16,15 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import { login } from '../../store/actions/auth';
 import { SET_TRANSITIONED } from '../../store/constants';
-import { getDefaultTheme } from '../../utility/theme';
+import { getTheme } from '../../utility/theme';
 
 
 const mapStateToProps = (state) => {
     return {
         isLoading: state.ui.isLoading,
         isLoggedIn: state.auth.isLoggedIn,
-        alreadyTransitioned : state.auth.alreadyTransitioned
+        alreadyTransitioned : state.auth.alreadyTransitioned,
+        theme: state.settings.theme
     };
 }
 
@@ -36,11 +37,13 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
+
 class Auth extends React.Component {
 
     constructor(props) {
         super(props);
-        
+
+
         this.state = {
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape',
             authMode: 'login'
@@ -94,7 +97,7 @@ class Auth extends React.Component {
         }
 
         return (
-            <View style = {styles.container}>
+            <View style = {[styles.container, { backgroundColor: getTheme(this.props.theme)}]}>
                 <View style={styles.titleContainer}>
                     <MainText>
                         <HeadingText style={styles.title}>Chime</HeadingText>
@@ -118,8 +121,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-		backgroundColor: getDefaultTheme()
+        alignItems: 'center'
     },
     button: {
         width: '50%'

@@ -6,10 +6,11 @@ import {
     StyleSheet
 } from 'react-native';
 
-import { getList } from '../../store/actions/messenger';
 import UserCard from './UserCard';
-import { Navigation } from 'react-native-navigation';
+
+import { getList } from '../../store/actions/messenger';
 import { CLEAN_MESSAGES } from '../../store/constants';
+
 
 const mapStateToProps = (state) => {
     return {
@@ -22,7 +23,7 @@ const mapDispatchToProps = (dispatch) => {
 
     return {
         getList : (authData) => dispatch(getList(authData)),
-        clearMessages: () => dispatch({ type : CLEAN_MESSAGES })
+        clearMessages: () => dispatch({ type : CLEAN_MESSAGES }),
     };
 }
 
@@ -35,6 +36,7 @@ class UserList extends React.Component {
             id: user.id,
             pw: user.pw
         })
+
         
     }
 

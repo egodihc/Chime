@@ -10,19 +10,23 @@ import {
     ActivityIndicator
 } from 'react-native';
 
-import { getMessages, sendMessage } from '../../store/actions/messenger';
-import { CLEAR_MESSAGES } from '../../store/constants';
 import { MessageCard } from './MessageCard';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { getDefaultTheme } from '../../utility/theme';
+
+import { getTheme } from '../../utility/theme';
+
+import { getMessages, sendMessage } from '../../store/actions/messenger';
+import { CLEAR_MESSAGES } from '../../store/constants';
+
 
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
         messages: state.messenger.messages,
         messagesLoaded: state.messenger.messagesLoaded,
-        isLoading: state.ui.isLoading
+        isLoading: state.ui.isLoading,
+        theme : state.settings.theme
     };
 }
 
@@ -31,7 +35,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getMessages : (config) => dispatch(getMessages(config)),
         sendMessage: (config) => dispatch(sendMessage(config)),
-        clearMessages : () => dispatch({ type : CLEAR_MESSAGES })
+        clearMessages : () => dispatch({ type : CLEAR_MESSAGES }),
+
     };
 }
 
@@ -51,7 +56,7 @@ class MessengerScreen extends React.Component {
                 pw: this.props.user.pw
             }
         }
-        
+
     }
 
     
@@ -152,7 +157,9 @@ class MessengerScreen extends React.Component {
                                     isSending = { isSending }
                                     consecutiveMessage = { consecutiveMessage } 
                                     message = { message.message } 
-                                    fileCode = { message.filecode } />
+                                    fileCode = { message.filecode }
+                                    theme = { this.props.theme }
+                                     />
                 });
             }
             else {
@@ -181,7 +188,7 @@ class MessengerScreen extends React.Component {
                         value = { this.state.messageField }
                     />
                     <TouchableOpacity onPress = {this.sendMessage}>
-                        <Icon name = { 'md-send' } color = { getDefaultTheme() } size = {30}/>
+                        <Icon name = { 'md-send' } color = { getTheme(this.props.theme) } size = {30}/>
                     </TouchableOpacity>
                    
                 </View>

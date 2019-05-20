@@ -1,7 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 import { Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { getDefaultTheme } from '../../utility/theme';
 
 const startTabs = () => {
 
@@ -26,7 +25,7 @@ const startTabs = () => {
                                 {
                                     icon: icons[2],
                                     title: 'Menu',
-                                    id: 'sideDrawerToggle'
+                                    id: 'settingsToggle'
 
                                 }
                             ]
@@ -42,7 +41,7 @@ const startTabs = () => {
                                 {
                                     icon: icons[2],
                                     title: 'Menu',
-                                    id: 'sideDrawerToggle'
+                                    id: 'settingsToggle'
 
                                 }
                             ]
@@ -51,16 +50,11 @@ const startTabs = () => {
                 ],
                 /* IOS only */
                 tabsStyle: {
-                    tabBarSelectedButtonColor: getDefaultTheme()
+                    tabBarSelectedButtonColor: 'black'
                 },
                 /* Android only */
                 appStyle: {
-                    tabBarSelectedButtonColor: getDefaultTheme()
-                },
-                drawer: {
-                    left: {
-                        screen: "chime.SideDrawer"
-                    }
+                    tabBarSelectedButtonColor: 'black'
                 }
             });
         }

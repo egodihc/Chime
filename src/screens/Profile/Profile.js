@@ -8,11 +8,12 @@ import {
 } from 'react-native';
 
 import MainText from '../../components/UI/MainText/MainText';
-import { getDefaultTheme } from '../../utility/theme';
+import { getTheme } from '../../utility/theme';
 
 const mapStateToProps = (state) => {
     return {
-        user: state.auth.user
+        user: state.auth.user,
+        theme: state.settings.theme
     };
 }
 
@@ -20,7 +21,7 @@ class ProfileScreen extends React.Component {
 
 
     static navigatorStyle = {
-        navBarButtonColor: getDefaultTheme()
+        navBarButtonColor: 'black'
     };
 
     constructor(props) {
@@ -31,12 +32,12 @@ class ProfileScreen extends React.Component {
 
     onNavigatorEvent = (event) => {
         if (event.type === 'NavBarButtonPress') {
-            if (event.id === 'sideDrawerToggle') {
-                this.props.navigator.toggleDrawer({
-                    side: 'left',
-                    animated: true,
-                    to: 'open'
-                });
+            if (event.id === 'settingsToggle') {
+                this.props.navigator.showModal({
+                    screen: "chime.SettingsScreen",
+                    title: "Settings",
+                    animationType: "slide-horizontal"
+                })
             }
         }
     }
@@ -46,7 +47,7 @@ class ProfileScreen extends React.Component {
 
         return (
             <View style = { styles.container }>
-                <View style = { styles.avatarBox }>
+                <View style = { [styles.avatarBox, { borderColor: getTheme(this.props.theme)}] }>
                     <Image source = { { uri : this.props.user.picture } } style = { styles.previewImage } />
                 </View>
                 <MainText>
@@ -67,7 +68,6 @@ const styles = StyleSheet.create({
     avatarBox: {
         margin: 5,
         borderWidth: 1,
-        borderColor: getDefaultTheme(),
         backgroundColor: '#eee',
         width: 200,
         height: 200

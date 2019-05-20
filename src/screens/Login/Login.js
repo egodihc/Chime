@@ -12,12 +12,9 @@ import {
 
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import Button from '../../components/UI/Button/Button';
-import startMainTabs from '../mainTabs/startMainTabs';
 import validate from '../../utility/validation';
 
 import { login } from '../../store/actions/auth';
-import { SET_TRANSITIONED } from '../../store/constants';
-
 
 const mapStateToProps = (state) => {
     return {

@@ -6,17 +6,14 @@ import {
     StyleSheet
 } from 'react-native';
 import UserList from '../../components/UserList/UserList';
-import { getDefaultTheme } from '../../utility/theme';
-
+import Settings from '../Settings/Settings';
 
 class UsersScreen extends React.Component {
 
-
     static navigatorStyle = {
-        navBarButtonColor: getDefaultTheme()
-    };
-
-
+        navBarButtonColor: 'black'
+    }
+    
     constructor(props) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -35,15 +32,19 @@ class UsersScreen extends React.Component {
         })
     }
 
+    onCloseSettings = () => {
+        this.setState({ showSettings: false });
+    }
+
 
     onNavigatorEvent = (event) => {
         if (event.type === 'NavBarButtonPress') {
-            if (event.id === 'sideDrawerToggle') {
-                this.props.navigator.toggleDrawer({
-                    side: 'left',
-                    animated: true,
-                    to: 'open'
-                });
+            if (event.id === 'settingsToggle') {
+                this.props.navigator.showModal({
+                    screen: "chime.SettingsScreen",
+                    title: "Settings",
+                    animationType: "slide-horizontal"
+                })
             }
         }
     }
@@ -54,6 +55,7 @@ class UsersScreen extends React.Component {
         return (
             <View style = {styles.container}>
                 <UserList onSelectUser = {this.onSelectUser}/>
+                <Settings></Settings>
             </View>
         )
     }
