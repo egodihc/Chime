@@ -10,7 +10,7 @@ const reducer = (state = initialState, action) => {
         case CHANGE_THEME: 
             return {
                 ...state,
-                theme: action.payload
+                theme: (state.theme === 'BLUE') ? 'orange' : 'BLUE'
             }
         default:
             return state;
