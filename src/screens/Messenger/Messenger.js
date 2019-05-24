@@ -6,9 +6,12 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
+    Dimensions,
     Text,
     ActivityIndicator
 } from 'react-native';
+
+import ImagePicker from 'react-native-image-picker';
 
 import { MessageCard } from './MessageCard';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
@@ -54,15 +57,30 @@ class MessengerScreen extends React.Component {
                 destination: this.props.target.id,
                 isGroup: this.props.isGroup,
                 pw: this.props.user.pw
-            }
+            },
+            viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
-
+        Dimensions.addEventListener('change',this.updateStyles);
     }
 
     
     componentDidMount() {
         this.props.getMessages(this.state.config);
     }
+
+    
+    componentWillUnmount() {
+        
+        Dimensions.removeEventListener('change',this.updateStyles);
+    }
+
+
+    updateStyles = (dims) => {
+        this.setState({
+            viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
+        })
+    }
+
 
 
     componentDidUpdate() {
@@ -111,6 +129,18 @@ class MessengerScreen extends React.Component {
             })
         }
 
+    }
+
+    onLaunchCamera = () => {
+        ImagePicker.launchCamera({ title: 'Take a photo'}, (response) => {
+
+        });
+    }
+
+    onLaunchImageLibrary = () => {
+        ImagePicker.launchImageLibrary({ title: 'Pick an image'}, (response) => {
+
+        });
     }
 
 
@@ -181,16 +211,25 @@ class MessengerScreen extends React.Component {
                     { this.conversation }
                 </ScrollView>
                 
-                <View style = {styles.input}>
-                    <DefaultInput 
-                        style = {styles.messageInput} 
-                        onChangeText = { (text) => { this.updateMessageField(text) }}
-                        value = { this.state.messageField }
-                    />
-                    <TouchableOpacity onPress = {this.sendMessage}>
-                        <Icon name = { 'md-send' } color = { getTheme(this.props.theme) } size = {30}/>
-                    </TouchableOpacity>
-                   
+                <View style = { styles.inputContainer }>
+                    <View style = {[styles.media, (this.state.viewMode === 'portrait') ? null : styles.landscapeMediaContainer ]}>
+                        <TouchableOpacity onPress = {this.onLaunchCamera}>
+                            <Icon name = { 'md-camera' } color = { getTheme(this.props.theme) } size = {30}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress = {this.onLaunchImageLibrary}>
+                            <Icon name = { 'md-image' } color = { getTheme(this.props.theme) } size = {30}/>
+                        </TouchableOpacity>
+                    </View>
+                    <View style = {[styles.textArea , (this.state.viewMode === 'portrait') ? null : styles.landscapeTextAreaContainer ]}>
+                        <DefaultInput 
+                            style = {styles.messageInput} 
+                            onChangeText = { (text) => { this.updateMessageField(text) }}
+                            value = { this.state.messageField }
+                        />
+                        <TouchableOpacity onPress = {this.sendMessage}>
+                            <Icon name = { 'md-send' } color = { getTheme(this.props.theme) } size = {30}/>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
             </View>
@@ -205,11 +244,22 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'space-between'
     },
+    media: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '20%'
+    },
     scrollView: {
         marginTop: 10
     },
     conversation: {
         justifyContent: 'flex-start'
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginLeft: 10,
     },
     intro: {
         textAlign: 'center'
@@ -217,13 +267,19 @@ const styles = StyleSheet.create({
     messageInput: {
         borderRadius: 5,
         backgroundColor: '#E9E9E9',
-        width: '80%'
+        width: '85%'
     },
-    input: {
+    textArea: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'center',
-        marginLeft: 10,
+        alignItems: 'center'
+    },
+    landscapeMediaContainer: {
+        width: '10%'
+    },
+    landscapeTextAreaContainer: {
+        width: '90%'
     }
 })
 
