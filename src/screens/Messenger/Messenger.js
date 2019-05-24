@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'react-native-fetch-blob';
 
 import { MessageCard } from './MessageCard';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
@@ -58,6 +59,7 @@ class MessengerScreen extends React.Component {
                 isGroup: this.props.isGroup,
                 pw: this.props.user.pw
             },
+            pickedImage: null,
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
         Dimensions.addEventListener('change',this.updateStyles);
@@ -119,6 +121,7 @@ class MessengerScreen extends React.Component {
         if (messageField) {
             this.props.sendMessage({
                 ...config,
+                isFile: 0,
                 message: messageField
             });
             this.setState(prevState => {
@@ -132,24 +135,48 @@ class MessengerScreen extends React.Component {
     }
 
     onLaunchCamera = () => {
-        ImagePicker.launchCamera({ title: 'Take a photo'}, (response) => {
-
+        ImagePicker.launchCamera({ title: 'Take a photo'}, (res) => {
+            this.imageHandler(res);
         });
     }
 
     onLaunchImageLibrary = () => {
-        ImagePicker.launchImageLibrary({ title: 'Pick an image'}, (response) => {
-
+        ImagePicker.launchImageLibrary({ title: 'Pick an image'}, (res) => {
+            this.imageHandler(res);
         });
+    }
+
+    imageHandler = (res) => {
+        if (res.didCancel) {
+            console.log('User cancelled');
+        }
+        else if (res.error) {
+            console.log('Error', res.error);
+        }
+        else {
+            this.setState(prevState => {
+                return {
+                    ...prevState,
+                    pickedImage: { base64: res.data }
+                }
+            });
+            RNFetchBlob.fs.readFile(res.uri, 'base64')
+            .then((data) => {
+                this.props.sendMessage({
+                    ...this.state.config,
+                    isFile: 1,
+                    message: `data:image/png;base64,${data}`
+                });
+            })
+
+
+
+        }
     }
 
 
     render() {
         
-        //TODO:
-        // The activity indicator should only show on first load 
-        
-
         const { target, messages, user, isLoading } = this.props;
 
         if (this.state.firstLoad) {

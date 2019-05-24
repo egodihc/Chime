@@ -1,11 +1,11 @@
 import { uiStartLoading, uiStopLoading } from "./ui";
-import { LOAD_LIST, LOAD_MESSAGES } from "../constants";
+import { LOAD_LIST, LOAD_MESSAGES, ADDRESS } from "../constants";
 
 export const getList = (authData) => (dispatch) => {
 
     dispatch(uiStartLoading());
 
-    fetch('https://chat-time-api.herokuapp.com/getList', {
+    fetch(`${ADDRESS}/getList`, {
         method :'post',
 		headers: {'Content-Type' : 'application/json'},
 		body: JSON.stringify({
@@ -34,7 +34,7 @@ export const getMessages = (config) => (dispatch) => {
     
     dispatch(uiStartLoading());
 
-    fetch('https://chat-time-api.herokuapp.com/getMessages', {
+    fetch(`${ADDRESS}/getMessages`, {
         method :'post',
 		headers: {'Content-Type' : 'application/json'},
 		body: JSON.stringify({
@@ -61,7 +61,7 @@ export const getMessages = (config) => (dispatch) => {
 export const sendMessage = (config) => (dispatch) => {
 
 
-    fetch('https://chat-time-api.herokuapp.com/sendMessage', {
+    fetch(`${ADDRESS}/sendMessage`, {
         method :'post',
 		headers: {'Content-Type' : 'application/json'},
 		body: JSON.stringify({
@@ -70,7 +70,7 @@ export const sendMessage = (config) => (dispatch) => {
             message: config.message,
             isGroup: config.isGroup,
             pw: config.pw,
-            isFile: false
+            isFile: config.isFile
         })
     })
     .then(res => res.json())

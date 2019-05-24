@@ -1,11 +1,11 @@
-import { SET_LOGGED_IN, SET_CODE } from '../constants';
+import { SET_LOGGED_IN, SET_CODE, ADDRESS } from '../constants';
 import { uiStartLoading, uiStopLoading } from './ui';
 
 export const login = (authData) => (dispatch) => {
 
     dispatch(uiStartLoading());
 
-    fetch('https://chat-time-api.herokuapp.com/signIn', {
+    fetch(`${ADDRESS}/signIn`, {
         method: 'post',
         headers: {'Content-Type' : 'application/json'},
         body: JSON.stringify({

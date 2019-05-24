@@ -9,3 +9,5 @@ export const LOAD_MESSAGES = 'LOAD_MESSAGES';
 export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 export const CLEAN_MESSAGES = 'CLEAN_MESSAGES';
 export const CHANGE_THEME = 'CHANGE_THEME';
+export const ADDRESS = 'http://192.168.1.73:3001';
+// export const ADDRESS = 'https://chat-time-api.herokuapp.com';
