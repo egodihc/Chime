@@ -39,8 +39,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getMessages : (config) => dispatch(getMessages(config)),
         sendMessage: (config) => dispatch(sendMessage(config)),
-        clearMessages : () => dispatch({ type : CLEAR_MESSAGES }),
-
+        clearMessages : () => dispatch({ type : CLEAR_MESSAGES })
     };
 }
 
@@ -59,6 +58,7 @@ class MessengerScreen extends React.Component {
                 isGroup: this.props.isGroup,
                 pw: this.props.user.pw
             },
+            tempMessages: [],
             pickedImage: null,
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
@@ -88,19 +88,23 @@ class MessengerScreen extends React.Component {
     componentDidUpdate() {
 
         /* Update the component every time new messages are fetched */
+
         if (!this.props.messagesLoaded) {
+
             this.setState(prevState => {
                 return {
                     ...prevState,
                     messages: this.props.messages,
+                    tempMessages: [],
                     firstLoad: false
                 }
             })
             /* Lock this loop */
             this.props.clearMessages();
         }
-    }
 
+    }
+    
 
     /* Input field handler */
     updateMessageField = (text) => {
@@ -119,11 +123,38 @@ class MessengerScreen extends React.Component {
         const { config, messageField } = this.state;
         
         if (messageField) {
+            /* Call API to send message */
             this.props.sendMessage({
                 ...config,
                 isFile: 0,
                 message: messageField
             });
+
+            /* Add temp message */
+
+            let tempMessages = this.state.tempMessages;
+            const tempMessage = {
+                ...config,
+                isFile: 0,
+                message: messageField,
+                isTemp: true
+            };
+
+            tempMessages.push(tempMessage);
+            let messages = this.state.messages;
+            messages.push({
+                ...tempMessage,
+                fileCode: 9
+            });
+            this.setState(prevState => {
+                return {
+                    ...prevState,
+                    tempMessages: tempMessages,
+                    messages: messages
+                }
+            })
+
+            /* Clear message input field */
             this.setState(prevState => {
                 return {
                     ...prevState,
@@ -199,6 +230,12 @@ class MessengerScreen extends React.Component {
     
                     let isSending = (message.sender === user.id);
                     let targetPic = target.picture;
+
+                    /* Check if message was sent */
+                    let isSent = false;
+                    if (message.isTemp === undefined) {
+                        isSent = true;
+                    }
                     
                     /* Change target picture according to group chat */
                     if (target.isGroup) {
@@ -217,6 +254,7 @@ class MessengerScreen extends React.Component {
                                     message = { message.message } 
                                     fileCode = { message.filecode }
                                     theme = { this.props.theme }
+                                    isSent = {isSent}
                                      />
                 });
             }

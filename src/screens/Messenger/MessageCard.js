@@ -3,11 +3,22 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import { getTheme } from '../../utility/theme';
 
-export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, consecutiveMessage, theme }) => {
+export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, consecutiveMessage, theme, isSent }) => {
+
+    let isNotSent = false;
+    if (isSending && !isSent) {
+        isNotSent = true;
+    }
 
     let finalMessage =       
-   
-        <View style = { [ styles.card, (isSending) ? styles.sender : styles.receiver, (isSending) ? { backgroundColor: getTheme(theme)} : { backgroundColor: '#DEDEDE'} ] }>
+
+
+        <View style = { [ 
+                        styles.card, 
+                        (isSending) ? styles.sender : styles.receiver, 
+                        (isSending) ? { backgroundColor: getTheme(theme)} : { backgroundColor: '#DEDEDE'},
+                        (isNotSent) ? { opacity: 0.6 } : null
+                    ] }>
             <Text style = { (isSending ? { color: 'white'} : { color: 'black' })}>
                 { message }
             </Text>
