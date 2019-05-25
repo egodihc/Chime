@@ -7,7 +7,7 @@ export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, 
 
     let finalMessage =       
    
-        <View style = { [ styles.card, (isSending) ? styles.sender : styles.receiver, (isSending) ? { backgroundColor: getTheme(theme)} :null ] }>
+        <View style = { [ styles.card, (isSending) ? styles.sender : styles.receiver, (isSending) ? { backgroundColor: getTheme(theme)} : { backgroundColor: '#DEDEDE'} ] }>
             <Text style = { (isSending ? { color: 'white'} : { color: 'black' })}>
                 { message }
             </Text>
@@ -15,7 +15,7 @@ export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, 
     
     if (fileCode === 0 || fileCode === 1) {
         finalMessage = 
-        <View style = {[ (isSending) ? styles.sender : styles.receiver,  styles.msgImage] }>
+        <View style = {[ (isSending) ? styles.sender : styles.receiver,  styles.card] }>
             <Image  
                 style = { styles.image} 
                 source = {{uri:message}}
@@ -71,23 +71,13 @@ const styles = StyleSheet.create({
         marginRight: 5
     },
     receiver: {
-        backgroundColor: '#DEDEDE',
         alignSelf: 'flex-start'
     },
-    msgImage: {
-        flexDirection: 'row',
-        flex: 1,
-        marginTop: 5,
-        marginBottom: 5,
-        paddingTop: 8,
-        paddingBottom: 8,
-        paddingRight: 10,
-        paddingLeft: 10,
-        borderRadius: 10,
-        justifyContent: 'center'
-    },
     image: {
+        minHeight: 300,
+        maxHeight: 300,
         height: '100%',
-        width: '100%'
-    }
+        width: '100%',
+        borderRadius: 10
+    },
 })

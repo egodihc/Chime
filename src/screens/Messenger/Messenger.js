@@ -129,7 +129,8 @@ class MessengerScreen extends React.Component {
                     ...prevState,
                     messageField: null
                 }
-            })
+            });
+            this.scrollView.scrollToEnd({animated: true});
         }
 
     }
