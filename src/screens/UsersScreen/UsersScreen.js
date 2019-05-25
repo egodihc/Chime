@@ -16,24 +16,42 @@ class UsersScreen extends React.Component {
     
     constructor(props) {
         super(props);
+        this.state = {
+            userSelected: false
+        }
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
+    componentDidMount() {
+        this.setState({ userSelected: false });
+    }
+
+
     /* Passes target as props to messenger screen */
     onSelectUser = (user) => {
+
+        // TODO:
+        // Debouncer to prevent stacking of multiple routes
         let name =  `${user.first} ${user.last}`;
+
         this.props.navigator.push({
             screen: 'chime.MessengerScreen',
             title: name,
             passProps: {
                 target: user,
                 isGroup: false
+            },
+            overrideBackPress: true,
+            navigatorButtons: {
+                rightButtons: [{
+                    icon: { uri :user.picture },
+                    id: 'viewProfile'
+                }] 
             }
         })
-    }
 
-    onCloseSettings = () => {
-        this.setState({ showSettings: false });
+        
+
     }
 
 
@@ -53,6 +71,7 @@ class UsersScreen extends React.Component {
     render() {
         
         return (
+            
             <View style = {styles.container}>
                 <UserList onSelectUser = {this.onSelectUser}/>
                 <Settings></Settings>

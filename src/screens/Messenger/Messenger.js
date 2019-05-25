@@ -22,6 +22,7 @@ import { getTheme } from '../../utility/theme';
 
 import { getMessages, sendMessage } from '../../store/actions/messenger';
 import { CLEAR_MESSAGES } from '../../store/constants';
+import ViewProfileScreen from '../ViewProfileScreen/ViewProfileScreen';
 
 
 const mapStateToProps = (state) => {
@@ -60,9 +61,11 @@ class MessengerScreen extends React.Component {
             },
             tempMessages: [],
             pickedImage: null,
+            mode: 'messenger',
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
         Dimensions.addEventListener('change',this.updateStyles);
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     
@@ -104,6 +107,43 @@ class MessengerScreen extends React.Component {
         }
 
     }
+
+    
+    onNavigatorEvent = (event) => {
+        if (event.type === 'NavBarButtonPress') {
+            if (event.id === 'viewProfile') {
+                this.setState(prevState => {
+                    return {
+                        ...prevState,
+                        mode: 'profile'
+                    }
+                })
+            }
+            else if (event.id === 'backPress') {
+                if (this.state.mode === 'messenger') {
+                    this.props.navigator.pop();
+                }
+                else {
+                    this.setState(prevState => {
+                        return {
+                            ...prevState,
+                            mode: 'messenger'
+                        }
+                    })
+                }
+            }
+        }
+    }
+
+    onBacktoMessengerMode = () => {
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                mode: 'messenger'
+            }
+        })
+    }
+
     
 
     /* Input field handler */
@@ -264,42 +304,47 @@ class MessengerScreen extends React.Component {
 
         }
 
-
-        return (
+        if (this.state.mode === 'messenger') {
+            return (
             
-            <View style = {styles.container}>
-                <ScrollView style = {styles.scrollView}
-                    ref = {ref => this.scrollView = ref}
-                    onContentSizeChange={(contentWidth, contentHeight)=>{        
-                        this.scrollView.scrollToEnd({animated: true});
-                    }}>
+                <View style = {styles.container}>
+                    <ScrollView style = {styles.scrollView}
+                        ref = {ref => this.scrollView = ref}
+                        onContentSizeChange={(contentWidth, contentHeight)=>{        
+                            this.scrollView.scrollToEnd({animated: true});
+                        }}>
+        
+                        { this.conversation }
+                    </ScrollView>
+                    
+                    <View style = { styles.inputContainer }>
+                        <View style = {[styles.media, (this.state.viewMode === 'portrait') ? null : styles.landscapeMediaContainer ]}>
+                            <TouchableOpacity onPress = {this.onLaunchCamera}>
+                                <Icon name = { 'md-camera' } color = { getTheme(this.props.theme) } size = {30}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress = {this.onLaunchImageLibrary}>
+                                <Icon name = { 'md-image' } color = { getTheme(this.props.theme) } size = {30}/>
+                            </TouchableOpacity>
+                        </View>
+                        <View style = {[styles.textArea , (this.state.viewMode === 'portrait') ? null : styles.landscapeTextAreaContainer ]}>
+                            <DefaultInput 
+                                style = {styles.messageInput} 
+                                onChangeText = { (text) => { this.updateMessageField(text) }}
+                                value = { this.state.messageField }
+                            />
+                            <TouchableOpacity onPress = {this.sendMessage}>
+                                <Icon name = { 'md-send' } color = { getTheme(this.props.theme) } size = {30}/>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
     
-                    { this.conversation }
-                </ScrollView>
-                
-                <View style = { styles.inputContainer }>
-                    <View style = {[styles.media, (this.state.viewMode === 'portrait') ? null : styles.landscapeMediaContainer ]}>
-                        <TouchableOpacity onPress = {this.onLaunchCamera}>
-                            <Icon name = { 'md-camera' } color = { getTheme(this.props.theme) } size = {30}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress = {this.onLaunchImageLibrary}>
-                            <Icon name = { 'md-image' } color = { getTheme(this.props.theme) } size = {30}/>
-                        </TouchableOpacity>
-                    </View>
-                    <View style = {[styles.textArea , (this.state.viewMode === 'portrait') ? null : styles.landscapeTextAreaContainer ]}>
-                        <DefaultInput 
-                            style = {styles.messageInput} 
-                            onChangeText = { (text) => { this.updateMessageField(text) }}
-                            value = { this.state.messageField }
-                        />
-                        <TouchableOpacity onPress = {this.sendMessage}>
-                            <Icon name = { 'md-send' } color = { getTheme(this.props.theme) } size = {30}/>
-                        </TouchableOpacity>
-                    </View>
                 </View>
+            )
+        }
+        else {
+            return <ViewProfileScreen user = {this.props.target} onBack = {this.onBacktoMessengerMode}></ViewProfileScreen>
+        }
 
-            </View>
-        )
     }
 }
 
