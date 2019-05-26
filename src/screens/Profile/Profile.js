@@ -21,22 +21,41 @@ class ProfileScreen extends React.Component {
 
 
     static navigatorStyle = {
-        navBarButtonColor: 'black'
-    };
+        tabBarButtonColor: getTheme(null,null),
+        tabBarSelectedButtonColor: getTheme(null,null),
+        forceTitlesDisplay: true
+    }
 
     constructor(props) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
+    componentDidMount() {
+        this.updateStyles();
+    }
+
+    componentDidUpdate() {
+        this.updateStyles();
+    }
+
+    updateStyles = () => {
+        this.props.navigator.setStyle({
+            navBarTextColor: getTheme(this.props.theme, 'text'),
+            navBarButtonColor: getTheme(this.props.theme, 'text'),
+            navBarBackgroundColor: getTheme(this.props.theme, 'bg'),
+            tabBarBackgroundColor: getTheme(this.props.theme, 'bg')
+        }); 
+    }
+
 
     onNavigatorEvent = (event) => {
         if (event.type === 'NavBarButtonPress') {
             if (event.id === 'settingsToggle') {
-                this.props.navigator.showModal({
-                    screen: "chime.SettingsScreen",
-                    title: "Settings",
-                    animationType: "slide-horizontal"
+                this.props.navigator.push({
+                    screen: 'chime.SettingsScreen',
+                    title: 'Settings',
+                    animationType: 'slide-horizontal'
                 })
             }
         }
@@ -44,16 +63,14 @@ class ProfileScreen extends React.Component {
 
 
     render() {
-
         return (
-            <View style = { styles.container }>
-                <View style = { [styles.avatarBox, { borderColor: getTheme(this.props.theme)}] }>
+            <View style = {[styles.container, {backgroundColor: getTheme(this.props.theme, 'bg')} ]}>
+                <View style = { [styles.avatarBox, { borderColor: getTheme(this.props.theme, 'text')}] }>
                     <Image source = { { uri : this.props.user.picture } } style = { styles.previewImage } />
                 </View>
-                <MainText>
+                <MainText color  = {getTheme(this.props.theme, true)}>
                     { `${this.props.user.first} ${this.props.user.last}` }
                 </MainText>
-
             </View>
         )
     }
@@ -62,6 +79,7 @@ class ProfileScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         width: '100%',
         alignItems: 'center'
     },

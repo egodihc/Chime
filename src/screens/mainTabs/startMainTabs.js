@@ -33,8 +33,8 @@ const startTabs = () => {
                     },
                     {
                         screen: "chime.ProfileScreen",
-                        label: "Profile",
-                        title: "Profile",
+                        label: "My Profile",
+                        title: "My Profile",
                         icon: icons[1],
                         navigatorButtons: {
                             leftButtons: [

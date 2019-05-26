@@ -50,12 +50,12 @@ class UserCard extends React.Component {
 		return (
 
 			<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user)}}>
-				<View style = {[styles.card, { borderColor: getTheme(this.props.theme) } ]}>
+				<View style = {[styles.card, { backgroundColor : getTheme(this.props.theme, 'bg')} ]}>
 					<View style = {styles.dpContainer}>
 						<Image resizeMode="cover" source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>
 					</View>
 					<View>
-						<Text> { `${this.props.user.first} ${this.props.user.last}` }</Text>
+						<Text style = {{color : getTheme(this.props.theme, 'text')}}> { `${this.props.user.first} ${this.props.user.last}` }</Text>
 					</View>
 				</View>
 			</TouchableNativeFeedback>

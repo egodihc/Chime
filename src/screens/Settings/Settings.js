@@ -19,27 +19,59 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setTheme : (theme) => dispatch(setTheme(theme))
+        toggleTheme : () => dispatch(setTheme())
     }
 }
 
-class Settings extends React.Component {
+class SettingsScreen extends React.Component {
 
+    static navigatorStyle = {
+        tabBarHidden: true
+    }
 
     constructor(props) {
         super(props);
+        // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        // this.props.navigator.setStyle({
+        //     navBarTextColor: getTheme(this.props.theme, 'text'),
+        //     navBarButtonColor: getTheme(this.props.theme, 'text'),
+        //     navBarBackgroundColor: getTheme(this.props.theme, 'bg')
+        // }); 
     }
 
+    
+    // componentDidMount() {
+    //     this.updateStyles();
+    // }
+
+    // componentDidUpdate() {
+    //     this.updateStyles();
+    // }
+
+    // updateStyles = () => {
+    //     this.props.navigator.setStyle({
+    //         navBarTextColor: getTheme(this.props.theme, 'text'),
+    //         navBarButtonColor: getTheme(this.props.theme, 'text'),
+    //         navBarBackgroundColor: getTheme(this.props.theme, 'bg')
+    //     }); 
+    // }
+
+
     changeTheme = () => {
-        this.props.setTheme('orange');
+        this.props.toggleTheme();
     }
 
     render() {
 
         return (
-            <View style = {[styles.container, { backgroundColor: getTheme(this.props.theme) }] }>
+            <View style = {[styles.container, { backgroundColor : getTheme(this.props.theme,'bg')}]}>
                 <View style={styles.titleContainer}>
-                    <Button onPress = {this.changeTheme }>Switch theme</Button>
+                    <Button 
+                    onPress = {this.changeTheme } 
+                    textColor =  {getTheme(this.props.theme, 'text')}
+                    borderColor = {getTheme(this.props.theme, 'text')}
+                    backgroundColor = {getTheme(this.props.theme, 'bg')}
+                    >{ (this.props.theme === 'DARK') ? 'Dark' : 'Light'}</Button>
                 </View>
             </View>
         );
@@ -64,4 +96,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen);

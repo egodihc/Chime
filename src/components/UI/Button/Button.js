@@ -11,8 +11,8 @@ import {
 const button = (props) => {
 
     const content = (
-        <View style = {[styles.button, {backgroundColor: props.color}, (props.disabled) ? styles.disabled : null ]}>
-            <Text style = {[styles.text, (props.disabled) ? styles.disabledText : null]}>
+        <View style = {[styles.button, {backgroundColor: props.color}, { borderColor : props.borderColor }, (props.disabled) ? styles.disabled : null ]}>
+            <Text style = {[ styles.text,  { color : props.textColor } , (props.disabled) ? styles.disabledText : null]}>
                 { props.children }
             </Text>
         </View>

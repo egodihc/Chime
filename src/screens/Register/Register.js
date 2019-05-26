@@ -14,11 +14,13 @@ import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import Button from '../../components/UI/Button/Button';
 import validate from '../../utility/validation';
 import { login } from '../../store/actions/auth';
+import { getTheme } from '../../utility/theme';
 
 
 const mapStateToProps = (state) => {
     return {
-        isLoading: state.ui.isLoading
+        isLoading: state.ui.isLoading,
+        theme: state.settings.theme
     };
 }
 
@@ -141,6 +143,8 @@ class Register extends React.Component {
         <Button 
             onPress = { this.onRegister }
             color = 'transparent'
+            textColor = {getTheme(this.props.theme, 'text')}
+            borderColor = {getTheme(this.props.theme, 'text')}
         >
             Create account
         </Button>;

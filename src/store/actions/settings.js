@@ -1,9 +1,8 @@
 import { CHANGE_THEME } from "../constants";
 
 
-export const setTheme = (theme) => {
+export const setTheme = () => {
     return {
-        type: CHANGE_THEME,
-        payload: theme
+        type: CHANGE_THEME
     }
 }

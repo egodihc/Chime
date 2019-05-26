@@ -97,15 +97,17 @@ class Auth extends React.Component {
         }
 
         return (
-            <View style = {[styles.container, { backgroundColor: getTheme(this.props.theme)}]}>
+            <View style = {[styles.container, { backgroundColor: getTheme(this.props.theme, 'bg')}]}>
                 <View style={styles.titleContainer}>
                     <MainText>
-                        <HeadingText style={styles.title}>Chime</HeadingText>
+                        <HeadingText style={[styles.title, { color : getTheme(this.props.theme, 'text')}]}>Chime</HeadingText>
                     </MainText>
                 </View>
                 <View style = {styles.button}>
                     <Button 
                         onPress = { this.switchMode }
+                        textColor = {getTheme(this.props.theme, 'text')}
+                        borderColor = {getTheme(this.props.theme, 'text')}
                     >
                         { (this.state.authMode === 'login' ? 'Click here to create an account.' : 'Click here to login.') }
                     </Button>  

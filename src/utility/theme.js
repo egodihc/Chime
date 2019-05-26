@@ -1,26 +1,33 @@
-export const BLUE = 'BLUE';
-export const ORANGE = 'ORANGE';
-export const DARK = 'DARK';
+export const getTheme = (theme, type) => {
 
-export const getColor = (theme) => {
-
-    switch (theme) {
-        case BLUE:
-            return '#ADD8E6';
-        case DARK:
-            return '#000';
-        default:
-            return '#ADD8E6';
+    if (type === 'text') {
+        if (theme === 'LIGHT') {
+            return 'black';
+        }
+        else {
+            return 'white';
+        }
     }
-}
-
-export const getTheme = (theme) => {
-    if (theme === BLUE) {
-        return '#ADD8E6';
+    else if (type === 'bg') {
+        if (theme === 'LIGHT') {
+            return 'white';
+        }
+        else {
+            return 'black';
+        }
+    }
+    else if (type === 'input') {
+        if (theme === 'LIGHT') {
+            return 'white';
+        }
+        else {
+            return '#404040';
+        }
     }
     else {
-        return 'orange';
+        return '#ADD8E6'
     }
+
     
     
 }

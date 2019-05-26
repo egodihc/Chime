@@ -46,6 +46,9 @@ const mapDispatchToProps = (dispatch) => {
 
 class MessengerScreen extends React.Component {
 
+    static navigatorStyle = {
+        tabBarHidden: true
+    }
 
     constructor(props) {
         super(props);
@@ -70,6 +73,12 @@ class MessengerScreen extends React.Component {
 
     
     componentDidMount() {
+        
+        this.props.navigator.setStyle({
+            navBarTextColor: getTheme(this.props.theme, 'text'),
+            navBarBackgroundColor: getTheme(this.props.theme, 'bg')
+        }); 
+
         this.props.getMessages(this.state.config);
     }
 
@@ -91,7 +100,6 @@ class MessengerScreen extends React.Component {
     componentDidUpdate() {
 
         /* Update the component every time new messages are fetched */
-
         if (!this.props.messagesLoaded) {
 
             this.setState(prevState => {
@@ -184,7 +192,7 @@ class MessengerScreen extends React.Component {
             let messages = this.state.messages;
             messages.push({
                 ...tempMessage,
-                fileCode: 9
+                filecode: 10
             });
             this.setState(prevState => {
                 return {
@@ -249,6 +257,7 @@ class MessengerScreen extends React.Component {
 
     render() {
         
+
         const { target, messages, user, isLoading } = this.props;
 
         if (this.state.firstLoad) {
@@ -307,7 +316,7 @@ class MessengerScreen extends React.Component {
         if (this.state.mode === 'messenger') {
             return (
             
-                <View style = {styles.container}>
+                <View style = {[styles.container, { backgroundColor : getTheme(this.props.theme, 'bg')}]}>
                     <ScrollView style = {styles.scrollView}
                         ref = {ref => this.scrollView = ref}
                         onContentSizeChange={(contentWidth, contentHeight)=>{        
@@ -320,20 +329,20 @@ class MessengerScreen extends React.Component {
                     <View style = { styles.inputContainer }>
                         <View style = {[styles.media, (this.state.viewMode === 'portrait') ? null : styles.landscapeMediaContainer ]}>
                             <TouchableOpacity onPress = {this.onLaunchCamera}>
-                                <Icon name = { 'md-camera' } color = { getTheme(this.props.theme) } size = {30}/>
+                                <Icon name = { 'md-camera' } color = { getTheme(this.props.theme, null) } size = {30}/>
                             </TouchableOpacity>
                             <TouchableOpacity onPress = {this.onLaunchImageLibrary}>
-                                <Icon name = { 'md-image' } color = { getTheme(this.props.theme) } size = {30}/>
+                                <Icon name = { 'md-image' } color = { getTheme(this.props.theme, null) } size = {30}/>
                             </TouchableOpacity>
                         </View>
                         <View style = {[styles.textArea , (this.state.viewMode === 'portrait') ? null : styles.landscapeTextAreaContainer ]}>
                             <DefaultInput 
-                                style = {styles.messageInput} 
+                                style = {[styles.messageInput, {backgroundColor: getTheme(this.props.theme, 'input')}, { color: getTheme(this.props.theme, 'text')}]} 
                                 onChangeText = { (text) => { this.updateMessageField(text) }}
                                 value = { this.state.messageField }
                             />
                             <TouchableOpacity onPress = {this.sendMessage}>
-                                <Icon name = { 'md-send' } color = { getTheme(this.props.theme) } size = {30}/>
+                                <Icon name = { 'md-send' } color = { getTheme(this.props.theme, null) } size = {30}/>
                             </TouchableOpacity>
                         </View>
                     </View>

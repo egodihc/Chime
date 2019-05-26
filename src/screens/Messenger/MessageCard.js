@@ -16,7 +16,7 @@ export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, 
         <View style = { [ 
                         styles.card, 
                         (isSending) ? styles.sender : styles.receiver, 
-                        (isSending) ? { backgroundColor: getTheme(theme)} : { backgroundColor: '#DEDEDE'},
+                        (isSending) ? { backgroundColor: getTheme('BLUE', false)} : { backgroundColor: '#DEDEDE'},
                         (isNotSent) ? { opacity: 0.6 } : null
                     ] }>
             <Text style = { (isSending ? { color: 'white'} : { color: 'black' })}>

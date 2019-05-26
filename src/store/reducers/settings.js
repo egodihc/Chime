@@ -1,7 +1,7 @@
 import { CHANGE_THEME } from "../constants";
 
 const initialState = {
-    theme: 'BLUE'
+    theme: 'LIGHT'
 }
 
 const reducer = (state = initialState, action) => {
@@ -10,7 +10,7 @@ const reducer = (state = initialState, action) => {
         case CHANGE_THEME: 
             return {
                 ...state,
-                theme: (state.theme === 'BLUE') ? 'orange' : 'BLUE'
+                theme: (state.theme === 'LIGHT') ? 'DARK' : 'LIGHT'
             }
         default:
             return state;

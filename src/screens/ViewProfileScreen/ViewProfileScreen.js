@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { connect } from 'react-redux';
 import { 
     View,
     Image,
@@ -7,10 +7,13 @@ import {
 } from 'react-native';
 
 import MainText from '../../components/UI/MainText/MainText';
-import Button from '../../components/UI/Button/Button';
 import { getTheme } from '../../utility/theme';
 
-
+const mapStateToProps = (state) => {
+    return {
+        theme: state.settings.theme
+    }
+}
 class ViewProfileScreen extends React.Component {
 
     constructor(props) {
@@ -21,12 +24,12 @@ class ViewProfileScreen extends React.Component {
     render() {
 
         return (
-            <View style = { styles.container }>
+            <View style = { [styles.container, { backgroundColor: getTheme(this.props.theme, 'bg')} ]}>
                 <View style = {styles.profileContainer}>
-                    <View style = { [styles.avatarBox, { borderColor: getTheme(this.props.theme)}] }>
+                    <View style = { [styles.avatarBox, { borderColor: getTheme(this.props.theme, 'text')}] }>
                         <Image source = { { uri : this.props.user.picture } } style = { styles.previewImage } />
                     </View>
-                    <MainText>
+                    <MainText color = {getTheme(this.props.theme, 'text')}>
                         { `${this.props.user.first} ${this.props.user.last}` }
                     </MainText>
                 </View>
@@ -59,4 +62,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default ViewProfileScreen;
+export default connect(mapStateToProps, null)(ViewProfileScreen);
