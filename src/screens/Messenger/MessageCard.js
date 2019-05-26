@@ -19,7 +19,7 @@ export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, 
                         (isSending) ? { backgroundColor: getTheme('BLUE', false)} : { backgroundColor: '#DEDEDE'},
                         (isNotSent) ? { opacity: 0.6 } : null
                     ] }>
-            <Text style = { (isSending ? { color: 'white'} : { color: 'black' })}>
+            <Text style = {[ styles.message,(isSending ? { color: 'white'} : { color: 'black' })]}>
                 { message }
             </Text>
         </View>
@@ -91,4 +91,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderRadius: 10
     },
+    message: {
+        fontWeight : 'bold'
+    }
 })

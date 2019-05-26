@@ -308,7 +308,10 @@ class MessengerScreen extends React.Component {
                 });
             }
             else {
-                this.conversation = <Text style = {styles.intro}>This is the beginning of your chat history with { `${this.props.target.first} ${this.props.target.last}`}</Text>
+                this.conversation = 
+                <Text style = {[styles.intro, { color : getTheme(this.props.theme, 'text')}]}>
+                    This is the beginning of your chat history with { `${this.props.target.first} ${this.props.target.last}`}
+                </Text>
             }
 
         }

@@ -25,7 +25,7 @@ export const getTheme = (theme, type) => {
         }
     }
     else {
-        return '#ADD8E6'
+        return '#0EBFE9'
     }
 
     

@@ -50,6 +50,14 @@ class Auth extends React.Component {
         }
 
         Dimensions.addEventListener('change',this.updateStyles);
+
+    }
+
+    componentDidMount() {
+        this.props.navigator.toggleNavBar({
+            to: 'hidden',
+            animated: false
+        });
     }
 
     componentDidUpdate() {
@@ -59,6 +67,7 @@ class Auth extends React.Component {
             this.props.setTransition();
             startMainTabs();
         }
+
     }
 
 
