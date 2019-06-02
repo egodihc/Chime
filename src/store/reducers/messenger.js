@@ -1,4 +1,4 @@
-import { LOAD_LIST, LOAD_MESSAGES, CLEAR_MESSAGES, CLEAN_MESSAGES, TEMP_MESSAGE } from "../constants";
+import { LOAD_LIST, LOAD_MESSAGES, CLEAR_MESSAGES, CLEAN_MESSAGES } from "../constants";
 
 
 const initialState = {
@@ -31,13 +31,6 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 messages: []
-            }
-        case TEMP_MESSAGE:
-            let tempMessages = state.tempMessages;
-            tempMessages.push(action.payload);
-            return {
-                ...state,
-                tempMessages: tempMessages
             }
         default:
             return state;

@@ -4,18 +4,29 @@ import { connect } from 'react-redux';
 import { 
     View,
     Image,
-    StyleSheet
+    StyleSheet,
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
 
 import MainText from '../../components/UI/MainText/MainText';
 import { getTheme } from '../../utility/theme';
+import { getProfile } from '../../store/actions/profile';
 
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
-        theme: state.settings.theme
+        theme: state.settings.theme,
+        profileState: state.profile
     };
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getProfile : (id) => dispatch(getProfile(id))
+    }
+}
+
 
 class ProfileScreen extends React.Component {
 
@@ -28,16 +39,57 @@ class ProfileScreen extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            profile: null,
+            profileLoaded: false,
+            viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
+        }
+        Dimensions.addEventListener('change',this.updateDimensions);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     componentDidMount() {
+
         this.updateStyles();
+
+        /* Call fetch profile API */
+        this.props.getProfile(this.props.user.id)
     }
 
+
     componentDidUpdate() {
+
+        /* On updating of props, either the style needs to be updated or/and the 
+            profile fetch API returned something - check if it did */
         this.updateStyles();
+
+        /* Load the profile if successfully fetched */
+        const { profile, profileFetchResponse } = this.props.profileState;
+        if (!this.state.profileLoaded) {
+            // TODO:
+            // Handle fail profile fetch response
+            if (profileFetchResponse === 0) {
+                this.setState(prevState => {
+                    return {
+                        ...prevState,
+                        profile: profile,
+                        profileLoaded: true
+                    }
+                })
+            }
+        }
     }
+
+    updateDimensions = (dims) => {
+        this.setState({
+            viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
+        })
+    }
+    
+    componentWillUnmount = () => {
+        Dimensions.removeEventListener('change',this.updateDimensions);
+    }
+
 
     updateStyles = () => {
         this.props.navigator.setStyle({
@@ -63,32 +115,66 @@ class ProfileScreen extends React.Component {
 
 
     render() {
-        return (
-            <View style = {[styles.container, {backgroundColor: getTheme(this.props.theme, 'bg')} ]}>
-                <View style = { [styles.avatarBox, { borderColor: getTheme(this.props.theme, 'text')}] }>
-                    <Image source = { { uri : this.props.user.picture } } style = { styles.previewImage } />
+        if (this.state.profile === null) {
+            return (
+                <ActivityIndicator></ActivityIndicator>
+            )
+        }
+        else {
+            return (
+                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme(this.props.theme, 'bg')} ]}>
+
+                    <View style = {styles.primaryDetailContainer}>
+                        <View style = { [styles.avatarBox, { borderColor: getTheme(this.props.theme, 'text')}] }>
+                            <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
+                        </View>
+                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                            { `${this.state.profile.first} ${this.state.profile.last}` }
+                        </MainText>
+                    </View>
+
+
+                    <View style = {styles.secondaryDetailContainer}>
+                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                            { `About me : ${this.state.profile.blurb}` }
+                        </MainText>
+                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                            { `Occupation : ${this.state.profile.occupation}` }
+                        </MainText>
+                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                            { `Birthday : ${this.state.profile.birthday}` }
+                        </MainText>
+                    </View>
                 </View>
-                <MainText color  = {getTheme(this.props.theme, true)}>
-                    { `${this.props.user.first} ${this.props.user.last}` }
-                </MainText>
-            </View>
-        )
+            )
+        }
     }
 }
 
 
 const styles = StyleSheet.create({
-    container: {
+    portraitContainer: {
         flex: 1,
         width: '100%',
         alignItems: 'center'
+    },
+    landScapeContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
+    primaryDetailContainer: {
+        alignItems: 'center'
+    },
+    secondaryDetailContainer: {
+        marginTop: 50
     },
     avatarBox: {
         margin: 5,
         borderWidth: 1,
         backgroundColor: '#eee',
-        width: 200,
-        height: 200
+        width: 175,
+        height: 175
     },
     previewImage: {
         width: '100%',
@@ -97,4 +183,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default connect(mapStateToProps, null)(ProfileScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

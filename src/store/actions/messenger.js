@@ -1,5 +1,5 @@
 import { uiStartLoading, uiStopLoading } from "./ui";
-import { LOAD_LIST, LOAD_MESSAGES, ADDRESS, TEMP_MESSAGE } from "../constants";
+import { LOAD_LIST, LOAD_MESSAGES, ADDRESS } from "../constants";
 
 export const getList = (authData) => (dispatch) => {
 
@@ -90,12 +90,4 @@ export const sendMessage = (config) => (dispatch) => {
         alert('Error: Message not sent');
     });
 
-}
-
-export const pushTempMessage = (message) => {
-
-    return {
-        type: TEMP_MESSAGE,
-        payload: message
-    }
 }
