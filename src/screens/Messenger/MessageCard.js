@@ -91,6 +91,6 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     message: {
-        fontWeight : 'bold'
+        fontWeight : '200'
     }
 })
