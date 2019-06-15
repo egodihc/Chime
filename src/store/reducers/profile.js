@@ -2,7 +2,7 @@ import { LOAD_PROFILE, SET_FAIL_PROFILE } from "../constants";
 
 const initialState = {
     profile: null,
-    profileFetchResponse: -1 
+    profileFetchResponse: -1
 }
 
 export const reducer = (state = initialState, action) => {

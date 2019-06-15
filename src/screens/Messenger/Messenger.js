@@ -180,7 +180,6 @@ class MessengerScreen extends React.Component {
             });
 
             /* Add temp message */
-
             let tempMessages = this.state.tempMessages;
             const tempMessage = {
                 ...config,
@@ -320,7 +319,7 @@ class MessengerScreen extends React.Component {
                 
                 
                 <View style = {[styles.container, { backgroundColor : getTheme(this.props.theme, 'bg')}]}>
-                    
+
                     {/* Message list section  */}
                     <ScrollView style = {styles.scrollView}
                         ref = {ref => this.scrollView = ref}
