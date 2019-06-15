@@ -19,6 +19,8 @@ export const GET_PROFILE = 'GET_PROFILE';
 export const LOAD_PROFILE = 'LOAD_PROFILE';
 export const SET_FAIL_PROFILE = 'SET_FAIL_PROFILE';
 
+export const SET_DISABLE_CARD = 'SET_DISABLE_CARD';
+export const CLEAR_DISABLE_CARD = 'CLEAR_DISABLE_CARD';
 
 // export const ADDRESS = 'http://192.168.1.73:3001';
 

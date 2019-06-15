@@ -8,14 +8,15 @@ import {
 
 import UserCard from './UserCard';
 
-import { getList } from '../../store/actions/messenger';
+import { getList, setDisable } from '../../store/actions/messenger';
 import { CLEAN_MESSAGES } from '../../store/constants';
 
 
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
-        list: state.messenger.list
+        list: state.messenger.list,
+        disabled: state.messenger.disabled
     };
 }
 
@@ -24,6 +25,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getList : (authData) => dispatch(getList(authData)),
         clearMessages: () => dispatch({ type : CLEAN_MESSAGES }),
+        setDisable : () => dispatch(setDisable())
     };
 }
 
@@ -42,6 +44,7 @@ class UserList extends React.Component {
 
     
     onSelectUser = (user) => {
+        this.props.setDisable();
         this.props.clearMessages();
         this.props.onSelectUser(user);
     }
@@ -55,6 +58,7 @@ class UserList extends React.Component {
             return <UserCard key = {i}
                             onSelectUser = {this.onSelectUser}
                             user = { user }
+                            disabled = { this.props.disabled }
                              />
         });
 

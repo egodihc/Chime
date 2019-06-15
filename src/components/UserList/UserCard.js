@@ -17,6 +17,8 @@ const mapStateToProps = (state) => {
 		theme: state.settings.theme
 	}
 }
+
+
 class UserCard extends React.Component {
 
 	
@@ -49,7 +51,10 @@ class UserCard extends React.Component {
 	render() {
 		return (
 
-			<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user)}}>
+			<TouchableNativeFeedback 
+				onPress = {()=> { this.props.onSelectUser(this.props.user)}}
+				disabled = {this.props.disabled}
+			>
 				<View style = {[styles.card, { backgroundColor : getTheme(this.props.theme, 'bg')} ]}>
 					<View style = {styles.dpContainer}>
 						<Image resizeMode="cover" source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>
@@ -67,7 +72,6 @@ class UserCard extends React.Component {
 const styles = StyleSheet.create({
 		card: {
 			height: 50,
-			borderWidth: 1,
 			width: '100%',
 			flexDirection: 'row'
 		},

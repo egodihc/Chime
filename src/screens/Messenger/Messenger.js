@@ -20,7 +20,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import { getTheme } from '../../utility/theme';
 
-import { getMessages, sendMessage } from '../../store/actions/messenger';
+import { getMessages, sendMessage, clearDisable } from '../../store/actions/messenger';
 import { CLEAR_MESSAGES } from '../../store/constants';
 import ViewProfileScreen from '../ViewProfileScreen/ViewProfileScreen';
 
@@ -40,7 +40,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getMessages : (config) => dispatch(getMessages(config)),
         sendMessage: (config) => dispatch(sendMessage(config)),
-        clearMessages : () => dispatch({ type : CLEAR_MESSAGES })
+        clearMessages : () => dispatch({ type : CLEAR_MESSAGES }),
+        clearDisable: () => dispatch(clearDisable())
     };
 }
 
@@ -84,7 +85,7 @@ class MessengerScreen extends React.Component {
 
     
     componentWillUnmount() {
-        
+        this.props.clearDisable();
         Dimensions.removeEventListener('change',this.updateStyles);
     }
 

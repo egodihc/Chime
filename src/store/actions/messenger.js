@@ -1,5 +1,5 @@
 import { uiStartLoading, uiStopLoading } from "./ui";
-import { LOAD_LIST, LOAD_MESSAGES, ADDRESS } from "../constants";
+import { LOAD_LIST, LOAD_MESSAGES, ADDRESS, CLEAR_DISABLE_CARD, SET_DISABLE_CARD } from "../constants";
 
 export const getList = (authData) => (dispatch) => {
 
@@ -90,4 +90,16 @@ export const sendMessage = (config) => (dispatch) => {
         alert('Error: Message not sent');
     });
 
+}
+
+export const clearDisable = () => {
+    return {
+        type : CLEAR_DISABLE_CARD
+    }
+}
+
+export const setDisable = () => {
+    return {
+        type : SET_DISABLE_CARD
+    }
 }
