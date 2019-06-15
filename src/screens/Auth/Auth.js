@@ -5,6 +5,7 @@ import {
     View,
     Dimensions,
     StyleSheet, 
+    Linking
 } from 'react-native';
 
 
@@ -94,6 +95,10 @@ class Auth extends React.Component {
         })
     }
 
+    openUrl = () => {
+        Linking.openURL('https://chime2.netlify.com');
+    }
+
     render() {
 
         let mainSection = null;
@@ -107,19 +112,21 @@ class Auth extends React.Component {
 
         return (
             <View style = {[styles.container, { backgroundColor: getTheme(this.props.theme, 'bg')}]}>
-                <View style={styles.titleContainer}>
-                    <MainText>
-                        <HeadingText style={[styles.title, { color : getTheme(this.props.theme, 'text')}]}>Chime</HeadingText>
-                    </MainText>
-                </View>
-                <View style = {styles.button}>
-                    <Button 
-                        onPress = { this.switchMode }
-                        textColor = {getTheme(this.props.theme, 'text')}
-                        borderColor = {getTheme(this.props.theme, 'text')}
-                    >
-                        { (this.state.authMode === 'login' ? 'Click here to create an account.' : 'Click here to login.') }
-                    </Button>  
+                <View style = { styles.topContainer }>
+                    <View style={styles.titleContainer}>
+                        <MainText>
+                            <HeadingText style={[styles.title, { color : getTheme(this.props.theme, 'text')}]}>Chime</HeadingText>
+                        </MainText>
+                    </View>
+                    <View style = {styles.button}>
+                        <Button 
+                            onPress = { this.openUrl }
+                            textColor = {getTheme(this.props.theme, 'text')}
+                            borderColor = {getTheme(this.props.theme, 'text')}
+                        >
+                            { (this.state.authMode === 'login' ? 'Click here to create an account.' : 'Click here to login.') }
+                        </Button>  
+                    </View>
                 </View>
                 { mainSection }
             </View>
@@ -131,7 +138,12 @@ class Auth extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    topContainer: {
+        flex: 1,
+        justifyContent: 'space-around',
         alignItems: 'center'
     },
     button: {
@@ -141,10 +153,7 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center'
 	},
-	titleContainer: {
-        paddingTop: 50,
-        paddingBottom: 50
-    }
+
 });
 
 

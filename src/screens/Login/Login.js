@@ -152,7 +152,7 @@ class Login extends React.Component {
 
 
         let mainButton = 
-        <View>
+        <View style = { (this.state.viewMode === 'portrait') ? styles.portraitButtonWrapper : styles.landscapeButtonWrapper } > 
             <Button 
                 onPress = { this.onLogin }
                 color = 'transparent'
@@ -226,8 +226,8 @@ class Login extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
+        justifyContent: 'center',
         width: '100%'
     },
     inputContainer: {
@@ -251,6 +251,12 @@ const styles = StyleSheet.create({
     },
     portraitPasswordWrapper: {
         width: '100%',
+    },
+    landscapeButtonWrapper: {
+        flexDirection: 'row'
+    },
+    portraitButtonWrapper: {
+        flexDirection: 'column'
     }
 });
 

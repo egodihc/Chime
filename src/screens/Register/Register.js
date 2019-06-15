@@ -212,8 +212,7 @@ class Register extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-		alignItems: 'center',
+        alignItems: 'center',
         width: '100%'
     },
     inputContainer: {
@@ -239,6 +238,7 @@ const styles = StyleSheet.create({
         width: '100%',
     }
 });
+
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

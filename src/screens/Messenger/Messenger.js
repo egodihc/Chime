@@ -317,8 +317,11 @@ class MessengerScreen extends React.Component {
 
         if (this.state.mode === 'messenger') {
             return (
-            
+                
+                
                 <View style = {[styles.container, { backgroundColor : getTheme(this.props.theme, 'bg')}]}>
+                    
+                    {/* Message list section  */}
                     <ScrollView style = {styles.scrollView}
                         ref = {ref => this.scrollView = ref}
                         onContentSizeChange={(contentWidth, contentHeight)=>{        
@@ -328,6 +331,8 @@ class MessengerScreen extends React.Component {
                         { this.conversation }
                     </ScrollView>
                     
+
+                    {/* Message input section  */}
                     <View style = { styles.inputContainer }>
                         <View style = {[styles.media, (this.state.viewMode === 'portrait') ? null : styles.landscapeMediaContainer ]}>
                             <TouchableOpacity onPress = {this.onLaunchCamera}>
