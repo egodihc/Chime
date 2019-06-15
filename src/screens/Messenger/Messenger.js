@@ -297,13 +297,11 @@ class MessengerScreen extends React.Component {
                     }
     
                     return <MessageCard key = {i}
-                                    userPic = { user.picture } 
                                     targetPic = { targetPic } 
                                     isSending = { isSending }
                                     consecutiveMessage = { consecutiveMessage } 
                                     message = { message.message } 
                                     fileCode = { message.filecode }
-                                    theme = { this.props.theme }
                                     isSent = {isSent}
                                      />
                 });

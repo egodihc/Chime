@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { getTheme } from '../../utility/theme';
 
-export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, consecutiveMessage, theme, isSent }) => {
+export const MessageCard = ({ targetPic, isSending, message, fileCode, consecutiveMessage, isSent }) => {
 
     let isNotSent = false;
     if (isSending && !isSent) {
@@ -11,8 +11,6 @@ export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, 
     }
 
     let finalMessage =       
-
-
         <View style = { [ 
                         styles.card, 
                         (isSending) ? styles.sender : styles.receiver, 
@@ -35,10 +33,14 @@ export const MessageCard = ({ userPic, targetPic, isSending, message, fileCode, 
         </View>
 
     }
-    let chatHead = <View style = {styles.padView}></View>;
 
+
+    /* Only display user avatar next to message if not consecutive message and is receiving */
+    let chatHead = <View style = { (isSending) ? {padding : 10 } : { padding : 27 } }></View>;
     if (!consecutiveMessage) {
-        chatHead = <Image source = { { uri : ((isSending) ? userPic : targetPic) }} style = {styles.chatHead} />;
+        if (!isSending) {
+            chatHead = <Image source = { { uri :  targetPic }} style = {styles.chatHead} />;
+        } 
     }
 
     return (
@@ -55,9 +57,6 @@ const styles = StyleSheet.create({
     },
     reverseContainer: {
         flexDirection: 'row-reverse'
-    },
-    padView: {
-        padding: 25
     },
     card: {
         flexDirection: 'row',
