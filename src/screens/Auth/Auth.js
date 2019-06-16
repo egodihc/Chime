@@ -115,7 +115,7 @@ class Auth extends React.Component {
                 <View style = { styles.topContainer }>
                     <View style={styles.titleContainer}>
                         <MainText>
-                            <HeadingText style={[styles.title, { color : getTheme(this.props.theme, 'text')}]}>Chime</HeadingText>
+                            <HeadingText style={[styles.title, { color : getTheme(this.props.theme, 'text')}]}>Chsime</HeadingText>
                         </MainText>
                     </View>
                     <View style = {styles.button}>

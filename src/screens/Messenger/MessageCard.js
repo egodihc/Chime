@@ -1,57 +1,118 @@
 import React from 'react';
 
-import { View, Text, Image, StyleSheet } from 'react-native';
+import {
+    View, 
+    Text, 
+    Image, 
+    StyleSheet,
+    TouchableNativeFeedback
+} from 'react-native';
 import { getTheme } from '../../utility/theme';
 
-export const MessageCard = ({ targetPic, isSending, message, fileCode, consecutiveMessage, isSent }) => {
 
-    let isNotSent = false;
-    if (isSending && !isSent) {
-        isNotSent = true;
+class MessageCard extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            showDate: false
+        }
     }
 
-    let finalMessage =       
-        <View style = { [ 
-                        styles.card, 
-                        (isSending) ? styles.sender : styles.receiver, 
-                        (isSending) ? { backgroundColor: getTheme('BLUE', false)} : { backgroundColor: '#DEDEDE'},
-                        (isNotSent) ? { opacity: 0.6 } : null
-                    ] }>
-            <Text style = {[ styles.message,(isSending ? { color: 'white'} : { color: 'black' })]}>
-                { message }
+    toggleDate = () => {
+        this.setState({ showDate: !this.state.showDate });
+    }
+
+    getDateString = (ts) => {
+        // TODO 
+        // Convert to human readable format
+        return ts;
+    }
+
+    render() {
+
+        const { targetPic, isSending, message, fileCode, consecutiveMessage, isSent, timestamp } = this.props;
+        const { showDate } = this.state;
+
+        let isNotSent = false;
+        if (isSending && !isSent) {
+            isNotSent = true;
+        }
+        
+        let date;
+        if (showDate) {
+            date = 
+            <Text>
+                { this.getDateString(timestamp) }
             </Text>
-        </View>
+        }
+
+        /* Assume message is normal text */
+        let finalMessage =       
+            <TouchableNativeFeedback onPress = {this.toggleDate} >
+                <View style = { (!isSending) ? styles.fullContainer: styles.reverseFullContainer  }>
+                    <View
+                        style = { [ 
+                            styles.card, 
+                            (isSending) ? styles.sender : styles.receiver, 
+                            (isSending) ? { backgroundColor: getTheme('BLUE', false)} : { backgroundColor: '#DEDEDE'},
+                            (isNotSent) ? { opacity: 0.6 } : null
+                        ] }
+                    >
+                        <Text style = {[ styles.message,(isSending ? { color: 'white'} : { color: 'black' })]}>
+                            { message }
+                        </Text>
+                    </View>
+                    { date }
+                </View>
+            </TouchableNativeFeedback>;
+        
+        /* Check if message is image */
+        if (fileCode === 0 || fileCode === 1) {
+            finalMessage = 
+            <View style = {[ (isSending) ? styles.sender : styles.receiver,  styles.card] }>
+                <Image  
+                    style = { styles.image} 
+                    source = {{uri:message}}
+                    resizeMode="cover"
+                ></Image>
+            </View>
     
-    if (fileCode === 0 || fileCode === 1) {
-        finalMessage = 
-        <View style = {[ (isSending) ? styles.sender : styles.receiver,  styles.card] }>
-            <Image  
-                style = { styles.image} 
-                source = {{uri:message}}
-                resizeMode="cover"
-            ></Image>
-        </View>
+        }
+    
+    
+        /* Only display user avatar next to message if not consecutive message and is receiving */
+        let chatHead = <View style = { (isSending) ? {padding : 10 } : { padding : 27 } }></View>;
+        if (!consecutiveMessage) {
+            if (!isSending) {
+                chatHead = <Image source = { { uri :  targetPic }} style = {styles.chatHead} />;
+            } 
+        }
+        
 
+        return (
+            <View style = { (!isSending) ? styles.container: styles.reverseContainer }>
+                {chatHead}
+                {finalMessage}
+            </View>
+        );
     }
-
-
-    /* Only display user avatar next to message if not consecutive message and is receiving */
-    let chatHead = <View style = { (isSending) ? {padding : 10 } : { padding : 27 } }></View>;
-    if (!consecutiveMessage) {
-        if (!isSending) {
-            chatHead = <Image source = { { uri :  targetPic }} style = {styles.chatHead} />;
-        } 
-    }
-
-    return (
-        <View style = { (!isSending) ? styles.container: styles.reverseContainer }>
-            {chatHead}
-            {finalMessage}
-        </View>
-    );
 }
 
+export default MessageCard;
+
+
 const styles = StyleSheet.create({
+    fullContainer: {
+        flex:1,
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+    },
+    reverseFullContainer: {
+        flex:1,
+        flexDirection: 'column',
+        alignItems: 'flex-end'   
+    },
     container: {
         flexDirection: 'row'
     },

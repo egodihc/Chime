@@ -6,9 +6,9 @@ import configureStore from './src/store/configureStore';
 import AuthScreen from './src/screens/Auth/Auth';
 import UsersScreen from './src/screens/UsersScreen/UsersScreen';
 import ProfileScreen from './src/screens/Profile/Profile';
-import MessengerScreen from './src/screens/Messenger/Messenger';
+import MessengerScreen from './src/screens/Messenger/MessengerScreen';
 import SettingsScreen from './src/screens/Settings/Settings';
-import ViewProfileScreen from './src/screens/ViewProfileScreen/ViewProfileScreen';
+import OtherProfile from './src/screens/OtherProfile/OtherProfile';
 
 
 const store = configureStore();
@@ -22,7 +22,7 @@ Navigation.registerComponent("chime.UsersScreen", () => UsersScreen, store, Prov
 Navigation.registerComponent("chime.ProfileScreen", () => ProfileScreen, store, Provider);
 Navigation.registerComponent("chime.MessengerScreen", () => MessengerScreen, store, Provider);
 Navigation.registerComponent("chime.SettingsScreen", () => SettingsScreen, store, Provider);
-Navigation.registerComponent("chime.ViewProfileScreen", () => ViewProfileScreen, store, Provider);
+Navigation.registerComponent("chime.OtherProfile", () => OtherProfile, store, Provider);
 
 
 
