@@ -1,4 +1,4 @@
-import { SET_LOGGED_IN, SET_CODE, ADDRESS } from '../constants';
+import { SET_LOGGED_IN, SET_CODE, ADDRESS, LOAD_USER } from '../constants';
 import { uiStartLoading, uiStopLoading } from './ui';
 
 export const login = (authData) => (dispatch) => {
@@ -39,3 +39,10 @@ export const login = (authData) => (dispatch) => {
         dispatch(uiStopLoading());
     })
 };
+
+export const loadUser = (user) => {
+    return {
+        type: LOAD_USER,
+        payload: user
+    }
+}

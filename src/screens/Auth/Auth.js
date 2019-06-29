@@ -18,12 +18,13 @@ import Register from '../Register/Register';
 import { login } from '../../store/actions/auth';
 import { SET_TRANSITIONED } from '../../store/constants';
 import { getTheme } from '../../utility/theme';
-
+import { insertUserData } from '../../utility/database';
 
 const mapStateToProps = (state) => {
     return {
         isLoading: state.ui.isLoading,
         isLoggedIn: state.auth.isLoggedIn,
+        user: state.auth.user,
         alreadyTransitioned : state.auth.alreadyTransitioned,
         theme: state.settings.theme
     };
@@ -54,19 +55,22 @@ class Auth extends React.Component {
 
     }
 
-    componentDidMount() {
-        this.props.navigator.toggleNavBar({
-            to: 'hidden',
-            animated: false
-        });
-    }
-
     componentDidUpdate() {
 
         /* Condition prevents this lifecycle hook from retriggering itself */
         if (this.props.isLoggedIn && !this.props.alreadyTransitioned) {
-            this.props.setTransition();
-            startMainTabs();
+            const { first, last, id, email, picture, pw } = this.props.user;
+            insertUserData(first, last, email, pw, id, picture)
+            .then(complete => {
+                if (complete) {
+                    this.props.setTransition();
+                    startMainTabs();
+                }
+                else {
+                    alert('Could not save user to database.');
+                }
+            })
+
         }
 
     }
@@ -115,7 +119,7 @@ class Auth extends React.Component {
                 <View style = { styles.topContainer }>
                     <View style={styles.titleContainer}>
                         <MainText>
-                            <HeadingText style={[styles.title, { color : getTheme(this.props.theme, 'text')}]}>Chsime</HeadingText>
+                            <HeadingText style={[styles.title, { color : getTheme(this.props.theme, 'text')}]}>Chime</HeadingText>
                         </MainText>
                     </View>
                     <View style = {styles.button}>

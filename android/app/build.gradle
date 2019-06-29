@@ -147,6 +147,7 @@ dependencies {
 
     compile project(':react-native-image-picker')
     compile project(':react-native-fetch-blob') 
+    implementation project(':react-native-sqlite-storage')
 }
 
 // Run this once to be able to run the application with BUCK

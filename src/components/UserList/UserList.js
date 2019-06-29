@@ -11,7 +11,6 @@ import UserCard from './UserCard';
 import { getList, setDisable } from '../../store/actions/messenger';
 import { CLEAN_MESSAGES } from '../../store/constants';
 
-
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
@@ -34,12 +33,11 @@ class UserList extends React.Component {
     constructor(props) {
         super(props);
         const user = this.props.user;
+        console.log('user list', user);
         this.props.getList({
             id: user.id,
             pw: user.pw
         })
-
-        
     }
 
     
