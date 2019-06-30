@@ -55,7 +55,8 @@ const startTabs = () => {
                 /* Android only */
                 appStyle: {
                     tabBarSelectedButtonColor: 'black'
-                }
+                },
+                animationType: 'fade'
             });
         }
     )

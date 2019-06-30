@@ -34,7 +34,7 @@ Navigation.registerComponent("chime.OtherProfile", () => OtherProfile, store, Pr
 Navigation.startSingleScreenApp({
 
 	screen : {
-		screen: "chime.StartScreen",
-		title : "Login"
-	}
+		screen: "chime.StartScreen"
+	},
+	animationType: 'fade'
 });
