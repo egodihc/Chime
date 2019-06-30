@@ -304,6 +304,7 @@ class MessengerScreen extends React.Component {
                                     fileCode = { message.filecode }
                                     isSent = {isSent}
                                     timestamp = { message.timestamp }
+                                    theme = { this.props.theme}
                                      />
                 });
             }

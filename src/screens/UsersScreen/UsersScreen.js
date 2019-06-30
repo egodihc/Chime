@@ -88,7 +88,7 @@ class UsersScreen extends React.Component {
                 this.props.navigator.push({
                     screen: 'chime.SettingsScreen',
                     title: 'Settings',
-                    animationType: 'slide-horizontal'
+                    animationType: 'fade'
                 })
             }
         }

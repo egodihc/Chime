@@ -25,14 +25,12 @@ class MessageCard extends React.Component {
     }
 
     getDateString = (ts) => {
-        // TODO 
-        // Convert to human readable format
         return epochToReadable(ts);
     }
 
     render() {
 
-        const { targetPic, isSending, message, fileCode, consecutiveMessage, isSent, timestamp } = this.props;
+        const { targetPic, isSending, message, fileCode, consecutiveMessage, isSent, timestamp, theme } = this.props;
         const { showDate } = this.state;
 
         let isNotSent = false;
@@ -43,7 +41,7 @@ class MessageCard extends React.Component {
         let date;
         if (showDate) {
             date = 
-            <Text>
+            <Text style = {{ color: getTheme(theme, 'text')}}>
                 { this.getDateString(timestamp) }
             </Text>
         }
