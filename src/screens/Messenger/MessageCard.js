@@ -50,8 +50,9 @@ class MessageCard extends React.Component {
 
         /* Assume message is normal text */
         let finalMessage =       
-            <TouchableNativeFeedback onPress = {this.toggleDate} >
-                <View style = { (!isSending) ? styles.fullContainer: styles.reverseFullContainer  }>
+        
+            <View style = { (!isSending) ? styles.fullContainer: styles.reverseFullContainer  }>
+                <TouchableNativeFeedback onPress = {this.toggleDate} >
                     <View
                         style = { [ 
                             styles.card, 
@@ -60,13 +61,14 @@ class MessageCard extends React.Component {
                             (isNotSent) ? { opacity: 0.6 } : null
                         ] }
                     >
+                        
                         <Text style = {[ styles.message,(isSending ? { color: 'white'} : { color: 'black' })]}>
                             { message }
                         </Text>
                     </View>
-                    { date }
-                </View>
-            </TouchableNativeFeedback>;
+                </TouchableNativeFeedback>
+                { date }
+            </View>;
         
         /* Check if message is image */
         if (fileCode === 0 || fileCode === 1) {
@@ -106,13 +108,15 @@ export default MessageCard;
 const styles = StyleSheet.create({
     fullContainer: {
         flex:1,
-        flexDirection: 'column',
-        alignItems: 'flex-start'
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
     },
     reverseFullContainer: {
         flex:1,
-        flexDirection: 'column',
-        alignItems: 'flex-end'   
+        flexDirection: 'row-reverse',
+        justifyContent: 'flex-start',
+        alignItems: 'center'   
     },
     container: {
         flexDirection: 'row'
@@ -124,6 +128,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 5,
         marginBottom: 5,
+        marginLeft: 2,
+        marginRight: 2,
         paddingTop: 8,
         paddingBottom: 8,
         paddingRight: 10,
