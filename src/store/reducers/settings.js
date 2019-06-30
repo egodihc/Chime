@@ -1,13 +1,18 @@
-import { CHANGE_THEME } from "../constants";
+import { TOGGLE_THEME, SET_THEME } from "../constants";
 
 const initialState = {
-    theme: 'LIGHT'
+    theme: null
 }
 
 const reducer = (state = initialState, action) => {
 
     switch(action.type) {
-        case CHANGE_THEME: 
+        case SET_THEME:
+            return {
+                ...state,
+                theme: action.payload
+            }
+        case TOGGLE_THEME: 
             return {
                 ...state,
                 theme: (state.theme === 'LIGHT') ? 'DARK' : 'LIGHT'

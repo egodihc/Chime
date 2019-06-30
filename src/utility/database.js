@@ -8,7 +8,7 @@ export const checkUser = () => {
         .then(DB => {
             console.log('Database opened.');
     
-            DB.executeSql('CREATE table IF NOT EXISTS User(First text, Last Text, Email text, Password text, ID Integer, Picture text)')
+            DB.executeSql('CREATE table IF NOT EXISTS User(First text, Last Text, Email text, Password text, ID Integer, Picture text, Theme text)')
             .then(() => {
                 DB.executeSql("SELECT * from User", [])
                 .then(([results]) => {
@@ -35,7 +35,7 @@ export const insertUserData = (first, last, email, password, ID, picture) => {
     
             console.log('Database opened.');
     
-            DB.executeSql(`INSERT INTO User (First, Last, Email, Password, ID, Picture) VALUES("${first}","${last}", "${email}", "${password}", ${ID}, "${picture}")`)
+            DB.executeSql(`INSERT INTO User (First, Last, Email, Password, ID, Picture, Theme) VALUES("${first}","${last}", "${email}", "${password}", ${ID}, "${picture}", "LIGHT")`)
             .then(() => {
                 console.log('User data inserted');
                 resolve(true);
@@ -47,6 +47,27 @@ export const insertUserData = (first, last, email, password, ID, picture) => {
         })
     })
 }
+
+export const saveThemeToDB = (theme) => {
+    return new Promise((resolve, reject) => {
+        SQLite.openDatabase({name: 'userChime.db', location: 'Library'})
+        .then(DB => {
+    
+            console.log('Database opened.');
+    
+            DB.executeSql(`UPDATE User SET Theme = "${theme}"`)
+            .then(() => {
+                console.log('Theme saved.', theme);
+                resolve(true);
+            })
+            .catch((e) => {
+                console.log('Theme could not be saved.', theme);
+                reject(e);
+            });
+        })
+    })
+}
+
 
 export const resetDB = () => {
     return new Promise((resolve, reject) => {

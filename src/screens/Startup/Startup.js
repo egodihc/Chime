@@ -10,13 +10,15 @@ import AuthScreen from '../Auth/Auth';
 import { resetDB, checkUser } from '../../utility/database';
 import { login, loadUser } from '../../store/actions/auth';
 import startMainTabs from '../mainTabs/startMainTabs';
+import { setTheme } from '../../store/actions/settings';
 
 const FLAG = 0;
 
 export const mapDispatchToProps = (dispatch) => {
     return {
         login : (authData) => dispatch(login(authData)),
-        loadUser: (user) => dispatch(loadUser(user))
+        loadUser: (user) => dispatch(loadUser(user)),
+        setTheme: (theme) => dispatch(setTheme(theme))
     }
 }
 
@@ -53,6 +55,7 @@ class StartScreen extends React.Component {
                         email: user.item(0).Email,
                         password: user.item(0).Password
                     })
+                    this.props.setTheme(user.item(0).Theme);
                     this.props.loadUser({
                         email: user.item(0).Email,
                         pw: user.item(0).Password,
@@ -61,7 +64,7 @@ class StartScreen extends React.Component {
                         last: user.item(0).Last,
                         picture: user.item(0).Picture
                     })
-                    startMainTabs();
+                    startMainTabs(user.item(0).Theme);
 
                 }
                 else {

@@ -33,7 +33,7 @@ class UserList extends React.Component {
     constructor(props) {
         super(props);
         const user = this.props.user;
-        console.log('user list', user);
+        console.log('user object', user);
         this.props.getList({
             id: user.id,
             pw: user.pw

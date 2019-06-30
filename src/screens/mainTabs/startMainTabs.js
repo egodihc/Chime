@@ -1,8 +1,9 @@
 import { Navigation } from 'react-native-navigation';
 import { Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { getTheme } from '../../utility/theme';
 
-const startTabs = () => {
+const startTabs = (theme) => {
 
     /* Execute async functions which return the icons and THEN register tabs */
     Promise.all([
@@ -26,7 +27,6 @@ const startTabs = () => {
                                     icon: icons[2],
                                     title: 'Menu',
                                     id: 'settingsToggle'
-
                                 }
                             ]
                         }
@@ -54,7 +54,8 @@ const startTabs = () => {
                 },
                 /* Android only */
                 appStyle: {
-                    tabBarSelectedButtonColor: 'black'
+                    tabBarSelectedButtonColor: 'black',
+                    tabBarBackgroundColor: getTheme(theme, 'bg')
                 },
                 animationType: 'fade'
             });

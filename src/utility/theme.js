@@ -27,7 +27,13 @@ export const getTheme = (theme, type) => {
     else {
         return '#0EBFE9'
     }
+}
 
-    
-    
+export const getToggledTheme = (currentTheme) => {
+    if (currentTheme === 'DARK') {
+        return 'LIGHT';
+    }
+    else {
+        return 'DARK';
+    }
 }

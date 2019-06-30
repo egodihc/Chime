@@ -14,7 +14,8 @@ export const LOAD_MESSAGES = 'LOAD_MESSAGES';
 export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 export const CLEAN_MESSAGES = 'CLEAN_MESSAGES';
 
-export const CHANGE_THEME = 'CHANGE_THEME';
+export const TOGGLE_THEME = 'TOGGLE_THEME';
+export const SET_THEME = 'SET_THEME';
 
 export const GET_PROFILE = 'GET_PROFILE';
 export const LOAD_PROFILE = 'LOAD_PROFILE';

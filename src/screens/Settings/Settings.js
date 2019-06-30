@@ -6,9 +6,11 @@ import {
 } from 'react-native';
 
 import Button from '../../components/UI/Button/Button';
-import { getTheme } from '../../utility/theme';
+import { getTheme, getToggledTheme } from '../../utility/theme';
 
-import { setTheme } from '../../store/actions/settings';
+import { toggleTheme } from '../../store/actions/settings';
+import { saveThemeToDB } from '../../utility/database';
+
 
 
 const mapStateToProps = (state) => {
@@ -19,7 +21,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        toggleTheme : () => dispatch(setTheme())
+        toggleTheme : () => dispatch(toggleTheme())
     }
 }
 
@@ -37,6 +39,7 @@ class SettingsScreen extends React.Component {
         //     navBarButtonColor: getTheme(this.props.theme, 'text'),
         //     navBarBackgroundColor: getTheme(this.props.theme, 'bg')
         // }); 
+        console.log(this.props.theme)
     }
 
     
@@ -59,6 +62,9 @@ class SettingsScreen extends React.Component {
 
     changeTheme = () => {
         this.props.toggleTheme();
+        saveThemeToDB(getToggledTheme(this.props.theme))
+        .then(() => {});
+
     }
 
     render() {
