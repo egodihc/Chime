@@ -64,7 +64,7 @@ class Auth extends React.Component {
             .then(complete => {
                 if (complete) {
                     this.props.setTransition();
-                    startMainTabs();
+                    startMainTabs(this.props.theme);
                 }
                 else {
                     alert('Could not save user to database.');
