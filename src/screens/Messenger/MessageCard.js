@@ -8,6 +8,7 @@ import {
     TouchableNativeFeedback
 } from 'react-native';
 import { getTheme } from '../../utility/theme';
+import { epochToReadable } from '../../utility/date';
 
 
 class MessageCard extends React.Component {
@@ -26,7 +27,7 @@ class MessageCard extends React.Component {
     getDateString = (ts) => {
         // TODO 
         // Convert to human readable format
-        return ts;
+        return epochToReadable(ts);
     }
 
     render() {
