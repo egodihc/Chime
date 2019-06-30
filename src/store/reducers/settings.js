@@ -1,7 +1,7 @@
 import { TOGGLE_THEME, SET_THEME } from "../constants";
 
 const initialState = {
-    theme: null
+    theme: 'LIGHT'
 }
 
 const reducer = (state = initialState, action) => {
