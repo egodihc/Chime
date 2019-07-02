@@ -57,14 +57,6 @@ class Login extends React.Component {
                         minLength: 6
                     },
                     touched: false
-                },
-                confirmPassword: {
-                    value: '',
-                    valid: false,
-                    validationRules: {
-                        equalTo: 'password'
-                    },
-                    touched: false
                 }
             }
         }
@@ -88,7 +80,7 @@ class Login extends React.Component {
     onLogin = () => {
         const authData = {
             email: this.state.controls.email.value,
-            password: this.state.controls.password.value
+            pw: this.state.controls.password.value
         }
         this.props.login(authData);
     }
@@ -98,7 +90,7 @@ class Login extends React.Component {
     skip = () => {
         const authData = {
             email: 'a',
-            password: 'a'
+            pw: 'a'
         }
         this.props.login(authData);
 
@@ -106,6 +98,7 @@ class Login extends React.Component {
 
     
     updateInputState = (key, value) => {
+        
 
         /* If the equalTo rule exists */
         let connectedValue = {};
@@ -129,13 +122,6 @@ class Login extends React.Component {
             return {
                 controls: {
                     ...prevState.controls,
-                    confirmPassword: {
-                        ...prevState.controls.confirmPassword,
-                        valid: key === 'password' ? 
-                            validate(prevState.controls.confirmPassword.value, prevState.controls.confirmPassword.validationRules, connectedValue) 
-                            : 
-                            prevState.controls.confirmPassword.valid
-                    },
                     [key]: {
                         ...prevState.controls[key],
                         value: value,

@@ -3,12 +3,13 @@ SQLite.DEBUG(true);
 SQLite.enablePromise(true);
 
 export const checkUser = () => {
+
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'userChime.db', location: 'Library'})
         .then(DB => {
             console.log('Database opened.');
     
-            DB.executeSql('CREATE table IF NOT EXISTS User(First text, Last Text, Email text, Password text, ID Integer, Picture text, Theme text)')
+            DB.executeSql('CREATE table IF NOT EXISTS User(first TEXT, last TEXT, email TEXT, pw TEXT, id INTEGER, picture TEXT, theme TEXT)')
             .then(() => {
                 DB.executeSql("SELECT * from User", [])
                 .then(([results]) => {
@@ -24,8 +25,37 @@ export const checkUser = () => {
             });
         })
     })
-
 }
+
+
+
+
+export const checkMessages = () => {
+    return new Promise((resolve, reject) => {
+        SQLite.openDatabase({name: 'messagesChime.db', location: 'Library'})
+        .then(DB => {
+            console.log('Database opened.');
+    
+            DB.executeSql('CREATE table IF NOT EXISTS Messages(Message text, Sender integer, Destination integer)')
+            .then(() => {
+                DB.executeSql("SELECT * from Messages", [])
+                .then(([results]) => {
+                    console.log('there', results.rows);
+                    resolve(results.rows);
+                })
+                .catch((e) => {
+                    console.log('Could not fetch messages from DB.');
+                    reject(e);
+                })
+            })
+            .catch(() => {
+                console.log('Could not create message DB.');
+            });
+        })
+    })
+}
+
+
 
 
 export const insertUserData = (first, last, email, password, ID, picture) => {
@@ -35,7 +65,7 @@ export const insertUserData = (first, last, email, password, ID, picture) => {
     
             console.log('Database opened.');
     
-            DB.executeSql(`INSERT INTO User (First, Last, Email, Password, ID, Picture, Theme) VALUES("${first}","${last}", "${email}", "${password}", ${ID}, "${picture}", "LIGHT")`)
+            DB.executeSql(`INSERT INTO User (first, last, email, pw, id, picture, theme) VALUES("${first}","${last}", "${email}", "${password}", ${ID}, "${picture}", "LIGHT")`)
             .then(() => {
                 console.log('User data inserted');
                 resolve(true);
@@ -47,6 +77,7 @@ export const insertUserData = (first, last, email, password, ID, picture) => {
         })
     })
 }
+
 
 export const saveThemeToDB = (theme) => {
     return new Promise((resolve, reject) => {
@@ -88,3 +119,4 @@ export const resetDB = () => {
         })
     })
 }
+

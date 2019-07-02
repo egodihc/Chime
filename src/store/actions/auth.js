@@ -10,7 +10,7 @@ export const login = (authData) => (dispatch) => {
         headers: {'Content-Type' : 'application/json'},
         body: JSON.stringify({
             email: authData.email,
-            pw: authData.password
+            pw: authData.pw
         })
     })
     .catch(err => {
@@ -20,7 +20,6 @@ export const login = (authData) => (dispatch) => {
     })
     .then(res => res.json())
     .then(res => {
-
         if (res.code === 0) {
             dispatch({ 
                 type : SET_LOGGED_IN, 
@@ -28,7 +27,7 @@ export const login = (authData) => (dispatch) => {
                     user : {
                         ...res.user,
                         email: authData.email,
-                        pw: authData.password
+                        pw: authData.pw
                     }
                 } 
             });

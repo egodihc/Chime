@@ -11,6 +11,8 @@ import { resetDB, checkUser } from '../../utility/database';
 import { login, loadUser } from '../../store/actions/auth';
 import startMainTabs from '../mainTabs/startMainTabs';
 import { setTheme } from '../../store/actions/settings';
+import { checkContacts } from '../../utility/contactsDatabase';
+import { loadList } from '../../store/actions/messenger';
 
 const FLAG = 0;
 
@@ -18,9 +20,12 @@ export const mapDispatchToProps = (dispatch) => {
     return {
         login : (authData) => dispatch(login(authData)),
         loadUser: (user) => dispatch(loadUser(user)),
-        setTheme: (theme) => dispatch(setTheme(theme))
+        setTheme: (theme) => dispatch(setTheme(theme)),
+        loadList: (list) => dispatch(loadList(list))
     }
+    
 }
+
 
 class StartScreen extends React.Component {
 
@@ -44,40 +49,40 @@ class StartScreen extends React.Component {
         });
 
         if (FLAG === 0) {
-
             checkUser()
             .then(user => {
                 if (user.length !== 0) {
-                    // TODO
-                    // Login
-                    console.log(user.item(0));
-                    this.props.login({
-                        email: user.item(0).Email,
-                        password: user.item(0).Password
-                    })
-                    this.props.setTheme(user.item(0).Theme);
-                    this.props.loadUser({
-                        email: user.item(0).Email,
-                        pw: user.item(0).Password,
-                        id: user.item(0).ID,
-                        first: user.item(0).First,
-                        last: user.item(0).Last,
-                        picture: user.item(0).Picture
-                    })
-                    startMainTabs(user.item(0).Theme);
+                    checkContacts()
+                    .then(contacts => {
 
+                        this.props.login({ ...user.item(0) });
+                        this.props.loadUser({ ...user.item(0) });
+                        this.props.setTheme(user.item(0).theme);
+
+                        const list = this.constructList(contacts);
+                        this.props.loadList(list);
+
+                        startMainTabs(user.item(0).theme);
+                    });
                 }
                 else {
                     this.showAuthScreen();
                 }
             })
-            
         }
         else {
             resetDB();
         }
     }
 
+    constructList = (contacts) => {
+        const list = [];
+        for (let i = 0;i < contacts.length; i++) {
+            const user = contacts.item(i);
+            list.push({ ...user });
+        }
+        return list;
+    }
 
     render() {
 

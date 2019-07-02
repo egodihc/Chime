@@ -7,7 +7,6 @@ export const toggleTheme = () => {
 }
 
 export const setTheme = (theme) => {
-    console.log('theme set in action to ', theme)
     return {
         type: SET_THEME,
         payload: theme
