@@ -9,9 +9,7 @@ import Button from '../../components/UI/Button/Button';
 import { getTheme, getToggledTheme } from '../../utility/theme';
 
 import { toggleTheme } from '../../store/actions/settings';
-import { saveThemeToDB } from '../../utility/database';
-
-
+import { saveThemeToDB } from '../../utility/userDatabase';
 
 const mapStateToProps = (state) => {
     return {

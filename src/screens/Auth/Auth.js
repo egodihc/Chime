@@ -12,13 +12,16 @@ import {
 import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import MainText from '../../components/UI/MainText/MainText';
 import Button from '../../components/UI/Button/Button';
-import startMainTabs from '../mainTabs/startMainTabs';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
+
+import startMainTabs from '../mainTabs/startMainTabs';
+import { getTheme } from '../../utility/theme';
+
 import { login } from '../../store/actions/auth';
 import { SET_TRANSITIONED } from '../../store/constants';
-import { getTheme } from '../../utility/theme';
-import { insertUserData } from '../../utility/database';
+import { insertUserData } from '../../utility/userDatabase';
+
 
 const mapStateToProps = (state) => {
     return {

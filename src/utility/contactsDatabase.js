@@ -1,31 +1,24 @@
 import SQLite from "react-native-sqlite-storage";
-SQLite.DEBUG(true);
-SQLite.enablePromise(true);
 
-
-export const checkContacts = () => {
+export const getContacts = () => {
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'contactsChime.db', location: 'Library'})
         .then(DB => {
-            console.log('Database opened.');
-    
-            DB.executeSql('CREATE TABLE IF NOT EXISTS Contacts(first TEXT, last TEXT, id INTEGER, lastSeen TEXT, picture TEXT)')
-            .then(() => {
-                DB.executeSql("SELECT * from Contacts", [])
-                .then(([results]) => {
-                    resolve(results.rows);
-                })
-                .catch((e) => {
-                    console.log('Could not fetch contacts from DB.');
-                    reject(e);
-                })
+            DB.executeSql("SELECT * from Contacts", [])
+            .then(([results]) => {
+                resolve(results.rows);
             })
-            .catch(() => {
-                console.log('Could not create contacts DB.');
-            });
+            .catch((e) => {
+                console.log('Could not fetch contacts from DB.');
+                reject(e);
+            })
         })
+        .catch(() => {
+            console.log('Could not open contacts DB.');
+        });
     })
 }
+
 
 export const insertContactData = (first, last, id, lastSeen, picture) => {
 
@@ -33,7 +26,6 @@ export const insertContactData = (first, last, id, lastSeen, picture) => {
         SQLite.openDatabase({name: 'contactsChime.db', location: 'Library'})
         .then(DB => {
     
-            console.log('Database opened.');
             DB.executeSql(`SELECT * FROM CONTACTS WHERE id = ${id}`)
             .then(([results]) => {
                 if (results.rows.length === 0) {

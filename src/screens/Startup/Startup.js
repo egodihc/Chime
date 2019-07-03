@@ -1,18 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import AuthScreen from '../Auth/Auth';
 import { 
     View,
     StyleSheet
 } from 'react-native';
 
-import AuthScreen from '../Auth/Auth';
-import { resetDB, checkUser } from '../../utility/database';
 import { login, loadUser } from '../../store/actions/auth';
-import startMainTabs from '../mainTabs/startMainTabs';
-import { setTheme } from '../../store/actions/settings';
-import { checkContacts } from '../../utility/contactsDatabase';
 import { loadList } from '../../store/actions/messenger';
+import { setTheme } from '../../store/actions/settings';
+
+import startMainTabs from '../mainTabs/startMainTabs';
+
+import { resetDB, initDB } from '../../utility/database';
+import { getContacts } from '../../utility/contactsDatabase';
+import { getUser } from '../../utility/userDatabase';
 
 const FLAG = 0;
 
@@ -23,9 +25,7 @@ export const mapDispatchToProps = (dispatch) => {
         setTheme: (theme) => dispatch(setTheme(theme)),
         loadList: (list) => dispatch(loadList(list))
     }
-    
 }
-
 
 class StartScreen extends React.Component {
 
@@ -36,7 +36,7 @@ class StartScreen extends React.Component {
             showAuth: false
         }
     }
-
+    
     showAuthScreen = () => {
         this.setState({ showAuth : true });
     }
@@ -49,29 +49,43 @@ class StartScreen extends React.Component {
         });
 
         if (FLAG === 0) {
-            checkUser()
-            .then(user => {
-                if (user.length !== 0) {
-                    checkContacts()
-                    .then(contacts => {
-
-                        this.props.login({ ...user.item(0) });
-                        this.props.loadUser({ ...user.item(0) });
-                        this.props.setTheme(user.item(0).theme);
-
-                        const list = this.constructList(contacts);
-                        this.props.loadList(list);
-
-                        startMainTabs(user.item(0).theme);
-                    });
-                }
-                else {
-                    this.showAuthScreen();
-                }
+            initDB()
+            .then(complete => {
+                getUser()
+                .then(user => {
+                    if (user) {
+                        getContacts()
+                        .then(contacts => {
+                            console.log('contacts are', contacts);
+                            this.props.login({ ...user });
+                            this.props.loadUser({ ...user });
+                            this.props.setTheme(user.theme);
+    
+                            const list = this.constructList(contacts);
+                            this.props.loadList(list);
+    
+                            startMainTabs(user.theme);
+                        });
+                    }
+                    else {
+                        this.showAuthScreen();
+                    }
+                })
             })
+            .catch(() => {
+                alert('Something went wrong, please restart the application');
+            })
+
+
         }
         else {
-            resetDB();
+            resetDB()
+            .then(() => {
+                alert(`Application reset mode : ON`);
+            })
+            .catch(() => {
+                alert('Application already reset');
+            })
         }
     }
 

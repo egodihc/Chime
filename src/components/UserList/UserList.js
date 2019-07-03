@@ -12,6 +12,7 @@ import { getList, setDisable } from '../../store/actions/messenger';
 import { CLEAN_MESSAGES } from '../../store/constants';
 import { insertContactData } from '../../utility/contactsDatabase';
 
+
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
@@ -34,7 +35,6 @@ class UserList extends React.Component {
     constructor(props) {
         super(props);
         const user = this.props.user;
-        console.log('user object', user);
         this.props.getList({
             id: user.id,
             pw: user.pw
@@ -45,6 +45,7 @@ class UserList extends React.Component {
         const { list } = this.props;
         if (list.length > 0) {
             for (let i = 0; i < list.length; i++) {
+                console.log(i, list[i]);
                 const { first, last, id, lastSeen, picture } = list[i];
                 insertContactData(first, last, id, lastSeen, picture)
                 .then();
