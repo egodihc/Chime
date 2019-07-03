@@ -13,6 +13,7 @@ import MainText from '../../components/UI/MainText/MainText';
 import { getTheme } from '../../utility/theme';
 import { getProfile } from '../../store/actions/profile';
 import { Navigation } from 'react-native-navigation';
+import { navigationButtonPressed, updateStyles } from '../NavigationUtility/navigationUtility';
 
 const mapStateToProps = (state) => {
     return {
@@ -31,13 +32,6 @@ const mapDispatchToProps = (dispatch) => {
 
 class ProfileScreen extends React.Component {
 
-
-    // static navigatorStyle = {
-    //     tabBarButtonColor: getTheme(null,null),
-    //     tabBarSelectedButtonColor: getTheme(null,null),
-    //     forceTitlesDisplay: true
-    // }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -46,12 +40,13 @@ class ProfileScreen extends React.Component {
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
         Dimensions.addEventListener('change',this.updateDimensions);
-        // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        this.navigationEventListener = Navigation.events().bindComponent(this, "ProfileScreen");
     }
 
     componentDidMount() {
 
         this.updateStyles();
+
         /* Call fetch profile API */
         this.props.getProfile(this.props.user.id);
     }
@@ -79,6 +74,17 @@ class ProfileScreen extends React.Component {
         }
     }
 
+    componentDidAppear() {
+        if (!this.state.profileLoaded) {
+            this.props.getProfile(this.props.user.id);
+        }
+        this.updateStyles();
+    }
+
+    updateStyles = () => {
+        updateStyles("ProfileScreen", this.props.theme);
+    }
+
     updateDimensions = (dims) => {
         this.setState({
             viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
@@ -87,31 +93,15 @@ class ProfileScreen extends React.Component {
     
     componentWillUnmount = () => {
         Dimensions.removeEventListener('change',this.updateDimensions);
+        if (this.navigationEventListener) {
+            this.navigationEventListener.remove();
+        }
     }
 
-
-    updateStyles = () => {
-        Navigation.mergeOptions("ProfileScreen", {
-            topBar: {
-                background: {
-                    color: getTheme(this.props.theme, 'bg')
-                },
-                title: {
-                    color: getTheme(this.props.theme, 'text')
-                }
-            },
-            bottomTabs: {
-                backgroundColor: getTheme(this.props.theme, 'bg'),
-
-            },
-            bottomTab: {
-                iconColor: getTheme(this.props.theme, 'text'),
-                textColor: getTheme(this.props.theme, 'text'),
-                selectedIconColor: getTheme(this.props.theme, 'text'),
-                selectedTextColor: getTheme(this.props.theme, 'text')
-            }
-        });
+    navigationButtonPressed = ({ buttonId }) => {
+        navigationButtonPressed(buttonId, "ProfileScreen")
     }
+
 
     render() {
         if (this.state.profile === null) {

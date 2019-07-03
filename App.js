@@ -12,6 +12,8 @@ import MessengerScreen from './src/screens/Messenger/MessengerScreen';
 import SettingsScreen from './src/screens/Settings/Settings';
 import OtherProfile from './src/screens/OtherProfile/OtherProfile';
 import StartScreen from './src/screens/Startup/Startup';
+import SideDrawer from './src/screens/SideDrawer/SideDrawer';
+
 
 
 const store = configureStore();
@@ -62,6 +64,13 @@ Navigation.registerComponent("chime.OtherProfile", () => (props) => (
 		<OtherProfile />
 	</Provider>
 ), () => OtherProfile);
+
+Navigation.registerComponent("chime.SideDrawer", () => (props) => (
+	<Provider store = {store}>
+		<SideDrawer />
+	</Provider>
+), () => SideDrawer);
+
 
 
 // Navigation.registerComponent("chime.AuthScreen", () => AuthScreen, store, Provider);

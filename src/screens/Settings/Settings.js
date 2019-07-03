@@ -10,6 +10,7 @@ import { getTheme, getToggledTheme } from '../../utility/theme';
 
 import { toggleTheme } from '../../store/actions/settings';
 import { saveThemeToDB } from '../../utility/userDatabase';
+import { updateStyles } from '../NavigationUtility/navigationUtility';
 
 const mapStateToProps = (state) => {
     return {
@@ -28,42 +29,24 @@ class SettingsScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        // this.props.navigator.setStyle({
-        //     navBarTextColor: getTheme(this.props.theme, 'text'),
-        //     navBarButtonColor: getTheme(this.props.theme, 'text'),
-        //     navBarBackgroundColor: getTheme(this.props.theme, 'bg')
-        // }); 
-        console.log(this.props.theme)
     }
 
-    
-    // componentDidMount() {
-    //     this.updateStyles();
-    // }
+    componentDidMount() {
+        updateStyles("SettingsScreen", this.props.theme);
+    }
 
-    // componentDidUpdate() {
-    //     this.updateStyles();
-    // }
-
-    // updateStyles = () => {
-    //     this.props.navigator.setStyle({
-    //         navBarTextColor: getTheme(this.props.theme, 'text'),
-    //         navBarButtonColor: getTheme(this.props.theme, 'text'),
-    //         navBarBackgroundColor: getTheme(this.props.theme, 'bg')
-    //     }); 
-    // }
-
+    componentDidUpdate() {
+        updateStyles("SettingsScreen", this.props.theme);
+    }
 
     changeTheme = () => {
         this.props.toggleTheme();
         saveThemeToDB(getToggledTheme(this.props.theme))
-        .then(() => {});
-
+        .then(() => { updateStyles("SettingsScreen", this.props.theme);});
     }
 
     render() {
-
+        updateStyles("SettingsScreen", this.props.theme);
         return (
             <View style = {[styles.container, { backgroundColor : getTheme(this.props.theme,'bg')}]}>
                 <View style={styles.titleContainer}>

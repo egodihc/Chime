@@ -10,6 +10,7 @@ import {
 
 import UserList from '../../components/UserList/UserList';
 import { getTheme } from '../../utility/theme';
+import { navigationButtonPressed, updateStyles } from '../NavigationUtility/navigationUtility';
 
 
 const mapStateToProps = (state) => {
@@ -20,15 +21,9 @@ const mapStateToProps = (state) => {
 
 class UsersScreen extends React.Component {
 
-    // static navigatorStyle = {
-    //     tabBarButtonColor: getTheme(null,null),
-    //     tabBarSelectedButtonColor: getTheme(null,null),
-    //     forceTitlesDisplay: true
-    // }
-
     constructor(props) {
         super(props);
-        // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        this.navigationEventListener = Navigation.events().bindComponent(this, "UsersScreen");
     }
 
     componentDidMount() {
@@ -39,27 +34,22 @@ class UsersScreen extends React.Component {
         this.updateStyles();
     }
 
-    updateStyles = () => {
-        Navigation.mergeOptions("UsersScreen", {
-            topBar: {
-                background: {
-                    color: getTheme(this.props.theme, 'bg')
-                },
-                title: {
-                    color: getTheme(this.props.theme, 'text')
-                }
-            },
-            bottomTabs: {
-                backgroundColor: getTheme(this.props.theme, 'bg'),
+    componentDidAppear() {
+        this.updateStyles();
+    }
 
-            },
-            bottomTab: {
-                iconColor: getTheme(this.props.theme, 'text'),
-                textColor: getTheme(this.props.theme, 'text'),
-                selectedIconColor: getTheme(this.props.theme, 'text'),
-                selectedTextColor: getTheme(this.props.theme, 'text')
-            }
-        });
+    updateStyles = () => {
+        updateStyles("UsersScreen", this.props.theme);
+    }
+
+    componentWillUnmount() {
+        if (this.navigationEventListener) {
+            this.navigationEventListener.remove();
+        }
+    }
+
+    navigationButtonPressed = ({ buttonId }) => {
+        navigationButtonPressed(buttonId, "UsersScreen");
     }
 
 
@@ -72,7 +62,7 @@ class UsersScreen extends React.Component {
         ])
         .then(
             (icon) => {
-                Navigation.push("MessengerStack", {
+                Navigation.push("TabsStack", {
                     component: {
                         id: "MessengerID",
                         name: 'chime.MessengerScreen',
@@ -86,17 +76,6 @@ class UsersScreen extends React.Component {
                                     text: `${user.first} ${user.last}`
                                 }
                             }
-                            // navigatorButtons: {
-                            //     leftButtons: [{
-                            //         icon: icon[0],
-                            //         id: 'backPress',
-                            //         buttonColor: getTheme(this.props.theme, 'text')
-                            //     }],
-                            //     rightButtons: [{
-                            //         icon: { uri :user.picture },
-                            //         id: 'viewProfile'
-                            //     }] 
-                            // }
                         }
                     }
                 })

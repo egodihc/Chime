@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { 
     View,
     StyleSheet,
@@ -14,15 +15,16 @@ import {
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 
+import OtherProfile from '../OtherProfile/OtherProfile';
+
 import MessageCard from './MessageCard';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 import { getTheme } from '../../utility/theme';
-
 import { getMessages, sendMessage, clearDisable } from '../../store/actions/messenger';
 import { CLEAR_MESSAGES } from '../../store/constants';
-import OtherProfile from '../OtherProfile/OtherProfile';
+
+import { updateStyles } from '../NavigationUtility/navigationUtility';
 
 
 const mapStateToProps = (state) => {
@@ -76,29 +78,31 @@ class MessengerScreen extends React.Component {
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
         
-        Dimensions.addEventListener('change',this.updateStyles);
+        Dimensions.addEventListener('change',this.updateDimensions);
     }
 
     
     componentDidMount() {
-    
         this.props.getMessages(this.state.config);
+        this.updateStyles();
     }
 
     
     componentWillUnmount() {
         this.props.clearDisable();
-        Dimensions.removeEventListener('change',this.updateStyles);
+        Dimensions.removeEventListener('change',this.updateDimensions);
     }
 
 
-    updateStyles = (dims) => {
+    updateDimensions = (dims) => {
         this.setState({
             viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
-        })
+        });
     }
 
-
+    updateStyles = () => {
+        updateStyles("MessengerScreen", this.props.theme);
+    }
 
     componentDidUpdate() {
 
@@ -186,7 +190,7 @@ class MessengerScreen extends React.Component {
                     messageField: null
                 }
             });
-            // this.scrollView.scrollToEnd({animated: true});
+            this.scrollView.scrollToEnd({animated: true});
         }
 
     }
@@ -234,7 +238,7 @@ class MessengerScreen extends React.Component {
 
     render() {
         
-
+        this.updateStyles();
         const { target, messages, user, isLoading } = this.props;
 
         if (this.state.firstLoad) {

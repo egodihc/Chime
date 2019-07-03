@@ -1,6 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 import { Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { getTheme } from '../../utility/theme';
 
 const startTabs = (theme) => {
 
@@ -14,57 +15,95 @@ const startTabs = (theme) => {
         (icons) => {
             Navigation.setRoot({
                 root: {
-                    bottomTabs: {
-                        id: "BottomTabs",
-                        children: [{
-                            stack: {
-                                id: "MessengerStack",
-                                children: [{
-                                    component: {
-                                        id: "UsersScreen",
-                                        name: "chime.UsersScreen",
-                                        options: {
-                                            bottomTab: {
-                                                icon: icons[0],
-                                                text: "Messenger"
-                                            }
-                                        }
-                                    }
-                                }],
-                                options: {
-                                    topBar: {
-                                        title: {
-                                            text: "Messenger"
-                                        }
-                                    }
-                                }
+                    sideMenu: {
+                        left: {
+                            component: {
+                                id: "Drawer",
+                                name: "chime.SideDrawer"
                             }
                         },
-                        {
+                        center: {
                             stack: {
-                                id: "ProfileStack",
+                                id: "TabsStack",
                                 children: [{
-                                    component: {
-                                        id: "ProfileScreen",
-                                        name: "chime.ProfileScreen",
-                                        options: {
-                                            bottomTab: {
-                                                icon: icons[1],
-                                                text: "Profile"
+                                    bottomTabs: {
+                                        id: "BottomTabs",
+                                        children: [{
+                                            stack: {
+                                                id: "MessengerStack",
+                                                children: [{
+                                                    component: {
+                                                        id: "UsersScreen",
+                                                        name: "chime.UsersScreen",
+                                                        options: {
+                                                            bottomTab: {
+                                                                icon: icons[0],
+                                                                text: "Messenger"
+                                                            },
+                                                        }
+                                                    }
+                                                }],
+                                                options: {
+                                                    topBar: {
+                                                        title: {
+                                                            text: "Messenger",
+                                                            color: getTheme(theme, 'text')
+                                                        },
+                                                        background: {
+                                                            color: getTheme(theme, 'bg')
+                                                        },
+                                                        leftButtons: [
+                                                            {
+                                                                icon: icons[2],
+                                                                title: 'Menu',
+                                                                id: 'sideDrawerToggle'
+                                                            }
+                                                        ],
+                                                        leftButtonColor: getTheme(theme, null)
+                                                    }
+                                                }
                                             }
-                                        }
+                                        },
+                                        {
+                                            stack: {
+                                                id: "ProfileStack",
+                                                children: [{
+                                                    component: {
+                                                        id: "ProfileScreen",
+                                                        name: "chime.ProfileScreen",
+                                                        options: {
+                                                            bottomTab: {
+                                                                icon: icons[1],
+                                                                text: "Profile"
+                                                            }
+                                                        }
+                                                    }
+                                                }],
+                                                options: {
+                                                    topBar: {
+                                                        title: {
+                                                            text: "My Profile",
+                                                            color: getTheme(theme, 'text')
+                                                        },
+                                                        background: {
+                                                            color: getTheme(theme, 'bg')
+                                                        },
+                                                        leftButtons: [
+                                                            {
+                                                                icon: icons[2],
+                                                                title: 'Menu',
+                                                                id: 'sideDrawerToggle'
+                                                            }
+                                                        ],
+                                                        leftButtonColor: getTheme(theme, null)
+                                                    }
+                                                }
+                                            }
+                                        }]
                                     }
-                                }],
-                                options: {
-                                    topBar: {
-                                        title: {
-                                            text: "My Profile"
-                                        }
-                                    }
-                                }
+                                }]
                             }
-
-                        }]
+                        }
                     }
                 }
             });
