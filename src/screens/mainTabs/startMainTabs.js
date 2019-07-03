@@ -1,7 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 import { Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { getTheme } from '../../utility/theme';
 
 const startTabs = (theme) => {
 
@@ -13,56 +12,69 @@ const startTabs = (theme) => {
     ])
     .then(
         (icons) => {
-            Navigation.startTabBasedApp({
-
-                tabs: [
-                    {
-                        screen: "chime.UsersScreen",
-                        label: "Messenger",
-                        title: "Messenger",
-                        icon: icons[0],
-                        navigatorButtons: {
-                            leftButtons: [
-                                {
-                                    icon: icons[2],
-                                    title: 'Menu',
-                                    id: 'settingsToggle'
+            Navigation.setRoot({
+                root: {
+                    bottomTabs: {
+                        id: "BottomTabs",
+                        children: [{
+                            stack: {
+                                id: "MessengerStack",
+                                children: [{
+                                    component: {
+                                        id: "UsersScreen",
+                                        name: "chime.UsersScreen",
+                                        options: {
+                                            bottomTab: {
+                                                icon: icons[0],
+                                                text: "Messenger"
+                                            }
+                                        }
+                                    }
+                                }],
+                                options: {
+                                    topBar: {
+                                        title: {
+                                            text: "Messenger"
+                                        }
+                                    }
                                 }
-                            ]
-                        }
-                    },
-                    {
-                        screen: "chime.ProfileScreen",
-                        label: "My Profile",
-                        title: "My Profile",
-                        icon: icons[1],
-                        navigatorButtons: {
-                            leftButtons: [
-                                {
-                                    icon: icons[2],
-                                    title: 'Menu',
-                                    id: 'settingsToggle'
-
+                            }
+                        },
+                        {
+                            stack: {
+                                id: "ProfileStack",
+                                children: [{
+                                    component: {
+                                        id: "ProfileScreen",
+                                        name: "chime.ProfileScreen",
+                                        options: {
+                                            bottomTab: {
+                                                icon: icons[1],
+                                                text: "Profile"
+                                            }
+                                        }
+                                    }
+                                }],
+                                options: {
+                                    topBar: {
+                                        title: {
+                                            text: "My Profile"
+                                        }
+                                    }
                                 }
-                            ]
-                        }
+                            }
+
+                        }]
                     }
-                ],
-                /* IOS only */
-                tabsStyle: {
-                    tabBarSelectedButtonColor: 'black'
-                },
-                /* Android only */
-                appStyle: {
-                    tabBarSelectedButtonColor: 'black',
-                    tabBarBackgroundColor: getTheme(theme, 'bg')
-                },
-                animationType: 'fade'
+                }
             });
         }
     )
 
 }
+
+
+
 
 
 export default startTabs;

@@ -54,7 +54,7 @@ class Auth extends React.Component {
             authMode: 'login'
         }
 
-        Dimensions.addEventListener('change',this.updateStyles);
+        // Dimensions.addEventListener('change',this.updateStyles);
 
     }
 
@@ -73,7 +73,6 @@ class Auth extends React.Component {
                     alert('Could not save user to database.');
                 }
             })
-
         }
 
     }

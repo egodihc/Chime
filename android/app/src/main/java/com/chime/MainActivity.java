@@ -1,10 +1,10 @@
 package com.chime;
 
-import com.reactnativenavigation.controllers.SplashActivity;
+import com.reactnativenavigation.NavigationActivity;
 import com.imagepicker.permissions.OnImagePickerPermissionsCallback;
 import com.facebook.react.modules.core.PermissionListener;
 
-public class MainActivity extends com.reactnativenavigation.controllers.SplashActivity implements OnImagePickerPermissionsCallback {
+public class MainActivity extends NavigationActivity implements OnImagePickerPermissionsCallback {
 
     /**
      * Returns the name of the main component registered from JavaScript.

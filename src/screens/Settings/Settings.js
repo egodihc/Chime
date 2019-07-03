@@ -25,9 +25,6 @@ const mapDispatchToProps = (dispatch) => {
 
 class SettingsScreen extends React.Component {
 
-    static navigatorStyle = {
-        tabBarHidden: true
-    }
 
     constructor(props) {
         super(props);

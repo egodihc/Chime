@@ -1,14 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import { 
     View,
     StyleSheet
 } from 'react-native';
+
 import UserList from '../../components/UserList/UserList';
-import Settings from '../Settings/Settings';
 import { getTheme } from '../../utility/theme';
-import Icon from 'react-native-vector-icons/Ionicons';
+
 
 const mapStateToProps = (state) => {
     return {
@@ -18,15 +20,15 @@ const mapStateToProps = (state) => {
 
 class UsersScreen extends React.Component {
 
-    static navigatorStyle = {
-        tabBarButtonColor: getTheme(null,null),
-        tabBarSelectedButtonColor: getTheme(null,null),
-        forceTitlesDisplay: true
-    }
+    // static navigatorStyle = {
+    //     tabBarButtonColor: getTheme(null,null),
+    //     tabBarSelectedButtonColor: getTheme(null,null),
+    //     forceTitlesDisplay: true
+    // }
 
     constructor(props) {
         super(props);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     componentDidMount() {
@@ -38,12 +40,26 @@ class UsersScreen extends React.Component {
     }
 
     updateStyles = () => {
-        this.props.navigator.setStyle({
-            navBarTextColor: getTheme(this.props.theme, 'text'),
-            navBarButtonColor: getTheme(this.props.theme, 'text'),
-            navBarBackgroundColor: getTheme(this.props.theme, 'bg'),
-            tabBarBackgroundColor: getTheme(this.props.theme, 'bg')
-        }); 
+        Navigation.mergeOptions("UsersScreen", {
+            topBar: {
+                background: {
+                    color: getTheme(this.props.theme, 'bg')
+                },
+                title: {
+                    color: getTheme(this.props.theme, 'text')
+                }
+            },
+            bottomTabs: {
+                backgroundColor: getTheme(this.props.theme, 'bg'),
+
+            },
+            bottomTab: {
+                iconColor: getTheme(this.props.theme, 'text'),
+                textColor: getTheme(this.props.theme, 'text'),
+                selectedIconColor: getTheme(this.props.theme, 'text'),
+                selectedTextColor: getTheme(this.props.theme, 'text')
+            }
+        });
     }
 
 
@@ -56,24 +72,32 @@ class UsersScreen extends React.Component {
         ])
         .then(
             (icon) => {
-                this.props.navigator.push({
-                    screen: 'chime.MessengerScreen',
-                    title: `${user.first} ${user.last}`,
-                    passProps: {
-                        target: user,
-                        isGroup: false
-                    },
-                    overrideBackPress: true,
-                    navigatorButtons: {
-                        leftButtons: [{
-                            icon: icon[0],
-                            id: 'backPress',
-                            buttonColor: getTheme(this.props.theme, 'text')
-                        }],
-                        rightButtons: [{
-                            icon: { uri :user.picture },
-                            id: 'viewProfile'
-                        }] 
+                Navigation.push("MessengerStack", {
+                    component: {
+                        id: "MessengerID",
+                        name: 'chime.MessengerScreen',
+                        passProps: {
+                            target: user,
+                            isGroup: false
+                        },
+                        options: {
+                            topBar: {
+                                title: {
+                                    text: `${user.first} ${user.last}`
+                                }
+                            }
+                            // navigatorButtons: {
+                            //     leftButtons: [{
+                            //         icon: icon[0],
+                            //         id: 'backPress',
+                            //         buttonColor: getTheme(this.props.theme, 'text')
+                            //     }],
+                            //     rightButtons: [{
+                            //         icon: { uri :user.picture },
+                            //         id: 'viewProfile'
+                            //     }] 
+                            // }
+                        }
                     }
                 })
             }
@@ -82,25 +106,12 @@ class UsersScreen extends React.Component {
     }
 
 
-    onNavigatorEvent = (event) => {
-        if (event.type === 'NavBarButtonPress') {
-            if (event.id === 'settingsToggle') {
-                this.props.navigator.push({
-                    screen: 'chime.SettingsScreen',
-                    title: 'Settings',
-                    animationType: 'fade'
-                })
-            }
-        }
-    }
-
-
     render() {
         return (
             
             <View style = {[styles.container, { backgroundColor : getTheme(this.props.theme, 'bg')}]}>
                 <UserList onSelectUser = {this.onSelectUser}/>
-                <Settings></Settings>
+                {/* <Settings></Settings> */}
             </View>
         )
     }

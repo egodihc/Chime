@@ -47,8 +47,15 @@ const mapDispatchToProps = (dispatch) => {
 
 class MessengerScreen extends React.Component {
 
-    static navigatorStyle = {
-        tabBarHidden: true
+
+    static options(passProps) {
+        return {
+            bottomTabs: {
+                visible: false,
+                drawBehind: true,
+                animate: false
+            }
+        };
     }
 
     constructor(props) {
@@ -68,18 +75,13 @@ class MessengerScreen extends React.Component {
             mode: 'messenger',
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
+        
         Dimensions.addEventListener('change',this.updateStyles);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     
     componentDidMount() {
-        
-        this.props.navigator.setStyle({
-            navBarTextColor: getTheme(this.props.theme, 'text'),
-            navBarBackgroundColor: getTheme(this.props.theme, 'bg')
-        }); 
-
+    
         this.props.getMessages(this.state.config);
     }
 
@@ -118,32 +120,6 @@ class MessengerScreen extends React.Component {
 
     }
 
-    
-    onNavigatorEvent = (event) => {
-        if (event.type === 'NavBarButtonPress') {
-            if (event.id === 'viewProfile') {
-                this.setState(prevState => {
-                    return {
-                        ...prevState,
-                        mode: 'profile'
-                    }
-                })
-            }
-            else if (event.id === 'backPress') {
-                if (this.state.mode === 'messenger') {
-                    this.props.navigator.pop();
-                }
-                else {
-                    this.setState(prevState => {
-                        return {
-                            ...prevState,
-                            mode: 'messenger'
-                        }
-                    })
-                }
-            }
-        }
-    }
 
     onBacktoMessengerMode = () => {
         this.setState(prevState => {
@@ -210,7 +186,7 @@ class MessengerScreen extends React.Component {
                     messageField: null
                 }
             });
-            this.scrollView.scrollToEnd({animated: true});
+            // this.scrollView.scrollToEnd({animated: true});
         }
 
     }
@@ -317,13 +293,13 @@ class MessengerScreen extends React.Component {
 
         }
 
-        if (this.state.mode === 'messenger') {
+        if (true) {
             return (
                 
                 
                 <View style = {[styles.container, { backgroundColor : getTheme(this.props.theme, 'bg')}]}>
 
-                    {/* Message list section  */}
+                    {/* Message list section */}
                     <ScrollView style = {styles.scrollView}
                         ref = {ref => this.scrollView = ref}
                         onContentSizeChange={(contentWidth, contentHeight)=>{        
@@ -353,7 +329,7 @@ class MessengerScreen extends React.Component {
                                 <Icon name = { 'md-send' } color = { getTheme(this.props.theme, null) } size = {30}/>
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </View> 
     
                 </View>
             )

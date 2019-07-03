@@ -36,6 +36,16 @@ class StartScreen extends React.Component {
             showAuth: false
         }
     }
+
+    static options(passProps) {
+        return {
+            topBar: {
+                visible: false,
+                drawBehind: true,
+                animate: false
+            }
+        };
+    }
     
     showAuthScreen = () => {
         this.setState({ showAuth : true });
@@ -43,10 +53,6 @@ class StartScreen extends React.Component {
 
     componentDidMount() {
 
-        this.props.navigator.toggleNavBar({
-            to: 'hidden',
-            animated: false
-        });
 
         if (FLAG === 0) {
             initDB()
@@ -56,7 +62,6 @@ class StartScreen extends React.Component {
                     if (user) {
                         getContacts()
                         .then(contacts => {
-                            console.log('contacts are', contacts);
                             this.props.login({ ...user });
                             this.props.loadUser({ ...user });
                             this.props.setTheme(user.theme);

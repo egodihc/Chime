@@ -1,6 +1,7 @@
+import React from 'react';
+
 import { Navigation } from 'react-native-navigation';
 import { Provider } from 'react-redux';
-
 import configureStore from './src/store/configureStore';
 
 
@@ -19,22 +20,70 @@ const store = configureStore();
 // Navigation.registerComponent("chime.ProfileButton", () => ProfileButton);
 
 /* Register screens */
-Navigation.registerComponent("chime.StartScreen", () => StartScreen, store, Provider);
-Navigation.registerComponent("chime.AuthScreen", () => AuthScreen, store, Provider);
-Navigation.registerComponent("chime.UsersScreen", () => UsersScreen, store, Provider);
-Navigation.registerComponent("chime.ProfileScreen", () => ProfileScreen, store, Provider);
-Navigation.registerComponent("chime.MessengerScreen", () => MessengerScreen, store, Provider);
-Navigation.registerComponent("chime.SettingsScreen", () => SettingsScreen, store, Provider);
-Navigation.registerComponent("chime.OtherProfile", () => OtherProfile, store, Provider);
+Navigation.registerComponent("chime.StartScreen", () => (props) => (
+	<Provider store = {store}>
+		<StartScreen />
+	</Provider>
+), () => StartScreen);
+
+Navigation.registerComponent("chime.AuthScreen", () => (props) => (
+	<Provider store = {store}>
+		<AuthScreen />
+	</Provider>
+), () => AuthScreen);
+
+
+Navigation.registerComponent("chime.UsersScreen", () => (props) => (
+	<Provider store = {store}>
+		<UsersScreen />
+	</Provider>
+), () => UsersScreen);
+
+Navigation.registerComponent("chime.ProfileScreen", () => (props) => (
+	<Provider store = {store}>
+		<ProfileScreen />
+	</Provider>
+), () => ProfileScreen);
+
+Navigation.registerComponent("chime.MessengerScreen", () => (props) => (
+	<Provider store = {store}>
+		<MessengerScreen { ...props} />
+	</Provider>
+), () => MessengerScreen);
+
+Navigation.registerComponent("chime.SettingsScreen", () => (props) => (
+	<Provider store = {store}>
+		<SettingsScreen />
+	</Provider>
+), () => SettingsScreen);
+
+Navigation.registerComponent("chime.OtherProfile", () => (props) => (
+	<Provider store = {store}>
+		<OtherProfile />
+	</Provider>
+), () => OtherProfile);
+
+
+// Navigation.registerComponent("chime.AuthScreen", () => AuthScreen, store, Provider);
+// Navigation.registerComponent("chime.UsersScreen", () => UsersScreen, store, Provider);
+// Navigation.registerComponent("chime.ProfileScreen", () => ProfileScreen, store, Provider);
+// Navigation.registerComponent("chime.MessengerScreen", () => MessengerScreen, store, Provider);
+// Navigation.registerComponent("chime.SettingsScreen", () => SettingsScreen, store, Provider);
+// Navigation.registerComponent("chime.OtherProfile", () => OtherProfile, store, Provider);
 
 
 
 
 /* Start app */
-Navigation.startSingleScreenApp({
-
-	screen : {
-		screen: "chime.StartScreen"
-	},
-	animationType: 'fade'
+Navigation.setRoot({
+	root: {
+		stack: {
+			id: 'AppStack',
+			children: [{
+				component: {
+					name: 'chime.StartScreen'
+				}
+			}]
+		}
+	}
 });

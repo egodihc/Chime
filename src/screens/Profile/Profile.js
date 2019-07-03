@@ -12,6 +12,7 @@ import {
 import MainText from '../../components/UI/MainText/MainText';
 import { getTheme } from '../../utility/theme';
 import { getProfile } from '../../store/actions/profile';
+import { Navigation } from 'react-native-navigation';
 
 const mapStateToProps = (state) => {
     return {
@@ -31,11 +32,11 @@ const mapDispatchToProps = (dispatch) => {
 class ProfileScreen extends React.Component {
 
 
-    static navigatorStyle = {
-        tabBarButtonColor: getTheme(null,null),
-        tabBarSelectedButtonColor: getTheme(null,null),
-        forceTitlesDisplay: true
-    }
+    // static navigatorStyle = {
+    //     tabBarButtonColor: getTheme(null,null),
+    //     tabBarSelectedButtonColor: getTheme(null,null),
+    //     forceTitlesDisplay: true
+    // }
 
     constructor(props) {
         super(props);
@@ -45,7 +46,7 @@ class ProfileScreen extends React.Component {
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
         Dimensions.addEventListener('change',this.updateDimensions);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     componentDidMount() {
@@ -57,7 +58,6 @@ class ProfileScreen extends React.Component {
 
 
     componentDidUpdate() {
-
         /* On updating of props, either the style needs to be updated or/and the 
             profile fetch API returned something - check if it did */
         this.updateStyles();
@@ -91,25 +91,26 @@ class ProfileScreen extends React.Component {
 
 
     updateStyles = () => {
-        this.props.navigator.setStyle({
-            navBarTextColor: getTheme(this.props.theme, 'text'),
-            navBarButtonColor: getTheme(this.props.theme, 'text'),
-            navBarBackgroundColor: getTheme(this.props.theme, 'bg'),
-            tabBarBackgroundColor: getTheme(this.props.theme, 'bg')
-        }); 
-    }
+        Navigation.mergeOptions("ProfileScreen", {
+            topBar: {
+                background: {
+                    color: getTheme(this.props.theme, 'bg')
+                },
+                title: {
+                    color: getTheme(this.props.theme, 'text')
+                }
+            },
+            bottomTabs: {
+                backgroundColor: getTheme(this.props.theme, 'bg'),
 
-
-    onNavigatorEvent = (event) => {
-        if (event.type === 'NavBarButtonPress') {
-            if (event.id === 'settingsToggle') {
-                this.props.navigator.push({
-                    screen: 'chime.SettingsScreen',
-                    title: 'Settings',
-                    animationType: 'slide-horizontal'
-                })
+            },
+            bottomTab: {
+                iconColor: getTheme(this.props.theme, 'text'),
+                textColor: getTheme(this.props.theme, 'text'),
+                selectedIconColor: getTheme(this.props.theme, 'text'),
+                selectedTextColor: getTheme(this.props.theme, 'text')
             }
-        }
+        });
     }
 
     render() {

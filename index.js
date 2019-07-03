@@ -1,7 +1,7 @@
 import React from 'react';
-import { AppRegistry } from 'react-native';
-import { Provider } from 'react-redux';
+import { Navigation } from "react-native-navigation";
 import App from './App';
+
 import configureStore from './src/store/configureStore';
 
 const store = configureStore();
@@ -12,4 +12,14 @@ const reduxComponent = () => (
     </Provider>
 );
 
-AppRegistry.registerComponent('Chime', () => reduxComponent);
+Navigation.registerComponent(`Chime`, () => reduxComponent);
+
+Navigation.events().registerAppLaunchedListener(() => {
+    Navigation.setRoot({
+        root: {
+            component: {
+                name: "Chime"
+            }
+        }
+    });
+});
