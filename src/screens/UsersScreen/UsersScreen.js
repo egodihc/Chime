@@ -88,7 +88,7 @@ class UsersScreen extends React.Component {
                 this.props.navigator.push({
                     screen: 'chime.SettingsScreen',
                     title: 'Settings',
-                    animationType: 'slide-horizontal'
+                    animationType: 'fade'
                 })
             }
         }
@@ -96,9 +96,6 @@ class UsersScreen extends React.Component {
 
 
     render() {
-        this.props.navigator.setStyle({
-            tabBarBackgroundColor: getTheme(this.props.theme, 'bg')
-        }); 
         return (
             
             <View style = {[styles.container, { backgroundColor : getTheme(this.props.theme, 'bg')}]}>

@@ -1,4 +1,4 @@
-import { SET_LOGGED_IN, SET_CODE, ADDRESS } from '../constants';
+import { SET_LOGGED_IN, SET_CODE, ADDRESS, LOAD_USER } from '../constants';
 import { uiStartLoading, uiStopLoading } from './ui';
 
 export const login = (authData) => (dispatch) => {
@@ -10,7 +10,7 @@ export const login = (authData) => (dispatch) => {
         headers: {'Content-Type' : 'application/json'},
         body: JSON.stringify({
             email: authData.email,
-            pw: authData.password
+            pw: authData.pw
         })
     })
     .catch(err => {
@@ -20,7 +20,6 @@ export const login = (authData) => (dispatch) => {
     })
     .then(res => res.json())
     .then(res => {
-
         if (res.code === 0) {
             dispatch({ 
                 type : SET_LOGGED_IN, 
@@ -28,7 +27,7 @@ export const login = (authData) => (dispatch) => {
                     user : {
                         ...res.user,
                         email: authData.email,
-                        pw: authData.password
+                        pw: authData.pw
                     }
                 } 
             });
@@ -39,3 +38,10 @@ export const login = (authData) => (dispatch) => {
         dispatch(uiStopLoading());
     })
 };
+
+export const loadUser = (user) => {
+    return {
+        type: LOAD_USER,
+        payload: user
+    }
+}

@@ -3,12 +3,14 @@ import { Provider } from 'react-redux';
 
 import configureStore from './src/store/configureStore';
 
+
 import AuthScreen from './src/screens/Auth/Auth';
 import UsersScreen from './src/screens/UsersScreen/UsersScreen';
 import ProfileScreen from './src/screens/Profile/Profile';
 import MessengerScreen from './src/screens/Messenger/MessengerScreen';
 import SettingsScreen from './src/screens/Settings/Settings';
 import OtherProfile from './src/screens/OtherProfile/OtherProfile';
+import StartScreen from './src/screens/Startup/Startup';
 
 
 const store = configureStore();
@@ -17,6 +19,7 @@ const store = configureStore();
 // Navigation.registerComponent("chime.ProfileButton", () => ProfileButton);
 
 /* Register screens */
+Navigation.registerComponent("chime.StartScreen", () => StartScreen, store, Provider);
 Navigation.registerComponent("chime.AuthScreen", () => AuthScreen, store, Provider);
 Navigation.registerComponent("chime.UsersScreen", () => UsersScreen, store, Provider);
 Navigation.registerComponent("chime.ProfileScreen", () => ProfileScreen, store, Provider);
@@ -31,7 +34,7 @@ Navigation.registerComponent("chime.OtherProfile", () => OtherProfile, store, Pr
 Navigation.startSingleScreenApp({
 
 	screen : {
-		screen: "chime.AuthScreen",
-		title : "Login"
-	}
+		screen: "chime.StartScreen"
+	},
+	animationType: 'fade'
 });

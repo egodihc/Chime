@@ -304,6 +304,7 @@ class MessengerScreen extends React.Component {
                                     fileCode = { message.filecode }
                                     isSent = {isSent}
                                     timestamp = { message.timestamp }
+                                    theme = { this.props.theme}
                                      />
                 });
             }
@@ -325,7 +326,9 @@ class MessengerScreen extends React.Component {
                     {/* Message list section  */}
                     <ScrollView style = {styles.scrollView}
                         ref = {ref => this.scrollView = ref}
-                    >
+                        onContentSizeChange={(contentWidth, contentHeight)=>{        
+                            this.scrollView.scrollToEnd({animated: true});
+                        }}>
                         { this.conversation }
                     </ScrollView>
                     

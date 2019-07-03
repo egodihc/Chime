@@ -51,9 +51,8 @@ class ProfileScreen extends React.Component {
     componentDidMount() {
 
         this.updateStyles();
-
         /* Call fetch profile API */
-        this.props.getProfile(this.props.user.id)
+        this.props.getProfile(this.props.user.id);
     }
 
 
@@ -112,7 +111,6 @@ class ProfileScreen extends React.Component {
             }
         }
     }
-
 
     render() {
         if (this.state.profile === null) {

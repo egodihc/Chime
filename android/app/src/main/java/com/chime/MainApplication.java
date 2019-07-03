@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.reactnativenavigation.NavigationApplication;
 import com.RNFetchBlob.RNFetchBlobPackage; 
-
+import org.pgsqlite.SQLitePluginPackage;
 import com.imagepicker.ImagePickerPackage;
 
 public class MainApplication extends NavigationApplication  {
@@ -33,7 +33,8 @@ public class MainApplication extends NavigationApplication  {
 		return Arrays.<ReactPackage>asList(
 				new VectorIconsPackage(),
 				new ImagePickerPackage(),
-				new RNFetchBlobPackage()
+				new RNFetchBlobPackage(),
+				new SQLitePluginPackage()
 		);
 	}
 

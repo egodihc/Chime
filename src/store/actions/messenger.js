@@ -17,6 +17,7 @@ export const getList = (authData) => (dispatch) => {
     .then(res => {
 
         if (res.code === 0) {
+            console.log(res.users);
             dispatch({ type: LOAD_LIST, payload: res.users });
         }
         else {
@@ -101,5 +102,12 @@ export const clearDisable = () => {
 export const setDisable = () => {
     return {
         type : SET_DISABLE_CARD
+    }
+}
+
+export const loadList = (list) => {
+    return {
+        type: LOAD_LIST,
+        payload: list
     }
 }

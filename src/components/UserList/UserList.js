@@ -10,6 +10,7 @@ import UserCard from './UserCard';
 
 import { getList, setDisable } from '../../store/actions/messenger';
 import { CLEAN_MESSAGES } from '../../store/constants';
+import { insertContactData } from '../../utility/contactsDatabase';
 
 
 const mapStateToProps = (state) => {
@@ -38,10 +39,19 @@ class UserList extends React.Component {
             id: user.id,
             pw: user.pw
         })
-
-        
     }
 
+    componentDidUpdate = () => {
+        const { list } = this.props;
+        if (list.length > 0) {
+            for (let i = 0; i < list.length; i++) {
+                console.log(i, list[i]);
+                const { first, last, id, lastSeen, picture } = list[i];
+                insertContactData(first, last, id, lastSeen, picture)
+                .then();
+            }
+        }
+    }
     
     onSelectUser = (user) => {
         this.props.setDisable();

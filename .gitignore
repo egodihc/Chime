@@ -1,7 +1,8 @@
 # OSX
 #
 .DS_Store
-
+*.keystore
+grade.properties
 # Xcode
 #
 build/

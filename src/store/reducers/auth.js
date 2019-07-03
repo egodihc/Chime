@@ -1,4 +1,4 @@
-import { SET_LOGGED_IN, SET_CODE, SET_TRANSITIONED } from '../constants';
+import { SET_LOGGED_IN, SET_CODE, SET_TRANSITIONED, LOAD_USER } from '../constants';
 
 const initialState = {
     isLoggedIn: false,
@@ -24,6 +24,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 alreadyTransitioned: true
+            }
+        case LOAD_USER:
+            return {
+                ...state,
+                user: action.payload
             }
         default:
             return state;

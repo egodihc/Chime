@@ -99,9 +99,12 @@ class ViewProfileScreen extends React.Component {
             )
         }
         else {
-            return <ActivityIndicator></ActivityIndicator>
+            return (
+                <View style = { {backgroundColor: getTheme(this.props.theme, 'bg'), flex: 1, justifyContent: 'center'}}>
+                    <ActivityIndicator></ActivityIndicator>
+                </View>
+            )
         }
-
     }
 }
 
