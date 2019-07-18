@@ -5,10 +5,23 @@ import MessengerScreen from './src/screens/Messenger/MessengerScreen';
 import { getTheme } from "./src/utility/theme";
 import SideDrawer from './src/screens/SideDrawer/SideDrawer';
 import Startup from "./src/screens/Startup/Startup";
+import ProfileScreen from './src/screens/Profile/Profile';
+
+const UserTab = createStackNavigator(
+	{
+		UsersScreen: {
+			screen: UsersScreen,
+			navigationOptions: {
+				header: null
+			}
+		}
+	}
+
+)
 
 const DrawerNavigator = createDrawerNavigator(
 	{
-		UsersScreen
+		UserTab
 	},
 	{
 		contentComponent: SideDrawer
@@ -28,6 +41,13 @@ const UsersTab = createStackNavigator(
 		MessengerScreen:  {
 			screen: MessengerScreen,
 			navigationOptions: {
+				headerTintColor: getTheme('text')
+			}
+		},
+		ProfileScreen: {
+			screen: ProfileScreen,
+			navigationOptions: {
+				title: 'My profile',
 				headerTintColor: getTheme('text')
 			}
 		}

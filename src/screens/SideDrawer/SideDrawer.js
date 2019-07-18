@@ -18,17 +18,26 @@ class SideDrawer extends React.Component {
 
     onSignOut = () => {
         resetDB()
-        .then(() => {
+        .then((complete) => {
             this.props.resetAppState();
             this.props.navigation.navigate('Startup');
         })
-        
+    }
+
+    onViewProfile = () => {
+        this.props.navigation.push('ProfileScreen');
     }
 
     render() {
 
         return (
             <View style = {[{ width: Dimensions.get('window').width * 0.8}, styles.container]}>
+                <TouchableOpacity onPress = {this.onViewProfile}>
+                    <View style = {styles.drawerItem}>
+                        <Icon style = {styles.drawerItemIcon} name = { Platform.OS === 'android' ? 'md-person' : 'ios-log-out'} size = {30} color = '#bbb' />
+                        <MainText>My Profile</MainText>
+                    </View>
+                </TouchableOpacity>
                 <TouchableOpacity onPress = {this.onSignOut}>
                     <View style = {styles.drawerItem}>
                         <Icon style = {styles.drawerItemIcon} name = { Platform.OS === 'android' ? 'md-log-out' : 'ios-log-out'} size = {30} color = '#bbb' />
