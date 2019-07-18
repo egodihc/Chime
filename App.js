@@ -1,40 +1,64 @@
-import { Navigation } from 'react-native-navigation';
-import { Provider } from 'react-redux';
-
-import configureStore from './src/store/configureStore';
-
-
-import AuthScreen from './src/screens/Auth/Auth';
-import UsersScreen from './src/screens/UsersScreen/UsersScreen';
-import ProfileScreen from './src/screens/Profile/Profile';
+import React from "react";
+import { createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator } from "react-navigation";
+import LoginScreen from "./src/screens/Login/Login";
+import UsersScreen from "./src/screens/UsersScreen/UsersScreen";
 import MessengerScreen from './src/screens/Messenger/MessengerScreen';
-import SettingsScreen from './src/screens/Settings/Settings';
-import OtherProfile from './src/screens/OtherProfile/OtherProfile';
-import StartScreen from './src/screens/Startup/Startup';
+import ProfileScreen from './src/screens/Profile/Profile';
+import { getTheme } from "./src/utility/theme";
+import { THEME } from "./src/store/constants";
+import Startup from "./src/screens/Startup/Startup";
 
-
-const store = configureStore();
-
-// import ProfileButton from './src/components/UI/ProfileButton/ProfileButton';
-// Navigation.registerComponent("chime.ProfileButton", () => ProfileButton);
-
-/* Register screens */
-Navigation.registerComponent("chime.StartScreen", () => StartScreen, store, Provider);
-Navigation.registerComponent("chime.AuthScreen", () => AuthScreen, store, Provider);
-Navigation.registerComponent("chime.UsersScreen", () => UsersScreen, store, Provider);
-Navigation.registerComponent("chime.ProfileScreen", () => ProfileScreen, store, Provider);
-Navigation.registerComponent("chime.MessengerScreen", () => MessengerScreen, store, Provider);
-Navigation.registerComponent("chime.SettingsScreen", () => SettingsScreen, store, Provider);
-Navigation.registerComponent("chime.OtherProfile", () => OtherProfile, store, Provider);
-
-
-
-
-/* Start app */
-Navigation.startSingleScreenApp({
-
-	screen : {
-		screen: "chime.StartScreen"
+const UsersTab = createStackNavigator(
+	{
+		UsersScreen: {
+			screen: UsersScreen,
+			navigationOptions: {
+				title: 'CONTACTS',
+				headerTintColor: getTheme('text')
+			}
+		},
+		MessengerScreen:  {
+			screen: MessengerScreen,
+			navigationOptions: {
+				headerTintColor: getTheme('text')
+			}
+		}
 	},
-	animationType: 'fade'
-});
+	{
+		initialRouteName: 'UsersScreen',
+		defaultNavigationOptions: {
+			headerStyle: {
+				backgroundColor: getTheme('bg')
+			}
+		}
+	}
+);
+  
+const MainTab = createStackNavigator(
+	{
+		Contacts: UsersTab
+	},
+	{
+		defaultNavigationOptions: {
+			header: null
+		}
+	}
+);
+
+const RootNavigator = createSwitchNavigator(
+	{
+		Startup: Startup,
+		MainTab: MainTab
+	},
+	{
+		initialRouteName: 'Startup'
+	}
+)
+
+const AppContainer = createAppContainer(RootNavigator);
+
+export default class App extends React.Component {
+	render() {
+		return <AppContainer />;
+	}
+}

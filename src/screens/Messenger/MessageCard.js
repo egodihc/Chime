@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
     View, 
     Text, 
@@ -7,9 +6,9 @@ import {
     StyleSheet,
     TouchableNativeFeedback
 } from 'react-native';
+
 import { getTheme } from '../../utility/theme';
 import { epochToReadable } from '../../utility/date';
-
 
 class MessageCard extends React.Component {
 
@@ -30,7 +29,7 @@ class MessageCard extends React.Component {
 
     render() {
 
-        const { targetPic, isSending, message, fileCode, consecutiveMessage, isSent, timestamp, theme } = this.props;
+        const { targetPic, isSending, message, fileCode, consecutiveMessage, isSent, timestamp } = this.props;
         const { showDate } = this.state;
 
         let isNotSent = false;
@@ -41,7 +40,7 @@ class MessageCard extends React.Component {
         let date;
         if (showDate) {
             date = 
-            <Text style = {{ color: getTheme(theme, 'text')}}>
+            <Text style = {{ color: getTheme('text')}}>
                 { this.getDateString(timestamp) }
             </Text>
         }
@@ -49,17 +48,16 @@ class MessageCard extends React.Component {
         /* Assume message is normal text */
         let finalMessage =       
         
-            <View style = { (!isSending) ? styles.fullContainer: styles.reverseFullContainer  }>
+            <View style = {(!isSending) ? styles.fullContainer: styles.reverseFullContainer}>
                 <TouchableNativeFeedback onPress = {this.toggleDate} >
                     <View
                         style = { [ 
                             styles.card, 
                             (isSending) ? styles.sender : styles.receiver, 
-                            (isSending) ? { backgroundColor: getTheme('BLUE', false)} : { backgroundColor: '#DEDEDE'},
+                            (isSending) ? { backgroundColor: getTheme(null)} : { backgroundColor: '#DEDEDE'},
                             (isNotSent) ? { opacity: 0.6 } : null
                         ] }
                     >
-                        
                         <Text style = {[ styles.message,(isSending ? { color: 'white'} : { color: 'black' })]}>
                             { message }
                         </Text>
@@ -73,7 +71,7 @@ class MessageCard extends React.Component {
             finalMessage = 
             <View style = {[ (isSending) ? styles.sender : styles.receiver,  styles.card] }>
                 <Image  
-                    style = { styles.image} 
+                    style = {styles.image}
                     source = {{uri:message}}
                     resizeMode="cover"
                 ></Image>

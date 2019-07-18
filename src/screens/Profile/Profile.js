@@ -16,7 +16,6 @@ import { getProfile } from '../../store/actions/profile';
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
-        theme: state.settings.theme,
         profileState: state.profile
     };
 }
@@ -27,15 +26,7 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-
 class ProfileScreen extends React.Component {
-
-
-    static navigatorStyle = {
-        tabBarButtonColor: getTheme(null,null),
-        tabBarSelectedButtonColor: getTheme(null,null),
-        forceTitlesDisplay: true
-    }
 
     constructor(props) {
         super(props);
@@ -45,22 +36,15 @@ class ProfileScreen extends React.Component {
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
         Dimensions.addEventListener('change',this.updateDimensions);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     componentDidMount() {
-
-        this.updateStyles();
         /* Call fetch profile API */
         this.props.getProfile(this.props.user.id);
     }
 
 
     componentDidUpdate() {
-
-        /* On updating of props, either the style needs to be updated or/and the 
-            profile fetch API returned something - check if it did */
-        this.updateStyles();
 
         /* Load the profile if successfully fetched */
         const { profile, profileFetchResponse } = this.props.profileState;
@@ -89,57 +73,36 @@ class ProfileScreen extends React.Component {
         Dimensions.removeEventListener('change',this.updateDimensions);
     }
 
-
-    updateStyles = () => {
-        this.props.navigator.setStyle({
-            navBarTextColor: getTheme(this.props.theme, 'text'),
-            navBarButtonColor: getTheme(this.props.theme, 'text'),
-            navBarBackgroundColor: getTheme(this.props.theme, 'bg'),
-            tabBarBackgroundColor: getTheme(this.props.theme, 'bg')
-        }); 
-    }
-
-
-    onNavigatorEvent = (event) => {
-        if (event.type === 'NavBarButtonPress') {
-            if (event.id === 'settingsToggle') {
-                this.props.navigator.push({
-                    screen: 'chime.SettingsScreen',
-                    title: 'Settings',
-                    animationType: 'slide-horizontal'
-                })
-            }
-        }
-    }
-
     render() {
         if (this.state.profile === null) {
             return (
-                <ActivityIndicator></ActivityIndicator>
+                <View style = {styles.loadingContainer}>
+                    <ActivityIndicator></ActivityIndicator>
+                </View>
             )
         }
         else {
             return (
-                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme(this.props.theme, 'bg')} ]}>
+                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme('bg')} ]}>
 
                     <View style = {styles.primaryDetailContainer}>
-                        <View style = { [styles.avatarBox, { borderColor: getTheme(this.props.theme, 'text')}] }>
+                        <View style = { [styles.avatarBox, { borderColor: getTheme('text')}] }>
                             <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
                         </View>
-                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                        <MainText>
                             { `${this.state.profile.first} ${this.state.profile.last}` }
                         </MainText>
                     </View>
 
 
                     <View style = {styles.secondaryDetailContainer}>
-                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                        <MainText>
                             { `About me : ${this.state.profile.blurb}` }
                         </MainText>
-                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                        <MainText>
                             { `Occupation : ${this.state.profile.occupation}` }
                         </MainText>
-                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                        <MainText>
                             { `Birthday : ${this.state.profile.birthday}` }
                         </MainText>
                     </View>
@@ -151,6 +114,12 @@ class ProfileScreen extends React.Component {
 
 
 const styles = StyleSheet.create({
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: getTheme('bg')
+    },
     portraitContainer: {
         flex: 1,
         width: '100%',

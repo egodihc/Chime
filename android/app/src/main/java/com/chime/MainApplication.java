@@ -1,58 +1,50 @@
 package com.chime;
 
 import android.app.Application;
+import android.util.Log;
 
+import com.facebook.react.PackageList;
+import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
+import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.oblador.vectoricons.VectorIconsPackage;
 
-import java.util.Arrays;
 import java.util.List;
 
 
-import com.reactnativenavigation.NavigationApplication;
-import com.RNFetchBlob.RNFetchBlobPackage; 
-import org.pgsqlite.SQLitePluginPackage;
-import com.imagepicker.ImagePickerPackage;
+public class MainApplication extends Application implements ReactApplication {
 
-public class MainApplication extends NavigationApplication  {
+  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+    @Override
+    public boolean getUseDeveloperSupport() {
+      return BuildConfig.DEBUG;
+    }
 
+    @Override
+    protected List<ReactPackage> getPackages() {
+      @SuppressWarnings("UnnecessaryLocalVariable")
+      List<ReactPackage> packages = new PackageList(this).getPackages();
+      // Packages that cannot be autolinked yet can be added manually here, for example:
+      // packages.add(new MyReactNativePackage());
+      return packages;
+    }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		SoLoader.init(this, /* native exopackage */ false);
-	}
+    @Override
+    protected String getJSMainModuleName() {
+      return "index";
+    }
+  };
 
-	public List<ReactPackage> getPackages() {
-		// Add additional packages you require here
-		// No need to add RnnPackage and MainReactPackage
-		return Arrays.<ReactPackage>asList(
-				new VectorIconsPackage(),
-				new ImagePickerPackage(),
-				new RNFetchBlobPackage(),
-				new SQLitePluginPackage()
-		);
-	}
+  @Override
+  public ReactNativeHost getReactNativeHost() {
+    return mReactNativeHost;
+  }
 
-	@Override
-	public String getJSMainModuleName() {
-		return "index";
-	}
-
-	@Override
-	public List<ReactPackage> createAdditionalReactPackages() {
-		return getPackages();
-	}
-
-	@Override
-	public boolean isDebug() {
-		// Make sure you are using BuildConfig from your own application
-		return BuildConfig.DEBUG;
-	}
-
-
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    SoLoader.init(this, /* native exopackage */ false);
+  }
 }

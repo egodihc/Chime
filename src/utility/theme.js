@@ -1,8 +1,12 @@
-export const getTheme = (theme, type) => {
+import { THEME } from "../store/constants";
+
+export const getTheme = (type) => {
+
+    const theme = THEME;
 
     if (type === 'text') {
         if (theme === 'LIGHT') {
-            return 'black';
+            return '#333';
         }
         else {
             return 'white';
@@ -13,7 +17,7 @@ export const getTheme = (theme, type) => {
             return 'white';
         }
         else {
-            return 'black';
+            return '#333';
         }
     }
     else if (type === 'input') {
@@ -26,14 +30,5 @@ export const getTheme = (theme, type) => {
     }
     else {
         return '#0EBFE9'
-    }
-}
-
-export const getToggledTheme = (currentTheme) => {
-    if (currentTheme === 'DARK') {
-        return 'LIGHT';
-    }
-    else {
-        return 'DARK';
     }
 }

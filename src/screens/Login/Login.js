@@ -10,65 +10,57 @@ import {
     TouchableWithoutFeedback
 } from 'react-native';
 
+import HeadingText from '../../components/UI/HeadingText/HeadingText';
+import MainText from '../../components/UI/MainText/MainText';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import Button from '../../components/UI/Button/Button';
-import validate from '../../utility/validation';
 
 import { login } from '../../store/actions/auth';
-import { getTheme } from '../../utility/theme';
 
 const mapStateToProps = (state) => {
     return {
         isLoading: state.ui.isLoading,
-        theme: state.settings.theme
+        isLoggedIn: state.auth.isLoggedIn,
+        user: state.auth.user
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
-
     return {
-        login : (authData) => dispatch(login(authData))
+        login : (authData) => dispatch(login(authData)),
     };
 }
 
 
-class Login extends React.Component {
+class LoginScreen extends React.Component {
 
+    static navigationOptions = {
+        header: null
+    }
 
     constructor(props) {
         super(props);
-        
         this.state = {
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape',
             authMode: 'login',
             controls: {
-                email: {
-                    value: '',
-                    valid: false,
-                    validationRules: {
-                        isEmail: true
-                    },
-                    touched: false
-                },
-                password: {
-                    value: '',
-                    valid: false,
-                    validationRules: {
-                        minLength: 6
-                    },
-                    touched: false
-                }
+                email: '',
+                password: ''
             }
         }
-
         Dimensions.addEventListener('change',this.updateStyles);
     }
 
+    componentDidUpdate() {
+        /* Condition prevents this lifecycle hook from retriggering itself */
+        if (this.props.isLoggedIn) {
+            this.props.onLoginSuccess(this.props.user);
+        }
+    }
 
     componentWillUnmount() {
         Dimensions.removeEventListener('change',this.updateStyles);
     }
-
 
     updateStyles = (dims) => {
         this.setState({
@@ -76,89 +68,34 @@ class Login extends React.Component {
         })
     }
 
-
     onLogin = () => {
-        const authData = {
-            email: this.state.controls.email.value,
-            pw: this.state.controls.password.value
-        }
-        this.props.login(authData);
-    }
-
-
-    /* Login with default account for testing */
-    skip = () => {
+        // const authData = {
+        //     email: this.state.controls.email.value,
+        //     pw: this.state.controls.password.value
+        // }
         const authData = {
             email: 'a',
             pw: 'a'
         }
         this.props.login(authData);
-
     }
 
-    
     updateInputState = (key, value) => {
-        
-
-        /* If the equalTo rule exists */
-        let connectedValue = {};
-        if (this.state.controls[key].validationRules.equalTo) {
-            const equalControl = this.state.controls[key].validationRules.equalTo;
-            const equalValue = this.state.controls[equalControl].value;
-            connectedValue = {
-                ...connectedValue,
-                equalTo: equalValue
-            }
-        }
-
-        if (key === 'password') {
-            connectedValue = {
-                ...connectedValue,
-                equalTo: value
-            }
-        }
-
         this.setState(prevState => {
             return {
                 controls: {
                     ...prevState.controls,
-                    [key]: {
-                        ...prevState.controls[key],
-                        value: value,
-                        valid: validate(value, prevState.controls[key].validationRules, connectedValue),
-                        touched: true
-                    }
+                    [key]: { value: value }
                 }
             }
         })
     }
-    
 
     render() {
-
-
         let mainButton = 
-        <View style = { (this.state.viewMode === 'portrait') ? styles.portraitButtonWrapper : styles.landscapeButtonWrapper } > 
-            <Button 
-                onPress = { this.onLogin }
-                color = 'transparent'
-                textColor = {getTheme(this.props.theme, 'text')}
-                borderColor = {getTheme(this.props.theme, 'text')}
-            >
-                Login
-            </Button>
-        
-            <Button 
-            onPress = { this.skip }
-            color = 'transparent'
-            textColor = {getTheme(this.props.theme, 'text')}
-            borderColor = {getTheme(this.props.theme, 'text')}
-            >
-                Login with default
-            </Button>
-        </View>
-
-
+            <View style = { (this.state.viewMode === 'portrait') ? styles.portraitButtonWrapper : styles.landscapeButtonWrapper } > 
+                <Button onPress = { this.onLogin } style = {styles.button}>LOGIN</Button>
+            </View>
 
         if (this.props.isLoading) {
             mainButton = <ActivityIndicator />
@@ -166,63 +103,95 @@ class Login extends React.Component {
  
         return (
             <View style = {styles.container}>
-				<TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
-					<View style = {styles.inputContainer}>
-						<DefaultInput 
-							style = {styles.input} 
-							placeholder = 'Email'
-							value = {this.state.controls.email.value}
-							onChangeText = { (val) => {this.updateInputState('email', val)}}
-							valid = {this.state.controls.email.valid}  
-							touched = {this.state.controls.email.touched}
-							autoCapitalize = {'none'}
-							autoCorrect = {false}
-							keyboardType = {'email-address'}
-							/>
-						<View style = { (this.state.viewMode === 'portrait' || this.state.authMode === 'login')
-							? styles.portraitPasswordContainer 
-							: styles.landscapePasswordContainer }>
-							<View style = { this.state.viewMode === 'portrait' || this.state.authMode === 'login'
-								? styles.portraitPasswordWrapper 
-								: styles.landscapePasswordWrapper }>
-								<DefaultInput 
-									style = {styles.input} 
-									placeholder = 'Password' 
-									value = {this.state.controls.password.value}
-									onChangeText = { (val) => {this.updateInputState('password', val)}}
-									valid = {this.state.controls.password.valid} 
-									touched = {this.state.controls.password.touched}
-									secureTextEntry
-									/>
-							</View>
-						</View>
-
-					</View>
-				</TouchableWithoutFeedback>
-
-                { mainButton }
-
+                <View style = {styles.titleContainer}>
+                    <MainText>
+                        <HeadingText style={styles.title}>Chime</HeadingText>
+                    </MainText>
+                </View>
+                <View style = {styles.inputContainerTop}>
+                    <TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
+                        <View style = {styles.inputContainer}>
+                            <DefaultInput 
+                                style = {styles.input} 
+                                placeholder = 'EMAIL'
+                                value = {this.state.controls.email.value}
+                                onChangeText = { (val) => {this.updateInputState('email', val)}}
+                                autoCapitalize = {'none'}
+                                autoCorrect = {false}
+                                keyboardType = {'email-address'}
+                                />
+                            <View style = { (this.state.viewMode === 'portrait' || this.state.authMode === 'login')
+                                ? styles.portraitPasswordContainer 
+                                : styles.landscapePasswordContainer }>
+                                <View style = { this.state.viewMode === 'portrait' || this.state.authMode === 'login'
+                                    ? styles.portraitPasswordWrapper 
+                                    : styles.landscapePasswordWrapper }>
+                                    <DefaultInput 
+                                        style = {styles.input} 
+                                        placeholder = 'PASSWORD' 
+                                        value = {this.state.controls.password.value}
+                                        onChangeText = { (val) => {this.updateInputState('password', val)}}
+                                        secureTextEntry
+                                        />
+                                </View>
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    { mainButton }
+                </View>
             </View>
-
         );
     }
 }
 
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: '#333'
+    },
+    inputContainerTop: {
+        flex: 3,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        width: '80%'
+    },
+    titleContainer: {
+        flex: 2,
+        justifyContent: 'center'
+    },
+    title: {
+        textAlign: 'center',
+        color: 'white'
+	},
+    landscapeButtonWrapper: {
+        flexDirection: 'row'
+    },
+    portraitButtonWrapper: {
+        marginTop: 30,
+        flexDirection: 'column',
+        alignItems: 'center',
         width: '100%'
     },
-    inputContainer: {
+    button: {
+        padding: 15,
+        borderRadius: 30,
+        backgroundColor: 'white',
         width: '80%',
-        margin: 10
+        marginBottom: 5
+    },
+
+    inputContainer: {
+        width: '100%'
     },
     input: {
         backgroundColor: '#eee',
-        borderColor: '#bbb'
+        borderColor: '#bbb',
+        borderRadius: 10,
+        padding: 10
     },
     landscapePasswordContainer: {
         flexDirection: 'row',
@@ -238,13 +207,5 @@ const styles = StyleSheet.create({
     portraitPasswordWrapper: {
         width: '100%',
     },
-    landscapeButtonWrapper: {
-        flexDirection: 'row'
-    },
-    portraitButtonWrapper: {
-        flexDirection: 'column'
-    }
+
 });
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);

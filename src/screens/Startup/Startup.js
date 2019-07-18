@@ -1,20 +1,14 @@
 import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import AuthScreen from '../Auth/Auth';
-import { 
-    View,
-    StyleSheet
-} from 'react-native';
 
 import { login, loadUser } from '../../store/actions/auth';
 import { loadList } from '../../store/actions/messenger';
-import { setTheme } from '../../store/actions/settings';
-
-import startMainTabs from '../mainTabs/startMainTabs';
 
 import { resetDB, initDB } from '../../utility/database';
 import { getContacts } from '../../utility/contactsDatabase';
-import { getUser } from '../../utility/userDatabase';
+import { getUser, insertUserData } from '../../utility/userDatabase';
+import Login from '../Login/Login';
 
 const FLAG = 0;
 
@@ -22,13 +16,11 @@ export const mapDispatchToProps = (dispatch) => {
     return {
         login : (authData) => dispatch(login(authData)),
         loadUser: (user) => dispatch(loadUser(user)),
-        setTheme: (theme) => dispatch(setTheme(theme)),
         loadList: (list) => dispatch(loadList(list))
     }
 }
 
 class StartScreen extends React.Component {
-
 
     constructor(props) {
         super(props);
@@ -36,17 +28,12 @@ class StartScreen extends React.Component {
             showAuth: false
         }
     }
-    
+
     showAuthScreen = () => {
         this.setState({ showAuth : true });
     }
 
     componentDidMount() {
-
-        this.props.navigator.toggleNavBar({
-            to: 'hidden',
-            animated: false
-        });
 
         if (FLAG === 0) {
             initDB()
@@ -56,15 +43,11 @@ class StartScreen extends React.Component {
                     if (user) {
                         getContacts()
                         .then(contacts => {
-                            console.log('contacts are', contacts);
                             this.props.login({ ...user });
                             this.props.loadUser({ ...user });
-                            this.props.setTheme(user.theme);
-    
                             const list = this.constructList(contacts);
                             this.props.loadList(list);
-    
-                            startMainTabs(user.theme);
+                            this.props.navigation.navigate('MainTab');
                         });
                     }
                     else {
@@ -75,8 +58,6 @@ class StartScreen extends React.Component {
             .catch(() => {
                 alert('Something went wrong, please restart the application');
             })
-
-
         }
         else {
             resetDB()
@@ -87,6 +68,19 @@ class StartScreen extends React.Component {
                 alert('Application already reset');
             })
         }
+    }
+
+    onLoginSuccess = (user) => {
+        const { first, last, id, email, picture, pw } = user;
+        insertUserData(first, last, email, pw, id, picture)
+        .then(complete => {
+            if (complete) {
+                this.props.navigation.navigate('MainTab');
+            }
+            else {
+                alert('Could not save user to database.');
+            }
+        })
     }
 
     constructList = (contacts) => {
@@ -104,8 +98,7 @@ class StartScreen extends React.Component {
 
         if (this.state.showAuth) {
             mainSection = 
-            <AuthScreen/>
-            
+            <Login onLoginSuccess = {this.onLoginSuccess}/>
         }
 
         return (

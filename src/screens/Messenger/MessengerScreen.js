@@ -11,18 +11,19 @@ import {
     ActivityIndicator
 } from 'react-native';
 
-import ImagePicker from 'react-native-image-picker';
-import RNFetchBlob from 'react-native-fetch-blob';
-
+import OtherProfile from '../OtherProfile/OtherProfile';
+import MessengerNavBar from './MessengerNavBar';
 import MessageCard from './MessageCard';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
+
+import ImagePicker from 'react-native-image-picker';
+// import RNFetchBlob from 'react-native-fetch-blob';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { getTheme } from '../../utility/theme';
-
-import { getMessages, sendMessage, clearDisable } from '../../store/actions/messenger';
+import { getMessages, sendMessage } from '../../store/actions/messenger';
 import { CLEAR_MESSAGES } from '../../store/constants';
-import OtherProfile from '../OtherProfile/OtherProfile';
+
 
 
 const mapStateToProps = (state) => {
@@ -31,7 +32,7 @@ const mapStateToProps = (state) => {
         messages: state.messenger.messages,
         messagesLoaded: state.messenger.messagesLoaded,
         isLoading: state.ui.isLoading,
-        theme : state.settings.theme
+        target: state.messenger.target
     };
 }
 
@@ -40,16 +41,15 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getMessages : (config) => dispatch(getMessages(config)),
         sendMessage: (config) => dispatch(sendMessage(config)),
-        clearMessages : () => dispatch({ type : CLEAR_MESSAGES }),
-        clearDisable: () => dispatch(clearDisable())
+        clearMessages : () => dispatch({ type : CLEAR_MESSAGES })
     };
 }
 
 class MessengerScreen extends React.Component {
 
-    static navigatorStyle = {
-        tabBarHidden: true
-    }
+    static navigationOptions = ({ navigation }) => ({
+        headerTitle: <MessengerNavBar toggleMode = {navigation.getParam('onToggleViewMode')} />
+    });
 
     constructor(props) {
         super(props);
@@ -60,35 +60,15 @@ class MessengerScreen extends React.Component {
             config: {
                 sender: this.props.user.id,
                 destination: this.props.target.id,
-                isGroup: this.props.isGroup,
+                isGroup: this.props.target.isGroup,
                 pw: this.props.user.pw
             },
             tempMessages: [],
-            pickedImage: null,
             mode: 'messenger',
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
         Dimensions.addEventListener('change',this.updateStyles);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
-
-    
-    componentDidMount() {
-        
-        this.props.navigator.setStyle({
-            navBarTextColor: getTheme(this.props.theme, 'text'),
-            navBarBackgroundColor: getTheme(this.props.theme, 'bg')
-        }); 
-
-        this.props.getMessages(this.state.config);
-    }
-
-    
-    componentWillUnmount() {
-        this.props.clearDisable();
-        Dimensions.removeEventListener('change',this.updateStyles);
-    }
-
 
     updateStyles = (dims) => {
         this.setState({
@@ -96,13 +76,19 @@ class MessengerScreen extends React.Component {
         })
     }
 
+    componentDidMount() {
+        this.props.navigation.setParams({ onToggleViewMode: this.onToggleViewMode });
+        this.props.getMessages(this.state.config);
+    }
 
+    componentWillUnmount() {
+        Dimensions.removeEventListener('change',this.updateStyles);
+    }
 
     componentDidUpdate() {
 
         /* Update the component every time new messages are fetched */
         if (!this.props.messagesLoaded) {
-
             this.setState(prevState => {
                 return {
                     ...prevState,
@@ -115,46 +101,16 @@ class MessengerScreen extends React.Component {
             this.props.clearMessages();
             this.scrollView.scrollToEnd({animated: true});
         }
-
     }
 
-    
-    onNavigatorEvent = (event) => {
-        if (event.type === 'NavBarButtonPress') {
-            if (event.id === 'viewProfile') {
-                this.setState(prevState => {
-                    return {
-                        ...prevState,
-                        mode: 'profile'
-                    }
-                })
-            }
-            else if (event.id === 'backPress') {
-                if (this.state.mode === 'messenger') {
-                    this.props.navigator.pop();
-                }
-                else {
-                    this.setState(prevState => {
-                        return {
-                            ...prevState,
-                            mode: 'messenger'
-                        }
-                    })
-                }
-            }
-        }
-    }
-
-    onBacktoMessengerMode = () => {
+    onToggleViewMode = () => {
         this.setState(prevState => {
             return {
                 ...prevState,
-                mode: 'messenger'
+                mode: (prevState.mode === 'messenger') ? 'profile' : 'messenger'
             }
         })
     }
-
-    
 
     /* Input field handler */
     updateMessageField = (text) => {
@@ -165,7 +121,6 @@ class MessengerScreen extends React.Component {
             }
         })
     }
-
 
     sendMessage = () => {
         
@@ -212,7 +167,6 @@ class MessengerScreen extends React.Component {
             });
             this.scrollView.scrollToEnd({animated: true});
         }
-
     }
 
     onLaunchCamera = () => {
@@ -228,30 +182,15 @@ class MessengerScreen extends React.Component {
     }
 
     imageHandler = (res) => {
-        if (res.didCancel) {
-            console.log('User cancelled');
-        }
-        else if (res.error) {
-            console.log('Error', res.error);
+        if (res.error) {
+            alert('Something went wrong while loading the image.');
         }
         else {
-            this.setState(prevState => {
-                return {
-                    ...prevState,
-                    pickedImage: { base64: res.data }
-                }
+            this.props.sendMessage({
+                ...this.state.config,
+                isFile: 1,
+                message: `data:image/png;base64,${res.data}`
             });
-            RNFetchBlob.fs.readFile(res.uri, 'base64')
-            .then((data) => {
-                this.props.sendMessage({
-                    ...this.state.config,
-                    isFile: 1,
-                    message: `data:image/png;base64,${data}`
-                });
-            })
-
-
-
         }
     }
 
@@ -304,13 +243,12 @@ class MessengerScreen extends React.Component {
                                     fileCode = { message.filecode }
                                     isSent = {isSent}
                                     timestamp = { message.timestamp }
-                                    theme = { this.props.theme}
                                      />
                 });
             }
             else {
                 this.conversation = 
-                <Text style = {[styles.intro, { color : getTheme(this.props.theme, 'text')}]}>
+                <Text style = {[styles.intro, { color : getTheme('text')}]}>
                     This is the beginning of your chat history with { `${this.props.target.first} ${this.props.target.last}`}
                 </Text>
             }
@@ -321,7 +259,7 @@ class MessengerScreen extends React.Component {
             return (
                 
                 
-                <View style = {[styles.container, { backgroundColor : getTheme(this.props.theme, 'bg')}]}>
+                <View style = {[styles.container, { backgroundColor : getTheme('bg')}]}>
 
                     {/* Message list section  */}
                     <ScrollView style = {styles.scrollView}
@@ -337,20 +275,20 @@ class MessengerScreen extends React.Component {
                     <View style = { styles.inputContainer }>
                         <View style = {[styles.media, (this.state.viewMode === 'portrait') ? null : styles.landscapeMediaContainer ]}>
                             <TouchableOpacity onPress = {this.onLaunchCamera}>
-                                <Icon name = { 'md-camera' } color = { getTheme(this.props.theme, null) } size = {30}/>
+                                <Icon name = { 'md-camera' } color = { getTheme(null) } size = {30}/>
                             </TouchableOpacity>
                             <TouchableOpacity onPress = {this.onLaunchImageLibrary}>
-                                <Icon name = { 'md-image' } color = { getTheme(this.props.theme, null) } size = {30}/>
+                                <Icon name = { 'md-image' } color = { getTheme(null) } size = {30}/>
                             </TouchableOpacity>
                         </View>
                         <View style = {[styles.textArea , (this.state.viewMode === 'portrait') ? null : styles.landscapeTextAreaContainer ]}>
                             <DefaultInput 
-                                style = {[styles.messageInput, {backgroundColor: getTheme(this.props.theme, 'input')}, { color: getTheme(this.props.theme, 'text')}]} 
+                                style = {[styles.messageInput, {backgroundColor: getTheme('input')}, { color: getTheme('text')}]} 
                                 onChangeText = { (text) => { this.updateMessageField(text) }}
                                 value = { this.state.messageField }
                             />
                             <TouchableOpacity onPress = {this.sendMessage}>
-                                <Icon name = { 'md-send' } color = { getTheme(this.props.theme, null) } size = {30}/>
+                                <Icon name = { 'md-send' } color = { getTheme(null) } size = {30}/>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -361,6 +299,7 @@ class MessengerScreen extends React.Component {
         else {
             return <OtherProfile user = {this.props.target} onBack = {this.onBacktoMessengerMode}></OtherProfile>
         }
+
 
     }
 }

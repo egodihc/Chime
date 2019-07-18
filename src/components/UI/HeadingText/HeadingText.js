@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 
-const headingText = (props) => {
+const HeadingText = (props) => {
 
     return (
         <Text 
@@ -13,7 +13,7 @@ const headingText = (props) => {
     );
 }
 
-export default headingText;
+export default HeadingText;
 
 const styles = StyleSheet.create({
 

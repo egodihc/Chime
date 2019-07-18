@@ -14,7 +14,6 @@ import { getProfile } from '../../store/actions/profile';
 
 const mapStateToProps = (state) => {
     return {
-        theme: state.settings.theme,
         profileState: state.profile
     }
 }
@@ -72,26 +71,26 @@ class ViewProfileScreen extends React.Component {
     render() {
         if (this.state.profileLoaded) {
             return (
-                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme(this.props.theme, 'bg')} ]}>
+                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme('bg')} ]}>
     
                     <View style = {styles.primaryDetailContainer}>
-                        <View style = { [styles.avatarBox, { borderColor: getTheme(this.props.theme, 'text')}] }>
+                        <View style = { [styles.avatarBox, { borderColor: getTheme('text')}] }>
                             <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
                         </View>
-                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                        <MainText>
                             { `${this.state.profile.first} ${this.state.profile.last}` }
                         </MainText>
                     </View>
     
     
                     <View style = {styles.secondaryDetailContainer}>
-                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                        <MainText>
                             { `About me : ${this.state.profile.blurb}` }
                         </MainText>
-                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                        <MainText>
                             { `Occupation : ${this.state.profile.occupation}` }
                         </MainText>
-                        <MainText color  = {getTheme(this.props.theme, 'text')}>
+                        <MainText>
                             { `Birthday : ${this.state.profile.birthday}` }
                         </MainText>
                     </View>
@@ -100,7 +99,7 @@ class ViewProfileScreen extends React.Component {
         }
         else {
             return (
-                <View style = { {backgroundColor: getTheme(this.props.theme, 'bg'), flex: 1, justifyContent: 'center'}}>
+                <View style = {styles.loadingContainer}>
                     <ActivityIndicator></ActivityIndicator>
                 </View>
             )
@@ -137,6 +136,11 @@ const styles = StyleSheet.create({
     previewImage: {
         width: '100%',
         height: '100%'
+    },
+    loadingContainer: {
+        backgroundColor: getTheme('bg'), 
+        flex: 1, 
+        justifyContent: 'center'
     }
 })
 

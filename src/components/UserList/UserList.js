@@ -10,14 +10,13 @@ import UserCard from './UserCard';
 
 import { getList, setDisable } from '../../store/actions/messenger';
 import { CLEAN_MESSAGES } from '../../store/constants';
-import { insertContactData } from '../../utility/contactsDatabase';
+// import { insertContactData } from '../../utility/contactsDatabase';
 
 
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
-        list: state.messenger.list,
-        disabled: state.messenger.disabled
+        list: state.messenger.list
     };
 }
 
@@ -25,8 +24,7 @@ const mapDispatchToProps = (dispatch) => {
 
     return {
         getList : (authData) => dispatch(getList(authData)),
-        clearMessages: () => dispatch({ type : CLEAN_MESSAGES }),
-        setDisable : () => dispatch(setDisable())
+        clearMessages: () => dispatch({ type : CLEAN_MESSAGES })
     };
 }
 
@@ -42,19 +40,18 @@ class UserList extends React.Component {
     }
 
     componentDidUpdate = () => {
-        const { list } = this.props;
-        if (list.length > 0) {
-            for (let i = 0; i < list.length; i++) {
-                console.log(i, list[i]);
-                const { first, last, id, lastSeen, picture } = list[i];
-                insertContactData(first, last, id, lastSeen, picture)
-                .then();
-            }
-        }
+        // const { list } = this.props;
+        // if (list.length > 0) {
+        //     for (let i = 0; i < list.length; i++) {
+        //         console.log(i, list[i]);
+        //         const { first, last, id, lastSeen, picture } = list[i];
+        //         insertContactData(first, last, id, lastSeen, picture)
+        //         .then();
+        //     }
+        // }
     }
     
     onSelectUser = (user) => {
-        this.props.setDisable();
         this.props.clearMessages();
         this.props.onSelectUser(user);
     }
@@ -68,7 +65,6 @@ class UserList extends React.Component {
             return <UserCard key = {i}
                             onSelectUser = {this.onSelectUser}
                             user = { user }
-                            disabled = { this.props.disabled }
                              />
         });
 

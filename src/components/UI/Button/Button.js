@@ -8,10 +8,10 @@ import {
     Platform 
 } from 'react-native';
 
-const button = (props) => {
+const Button = (props) => {
 
     const content = (
-        <View style = {[styles.button, {backgroundColor: props.color}, { borderColor : props.borderColor }, (props.disabled) ? styles.disabled : null ]}>
+        <View style = {[styles.button, (props.disabled) ? styles.disabled : null, props.style ]}>
             <Text style = {[ styles.text,  { color : props.textColor } , (props.disabled) ? styles.disabledText : null]}>
                 { props.children }
             </Text>
@@ -38,18 +38,20 @@ const button = (props) => {
     }
 }
 
-export default button;
+export default Button;
 
 const styles = StyleSheet.create({
 
     button: {
+        justifyContent: 'center',
         padding: 10,
-        margin: 5,
         borderWidth: 1,
+        borderRadius: 20,
         borderColor: 'black'
     },
     text: {
-        color: 'black'
+        color: 'black',
+        textAlign: 'center'
     },
     disabled: {
         backgroundColor: '#eee',

@@ -1,4 +1,4 @@
-import { LOAD_LIST, LOAD_MESSAGES, CLEAR_MESSAGES, CLEAN_MESSAGES, SET_DISABLE_CARD, CLEAR_DISABLE_CARD } from "../constants";
+import { LOAD_LIST, LOAD_MESSAGES, CLEAR_MESSAGES, CLEAN_MESSAGES, SET_TARGET } from "../constants";
 
 
 const initialState = {
@@ -6,7 +6,7 @@ const initialState = {
     messages: [],
     messagesLoaded : true,
     tempMessages: [],
-    disabled: false
+    target: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -33,15 +33,10 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 messages: []
             }
-        case SET_DISABLE_CARD:
+        case SET_TARGET:
             return {
                 ...state,
-                disabled: true                
-            }
-        case CLEAR_DISABLE_CARD:
-            return {
-                ...state,
-                disabled: false
+                target: action.payload
             }
         default:
             return state;
