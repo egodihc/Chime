@@ -25,8 +25,9 @@ class SideDrawer extends React.Component {
     onSignOut = () => {
         resetDB()
         .then((complete) => {
-            this.props.resetAppState();
+            
             this.props.navigation.navigate('Startup');
+            this.props.resetAppState();
         })
     }
 
