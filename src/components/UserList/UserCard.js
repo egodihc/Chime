@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { getTheme } from '../../utility/theme';
+import { getLastOnline } from '../../utility/date';
 
 class UserCard extends React.Component {
 
@@ -25,7 +26,11 @@ class UserCard extends React.Component {
         this.setState({
             viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
         })
-    }
+	}
+	
+	getLastSeen = () => {
+		return getLastOnline(this.props.user.lastSeen);
+	}
 
 	componentWillUnmount() {
         /* Prevent memory leak */
@@ -34,16 +39,16 @@ class UserCard extends React.Component {
 
 	render() {
 		return (
-			<TouchableNativeFeedback 
-				onPress = {()=> { this.props.onSelectUser(this.props.user)}}
-				disabled = {this.props.disabled}
-			>
+			<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user)}}>
 				<View style = {[styles.card, { backgroundColor : getTheme('bg')} ]}>
 					<View style = {styles.dpContainer}>
-						<Image resizeMode="cover" source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>
-					</View>
-					<View>
-						<Text style = {{color : getTheme('text')}}> { `${this.props.user.first} ${this.props.user.last}` }</Text>
+							<Image resizeMode="cover" source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>
+						</View>
+						<View style = {styles.textContainer}>
+							<Text style = {styles.text}> { `${this.props.user.first} ${this.props.user.last}` }</Text>
+						</View>
+					<View style = {styles.lastSeenContainer}>
+						<Text style = {styles.text}>{this.getLastSeen()}</Text>			
 					</View>
 				</View>
 			</TouchableNativeFeedback>
@@ -57,10 +62,20 @@ const styles = StyleSheet.create({
 	card: {
 		height: 50,
 		width: '100%',
-		flexDirection: 'row'
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	textContainer: {
+		flex: 1
+	},
+	text: {
+		color : 'white'
 	},
 	dpContainer: {
 		width: 50
+	},
+	lastSeenContainer: {
+		width: '10%'
 	},
 	dp: {
 		width: '100%',

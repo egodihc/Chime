@@ -1,4 +1,4 @@
-import { SET_LOGGED_IN, SET_CODE, SET_TRANSITIONED, LOAD_USER } from '../constants';
+import { SET_LOGGED_IN, SET_CODE, SET_TRANSITIONED, LOAD_USER, RESET_APP_STATE } from '../constants';
 
 const initialState = {
     isLoggedIn: false,
@@ -30,6 +30,8 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 user: action.payload
             }
+        case RESET_APP_STATE: 
+            return initialState
         default:
             return state;
     }

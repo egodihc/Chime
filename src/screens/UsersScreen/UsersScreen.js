@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { 
     View,
+    Image,
     StyleSheet
 } from 'react-native';
 
@@ -17,7 +18,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class UsersScreen extends React.Component {
-
+    
     constructor(props) {
         super(props);
     }
@@ -28,7 +29,7 @@ class UsersScreen extends React.Component {
             ...user,
             isGroup: false
         });
-        this.props.navigation.navigate('MessengerScreen');
+        this.props.navigation.push('MessengerScreen');
     }
 
 

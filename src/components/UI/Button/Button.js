@@ -45,13 +45,12 @@ const styles = StyleSheet.create({
     button: {
         justifyContent: 'center',
         padding: 10,
-        borderWidth: 1,
-        borderRadius: 20,
-        borderColor: 'black'
+        borderRadius: 20
     },
     text: {
         color: 'black',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontWeight: 'bold'
     },
     disabled: {
         backgroundColor: '#eee',

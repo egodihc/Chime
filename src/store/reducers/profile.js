@@ -1,4 +1,4 @@
-import { LOAD_PROFILE, SET_FAIL_PROFILE } from "../constants";
+import { LOAD_PROFILE, SET_FAIL_PROFILE, RESET_APP_STATE } from "../constants";
 
 const initialState = {
     profile: null,
@@ -19,6 +19,8 @@ export const reducer = (state = initialState, action) => {
                 ...state,
                 profileFetchResponse: action.payload
             }
+        case RESET_APP_STATE: 
+            return initialState
         default: 
             return state;
     }

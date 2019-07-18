@@ -23,7 +23,6 @@ class MessengerNavBar extends React.Component {
                     <TouchableOpacity onPress = {this.props.toggleMode}>
                         <Image source = {{uri: this.props.target.picture}} style = {styles.imageContainer}/>
                     </TouchableOpacity>
-
                 </View>
             </View>
         )

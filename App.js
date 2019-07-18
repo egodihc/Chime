@@ -1,17 +1,25 @@
 import React from "react";
-import { createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator } from "react-navigation";
-import LoginScreen from "./src/screens/Login/Login";
+import { createStackNavigator, createAppContainer, createSwitchNavigator, createDrawerNavigator } from "react-navigation";
 import UsersScreen from "./src/screens/UsersScreen/UsersScreen";
 import MessengerScreen from './src/screens/Messenger/MessengerScreen';
-import ProfileScreen from './src/screens/Profile/Profile';
 import { getTheme } from "./src/utility/theme";
-import { THEME } from "./src/store/constants";
+import SideDrawer from './src/screens/SideDrawer/SideDrawer';
 import Startup from "./src/screens/Startup/Startup";
+
+const DrawerNavigator = createDrawerNavigator(
+	{
+		UsersScreen
+	},
+	{
+		contentComponent: SideDrawer
+	}
+	
+)
 
 const UsersTab = createStackNavigator(
 	{
 		UsersScreen: {
-			screen: UsersScreen,
+			screen: DrawerNavigator,
 			navigationOptions: {
 				title: 'CONTACTS',
 				headerTintColor: getTheme('text')
@@ -33,22 +41,13 @@ const UsersTab = createStackNavigator(
 		}
 	}
 );
-  
-const MainTab = createStackNavigator(
-	{
-		Contacts: UsersTab
-	},
-	{
-		defaultNavigationOptions: {
-			header: null
-		}
-	}
-);
+
+
 
 const RootNavigator = createSwitchNavigator(
 	{
 		Startup: Startup,
-		MainTab: MainTab
+		MainTab: UsersTab
 	},
 	{
 		initialRouteName: 'Startup'

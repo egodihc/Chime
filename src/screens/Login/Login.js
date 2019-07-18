@@ -7,6 +7,7 @@ import {
     StyleSheet, 
     ActivityIndicator,
     Keyboard,
+    Image,
     TouchableWithoutFeedback
 } from 'react-native';
 
@@ -16,6 +17,7 @@ import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import Button from '../../components/UI/Button/Button';
 
 import { login } from '../../store/actions/auth';
+import { getTheme } from '../../utility/theme';
 
 const mapStateToProps = (state) => {
     return {
@@ -69,14 +71,14 @@ class LoginScreen extends React.Component {
     }
 
     onLogin = () => {
-        // const authData = {
-        //     email: this.state.controls.email.value,
-        //     pw: this.state.controls.password.value
-        // }
         const authData = {
-            email: 'a',
-            pw: 'a'
+            email: this.state.controls.email.value,
+            pw: this.state.controls.password.value
         }
+        // const authData = {
+        //     email: 'a',
+        //     pw: 'a'
+        // }
         this.props.login(authData);
     }
 
@@ -94,7 +96,7 @@ class LoginScreen extends React.Component {
     render() {
         let mainButton = 
             <View style = { (this.state.viewMode === 'portrait') ? styles.portraitButtonWrapper : styles.landscapeButtonWrapper } > 
-                <Button onPress = { this.onLogin } style = {styles.button}>LOGIN</Button>
+                <Button onPress = { this.onLogin } style = {styles.button} textColor = {'white'}>LOGIN</Button>
             </View>
 
         if (this.props.isLoading) {
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
     button: {
         padding: 15,
         borderRadius: 30,
-        backgroundColor: 'white',
+        backgroundColor: getTheme(null),
         width: '80%',
         marginBottom: 5
     },

@@ -1,4 +1,4 @@
-import { LOAD_LIST, LOAD_MESSAGES, CLEAR_MESSAGES, CLEAN_MESSAGES, SET_TARGET } from "../constants";
+import { LOAD_LIST, LOAD_MESSAGES, CLEAR_MESSAGES, CLEAN_MESSAGES, SET_TARGET, RESET_APP_STATE } from "../constants";
 
 
 const initialState = {
@@ -38,6 +38,8 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 target: action.payload
             }
+        case RESET_APP_STATE: 
+            return initialState
         default:
             return state;
     }

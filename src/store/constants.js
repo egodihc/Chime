@@ -27,3 +27,5 @@ export const SET_TARGET = 'SET_TARGET';
 export const THEME = 'DARK';
 export const ADDRESS = 'https://chat-time-api.herokuapp.com';
 
+export const RESET_APP_STATE = 'RESET_APP_STATE';
+
