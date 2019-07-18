@@ -1,12 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { View, Dimensions, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Image, Dimensions, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MainText from '../../components/UI/MainText/MainText';
 
 import { resetDB } from '../../utility/database';
 import { RESET_APP_STATE } from '../../store/constants';
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.auth.user
+    }
+}
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -32,9 +38,15 @@ class SideDrawer extends React.Component {
 
         return (
             <View style = {[{ width: Dimensions.get('window').width * 0.8}, styles.container]}>
+                <View style = {styles.profileIconContainer}>
+                    <Image source = {{uri: this.props.user.picture}} style = {styles.imageContainer}/>
+                    <View style = {styles.nameContainer}>
+                        <MainText>{`${this.props.user.first} ${this.props.user.last}`}</MainText>
+                    </View>
+                </View>
                 <TouchableOpacity onPress = {this.onViewProfile}>
                     <View style = {styles.drawerItem}>
-                        <Icon style = {styles.drawerItemIcon} name = { Platform.OS === 'android' ? 'md-person' : 'ios-log-out'} size = {30} color = '#bbb' />
+                        <Icon style = {styles.drawerItemIcon} name = { Platform.OS === 'android' ? 'md-person' : 'ios-person'} size = {30} color = '#bbb' />
                         <MainText>My Profile</MainText>
                     </View>
                 </TouchableOpacity>
@@ -49,13 +61,25 @@ class SideDrawer extends React.Component {
     }
 }
 
-export default connect(null, mapDispatchToProps)(SideDrawer);
+export default connect(mapStateToProps, mapDispatchToProps)(SideDrawer);
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 50,
+        paddingTop: 25,
         backgroundColor: '#333',
         flex: 1
+    },
+    profileIconContainer: {
+        marginLeft: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 30
+    },
+    nameContainer: {
+        width: '80%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     drawerItem: {
         flexDirection: 'row',
@@ -66,5 +90,9 @@ const styles = StyleSheet.create({
     drawerItemIcon: {
         marginLeft: 10,
         marginRight: 10
+    },
+    imageContainer: {
+        width: 50,
+        height: 50
     }
 })
