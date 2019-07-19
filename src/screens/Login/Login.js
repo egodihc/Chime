@@ -75,10 +75,6 @@ class LoginScreen extends React.Component {
             email: this.state.controls.email.value,
             pw: this.state.controls.password.value
         }
-        // const authData = {
-        //     email: 'a',
-        //     pw: 'a'
-        // }
         this.props.login(authData);
     }
 

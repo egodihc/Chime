@@ -1,21 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { 
-    View,
-    Image,
-    StyleSheet,
-    ActivityIndicator,
-    TouchableOpacity,
-    Dimensions
-} from 'react-native';
+import { View, Image, StyleSheet, ActivityIndicator, TouchableOpacity, Dimensions, Keyboard } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import Button from '../../components/UI/Button/Button';
+import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import MainText from '../../components/UI/MainText/MainText';
+
 import { getTheme } from '../../utility/theme';
 import { getProfile } from '../../store/actions/profile';
-import Button from '../../components/UI/Button/Button';
+
 
 const mapStateToProps = (state) => {
     return {
@@ -39,20 +35,35 @@ class ProfileScreen extends React.Component {
             profileLoaded: false,
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape',
             mode: 'view',
+            keyboard: 'hide',
             controls: {
                 picture: '',
                 blurb: '',
                 occupation: '',
                 birthday: ''
-
             }
         }
         Dimensions.addEventListener('change',this.updateDimensions);
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this));
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide.bind(this));
     }
 
     componentDidMount() {
         /* Call fetch profile API */
         this.props.getProfile(this.props.user.id);
+    }
+
+    keyboardDidShow = () => {
+        this.setState({ keyboard: 'show'});
+    }
+
+    keyboardDidHide = () => {
+        this.setState({ keyboard: 'hide'});
+    }
+
+    componentWillUnmount() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
     }
 
     componentDidUpdate() {
@@ -139,26 +150,24 @@ class ProfileScreen extends React.Component {
         else {
             return (
                 <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme('bg')} ]}>
-
-                    <View style = {styles.primaryDetailContainer}>
-                        <View style = { [styles.avatarBox, { borderColor: getTheme('text')}] }>
-                            <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
+                    {(this.state.keyboard === 'hide') ? 
+                        <View style = {styles.primaryDetailContainer}>
+                            <View style = { [styles.avatarBox, { borderColor: getTheme('text')}] }>
+                                <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
+                            </View>
+                            <MainText>
+                                { `${this.state.profile.first} ${this.state.profile.last}` }
+                            </MainText>
                         </View>
-                        <MainText>
-                            { `${this.state.profile.first} ${this.state.profile.last}` }
-                        </MainText>
-                    </View>
+                        :
+                        null
+                    }
+
 
                     <View style = {styles.secondaryDetailContainer}>
-                        <MainText>
-                            { `About me : ${this.state.profile.blurb}` }
-                        </MainText>
-                        <MainText>
-                            { `Occupation : ${this.state.profile.occupation}` }
-                        </MainText>
-                        <MainText>
-                            { `Birthday : ${this.state.profile.birthday}` }
-                        </MainText>
+                        <DefaultInput placeholder = {'About me'} style = {styles.input} />
+                        <DefaultInput placeholder = {'Occupation'} style = {styles.input}/>
+                        <DefaultInput placeholder = {'Birthday'} style = {styles.input}/>
                     </View>
 
                     <View style = {styles.itemTopContainer}>
@@ -183,6 +192,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%'
+    },
+    input: {
+        width: '70%'
     },
     iconContainer: {
         borderColor: '#eee',
@@ -214,7 +226,8 @@ const styles = StyleSheet.create({
     secondaryDetailContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '100%'
     },
     avatarBox: {
         margin: 5,

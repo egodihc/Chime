@@ -283,7 +283,7 @@ class MessengerScreen extends React.Component {
                         </View>
                         <View style = {[styles.textArea , (this.state.viewMode === 'portrait') ? null : styles.landscapeTextAreaContainer ]}>
                             <DefaultInput 
-                                style = {[styles.messageInput, {backgroundColor: getTheme('input')}, { color: getTheme('text')}]} 
+                                style = {styles.messageInput} 
                                 onChangeText = { (text) => { this.updateMessageField(text) }}
                                 value = { this.state.messageField }
                             />
@@ -333,7 +333,6 @@ const styles = StyleSheet.create({
     },  
     messageInput: {
         borderRadius: 5,
-        backgroundColor: '#E9E9E9',
         width: '85%'
     },
     textArea: {
