@@ -10,6 +10,7 @@ import {
 import UserList from '../../components/UserList/UserList';
 import { getTheme } from '../../utility/theme';
 import { setTarget } from '../../store/actions/messenger';
+import ContactNavBar from './ContactNavBar';
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -18,13 +19,26 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class UsersScreen extends React.Component {
+
+    static navigationOptions = ({ navigation }) => ({
+        headerTitle: <ContactNavBar toggleDrawer = {navigation.getParam('toggleDrawer')} />
+    });
     
     constructor(props) {
         super(props);
     }
 
+    componentDidMount() {
+        this.props.navigation.setParams({ toggleDrawer: this.toggleDrawer });
+    }
+
+    toggleDrawer = () => {
+        this.props.navigation.toggleDrawer();
+    }
+
     /* Passes target as props to messenger screen */
     onSelectUser = (user) => {
+
         this.props.setTarget({
             ...user,
             isGroup: false

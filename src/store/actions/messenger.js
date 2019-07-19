@@ -15,9 +15,7 @@ export const getList = (authData) => (dispatch) => {
     })
     .then(res => res.json())
     .then(res => {
-
         if (res.code === 0) {
-            console.log(res.users);
             dispatch({ type: LOAD_LIST, payload: res.users });
         }
         else {

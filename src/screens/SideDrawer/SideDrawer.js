@@ -22,6 +22,24 @@ const mapDispatchToProps = (dispatch) => {
 
 class SideDrawer extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
+        }
+        Dimensions.addEventListener('change',this.updateStyles);
+    }
+
+    updateStyles = (dims) => {
+        this.setState({
+            viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
+        })
+    }
+
+    componentWillUnmount() {
+        Dimensions.removeEventListener('change',this.updateStyles);
+    }
+
     onSignOut = () => {
         resetDB()
         .then((complete) => {
@@ -36,9 +54,9 @@ class SideDrawer extends React.Component {
     }
 
     render() {
-
+        const { viewMode } = this.state;
         return (
-            <View style = {[{ width: Dimensions.get('window').width * 0.8}, styles.container]}>
+            <View style = {[{ width: (viewMode === 'portrait') ? Dimensions.get('window').width * 0.8 : Dimensions.get('window').width * 0.41}, styles.container]}>
                 <View style = {styles.profileIconContainer}>
                     <Image source = {{uri: this.props.user.picture}} style = {styles.imageContainer}/>
                     <View style = {styles.nameContainer}>

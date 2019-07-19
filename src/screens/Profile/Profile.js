@@ -6,12 +6,16 @@ import {
     Image,
     StyleSheet,
     ActivityIndicator,
+    TouchableOpacity,
     Dimensions
 } from 'react-native';
+
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import MainText from '../../components/UI/MainText/MainText';
 import { getTheme } from '../../utility/theme';
 import { getProfile } from '../../store/actions/profile';
+import Button from '../../components/UI/Button/Button';
 
 const mapStateToProps = (state) => {
     return {
@@ -33,7 +37,15 @@ class ProfileScreen extends React.Component {
         this.state = {
             profile: null,
             profileLoaded: false,
-            viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
+            viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape',
+            mode: 'view',
+            controls: {
+                picture: '',
+                blurb: '',
+                occupation: '',
+                birthday: ''
+
+            }
         }
         Dimensions.addEventListener('change',this.updateDimensions);
     }
@@ -42,7 +54,6 @@ class ProfileScreen extends React.Component {
         /* Call fetch profile API */
         this.props.getProfile(this.props.user.id);
     }
-
 
     componentDidUpdate() {
 
@@ -68,6 +79,15 @@ class ProfileScreen extends React.Component {
             viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
         })
     }
+
+    onToggleEditMode = () => {
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                mode: (prevState.mode === 'edit') ? 'view' : 'edit'
+            }
+        })
+    }
     
     componentWillUnmount = () => {
         Dimensions.removeEventListener('change',this.updateDimensions);
@@ -81,7 +101,7 @@ class ProfileScreen extends React.Component {
                 </View>
             )
         }
-        else {
+        else if (this.state.mode === 'view') {
             return (
                 <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme('bg')} ]}>
 
@@ -106,6 +126,44 @@ class ProfileScreen extends React.Component {
                             { `Birthday : ${this.state.profile.birthday}` }
                         </MainText>
                     </View>
+                    <View style = {styles.itemTopContainer}>
+                        <View style = {styles.iconContainer}>
+                            <TouchableOpacity onPress = {this.onToggleEditMode}>
+                                <Icon name = { Platform.OS === 'android' ? 'md-create' : 'ios-create'} size = {30} color = '#bbb' />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            )
+        }
+        else {
+            return (
+                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme('bg')} ]}>
+
+                    <View style = {styles.primaryDetailContainer}>
+                        <View style = { [styles.avatarBox, { borderColor: getTheme('text')}] }>
+                            <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
+                        </View>
+                        <MainText>
+                            { `${this.state.profile.first} ${this.state.profile.last}` }
+                        </MainText>
+                    </View>
+
+                    <View style = {styles.secondaryDetailContainer}>
+                        <MainText>
+                            { `About me : ${this.state.profile.blurb}` }
+                        </MainText>
+                        <MainText>
+                            { `Occupation : ${this.state.profile.occupation}` }
+                        </MainText>
+                        <MainText>
+                            { `Birthday : ${this.state.profile.birthday}` }
+                        </MainText>
+                    </View>
+
+                    <View style = {styles.itemTopContainer}>
+                        <Button style = {styles.button} onPress = {this.onToggleEditMode} textColor = {'white'}>Save</Button>
+                    </View>
                 </View>
             )
         }
@@ -120,6 +178,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: getTheme('bg')
     },
+    itemTopContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%'
+    },
+    iconContainer: {
+        borderColor: '#eee',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        width: 40,
+        height: 40
+    },
+    button: {
+        borderColor: 'white',
+        width: '40%'
+    },
     portraitContainer: {
         flex: 1,
         width: '100%',
@@ -131,10 +207,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     primaryDetailContainer: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center'
     },
     secondaryDetailContainer: {
-        marginTop: 50
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     avatarBox: {
         margin: 5,
