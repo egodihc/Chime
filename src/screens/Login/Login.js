@@ -189,7 +189,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#eee',
         borderColor: '#bbb',
         borderRadius: 10,
-        padding: 10
+        padding: 10,
+        color: 'black'
     },
     landscapePasswordContainer: {
         flexDirection: 'row',

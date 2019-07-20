@@ -284,6 +284,7 @@ class MessengerScreen extends React.Component {
                         <View style = {[styles.textArea , (this.state.viewMode === 'portrait') ? null : styles.landscapeTextAreaContainer ]}>
                             <DefaultInput 
                                 style = {styles.messageInput} 
+                                placeholder = 'Send a message'
                                 onChangeText = { (text) => { this.updateMessageField(text) }}
                                 value = { this.state.messageField }
                             />

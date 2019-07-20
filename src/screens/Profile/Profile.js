@@ -10,19 +10,19 @@ import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import MainText from '../../components/UI/MainText/MainText';
 
 import { getTheme } from '../../utility/theme';
-import { getProfile } from '../../store/actions/profile';
-
+import { getProfile, saveProfile } from '../../store/actions/profile';
 
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
-        profileState: state.profile
+        profileAPIState: state.profile
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getProfile : (id) => dispatch(getProfile(id))
+        getProfile : (id) => dispatch(getProfile(id)),
+        saveProfile: (params) => dispatch(saveProfile(params))
     }
 }
 
@@ -37,11 +37,12 @@ class ProfileScreen extends React.Component {
             mode: 'view',
             keyboard: 'hide',
             controls: {
-                picture: '',
                 blurb: '',
                 occupation: '',
-                birthday: ''
-            }
+                birthday: '',
+                location: ''
+            },
+            editPending: false
         }
         Dimensions.addEventListener('change',this.updateDimensions);
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this));
@@ -64,21 +65,48 @@ class ProfileScreen extends React.Component {
     componentWillUnmount() {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
+        Dimensions.removeEventListener('change',this.updateDimensions);
+    }
+
+    editItem = (key, value) => {
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                controls: {
+                    ...prevState.controls,
+                    [key]: value
+                }
+            }
+        });
     }
 
     componentDidUpdate() {
 
         /* Load the profile if successfully fetched */
-        const { profile, profileFetchResponse } = this.props.profileState;
+        const { profile, profileFetchResponse, profileEditResponse } = this.props.profileAPIState;
         if (!this.state.profileLoaded) {
-            // TODO:
-            // Handle fail profile fetch response
-            if (profileFetchResponse === 0) {
+            if (profileFetchResponse === 0 && !this.state.editPending) {
                 this.setState(prevState => {
                     return {
                         ...prevState,
                         profile: profile,
+                        controls: {
+                            ...profile
+                        },
                         profileLoaded: true
+                    }
+                })
+            }
+            else if (profileEditResponse === 0 && this.state.editPending) {
+                this.setState(prevState => {
+                    return {
+                        ...prevState,
+                        profile: profile,
+                        controls: {
+                            ...profile
+                        },
+                        profileLoaded: true,
+                        editPending: false
                     }
                 })
             }
@@ -88,20 +116,34 @@ class ProfileScreen extends React.Component {
     updateDimensions = (dims) => {
         this.setState({
             viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
-        })
+        });
     }
 
     onToggleEditMode = () => {
         this.setState(prevState => {
             return {
                 ...prevState,
-                mode: (prevState.mode === 'edit') ? 'view' : 'edit'
+                mode: 'edit'
             }
-        })
+        });
     }
-    
-    componentWillUnmount = () => {
-        Dimensions.removeEventListener('change',this.updateDimensions);
+
+    onSaveProfile = () => {
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                profile: null,
+                profileLoaded: false,
+                mode: 'view',
+                editPending: true
+            }
+        });
+        this.props.saveProfile({ 
+            ...this.state.controls,
+            picture: null,
+            id: this.props.user.id,
+            pw: this.props.user.pw
+        });
     }
 
     render() {
@@ -162,16 +204,28 @@ class ProfileScreen extends React.Component {
                         :
                         null
                     }
-
-
                     <View style = {styles.secondaryDetailContainer}>
-                        <DefaultInput placeholder = {'About me'} style = {styles.input} />
-                        <DefaultInput placeholder = {'Occupation'} style = {styles.input}/>
-                        <DefaultInput placeholder = {'Birthday'} style = {styles.input}/>
+                        <DefaultInput 
+                            placeholder = {'About me'} 
+                            style = {styles.input} 
+                            defaultValue = {this.state.profile.blurb}
+                            onChangeText = { (text) => { this.editItem('blurb',text)}}
+                        />
+                        <DefaultInput 
+                            placeholder = {'Occupation'} 
+                            style = {styles.input} 
+                            defaultValue = {this.state.profile.occupation} 
+                            onChangeText = { (text) => { this.editItem('occupation',text)}}
+                        />
+                        <DefaultInput 
+                            placeholder = {'Birthday'} 
+                            style = {styles.input}
+                            defaultValue = {this.state.profile.birthday} 
+                            onChangeText = { (text) => { this.editItem('birthday',text)}}
+                        />
                     </View>
-
                     <View style = {styles.itemTopContainer}>
-                        <Button style = {styles.button} onPress = {this.onToggleEditMode} textColor = {'white'}>Save</Button>
+                        <Button style = {styles.button} onPress = {this.onSaveProfile} textColor = {'white'}>Save</Button>
                     </View>
                 </View>
             )

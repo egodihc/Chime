@@ -20,11 +20,16 @@ export const SET_THEME = 'SET_THEME';
 export const GET_PROFILE = 'GET_PROFILE';
 export const LOAD_PROFILE = 'LOAD_PROFILE';
 export const SET_FAIL_PROFILE = 'SET_FAIL_PROFILE';
+export const EDIT_PROFILE_SUCCESS = 'EDIT_PROFILE_SUCCESS';
+export const EDIT_PROFILE_FAILED = 'EDIT_PROFILE_FAILED';
+export const CLEAR_RESPONSE_CODE = 'CLEAR_RESPONSE_CODE';
 
 export const SET_TARGET = 'SET_TARGET';
 
-// export const ADDRESS = 'http://192.168.1.73:3001';
 export const THEME = 'DARK';
+
+// export const ADDRESS = 'http://192.168.1.76:3001';
+
 export const ADDRESS = 'https://chat-time-api.herokuapp.com';
 
 export const RESET_APP_STATE = 'RESET_APP_STATE';
