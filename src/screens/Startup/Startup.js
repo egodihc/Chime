@@ -43,8 +43,13 @@ class StartScreen extends React.Component {
                     if (user) {
                         getContacts()
                         .then(contacts => {
-                            this.props.login({ ...user });
-                            this.props.loadUser({ ...user });
+                            this.props.login({ username: user.username, password: user.password });
+                            this.props.loadUser({ 
+                                username: user.username,
+                                password: user.password,
+                                first: user.first,
+                                last: user.last
+                            });
                             const list = this.constructList(contacts);
                             this.props.loadList(list);
                             this.props.navigation.navigate('MainTab');
@@ -71,8 +76,8 @@ class StartScreen extends React.Component {
     }
 
     onLoginSuccess = (user) => {
-        const { first, last, id, email, picture, pw } = user;
-        insertUserData(first, last, email, pw, id, picture)
+        const { first, last, username, picture, password } = user;
+        insertUserData(first, last, username, password, picture)
         .then(complete => {
             if (complete) {
                 this.props.navigation.navigate('MainTab');

@@ -22,7 +22,7 @@ import { getTheme } from '../../utility/theme';
 const mapStateToProps = (state) => {
     return {
         isLoading: state.ui.isLoading,
-        isLoggedIn: state.auth.isLoggedIn,
+        auth: state.auth,
         user: state.auth.user
     };
 }
@@ -46,7 +46,7 @@ class LoginScreen extends React.Component {
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape',
             authMode: 'login',
             controls: {
-                email: '',
+                username: '',
                 password: ''
             }
         }
@@ -55,8 +55,12 @@ class LoginScreen extends React.Component {
 
     componentDidUpdate() {
         /* Condition prevents this lifecycle hook from retriggering itself */
-        if (this.props.isLoggedIn) {
-            this.props.onLoginSuccess(this.props.user);
+        if (this.props.auth.code === 0) {
+            const data = {
+                ...this.props.user,
+                password: this.props.auth.authData.password
+            }
+            this.props.onLoginSuccess(data);
         }
     }
 
@@ -72,8 +76,8 @@ class LoginScreen extends React.Component {
 
     onLogin = () => {
         const authData = {
-            email: this.state.controls.email.value,
-            pw: this.state.controls.password.value
+            username: this.state.controls.username.value,
+            password: this.state.controls.password.value
         }
         this.props.login(authData);
     }
@@ -111,12 +115,11 @@ class LoginScreen extends React.Component {
                         <View style = {styles.inputContainer}>
                             <DefaultInput 
                                 style = {styles.input} 
-                                placeholder = 'EMAIL'
-                                value = {this.state.controls.email.value}
-                                onChangeText = { (val) => {this.updateInputState('email', val)}}
+                                placeholder = 'USERNAME'
+                                value = {this.state.controls.username.value}
+                                onChangeText = { (val) => {this.updateInputState('username', val)}}
                                 autoCapitalize = {'none'}
                                 autoCorrect = {false}
-                                keyboardType = {'email-address'}
                                 />
                             <View style = { (this.state.viewMode === 'portrait' || this.state.authMode === 'login')
                                 ? styles.portraitPasswordContainer 

@@ -5,12 +5,14 @@ import uiReducer from './reducers/ui';
 import authReducer from './reducers/auth';
 import messengerReducer from './reducers/messenger';
 import profileReducer from './reducers/profile';
+import listReducer from './reducers/list';
 
 const rootReducer = combineReducers({
     ui : uiReducer,
     auth : authReducer,
     messenger: messengerReducer,
-    profile: profileReducer
+    profile: profileReducer,
+    list: listReducer
 });
 
 const configureStore = () => {

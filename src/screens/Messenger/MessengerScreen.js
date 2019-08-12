@@ -24,11 +24,9 @@ import { getTheme } from '../../utility/theme';
 import { getMessages, sendMessage } from '../../store/actions/messenger';
 import { CLEAR_MESSAGES } from '../../store/constants';
 
-
-
 const mapStateToProps = (state) => {
     return {
-        user: state.auth.user,
+        authData: state.auth.authData,
         messages: state.messenger.messages,
         messagesLoaded: state.messenger.messagesLoaded,
         isLoading: state.ui.isLoading,
@@ -58,15 +56,15 @@ class MessengerScreen extends React.Component {
             messageField: null,
             firstLoad: true,
             config: {
-                sender: this.props.user.id,
-                destination: this.props.target.id,
-                isGroup: this.props.target.isGroup,
-                pw: this.props.user.pw
+                sender: this.props.authData.username,
+                destination: this.props.target.username,
+                password: this.props.authData.password
             },
             tempMessages: [],
             mode: 'messenger',
             viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
         }
+        console.log(this.props.target, '?????')
         Dimensions.addEventListener('change',this.updateStyles);
     }
 
@@ -78,7 +76,7 @@ class MessengerScreen extends React.Component {
 
     componentDidMount() {
         this.props.navigation.setParams({ onToggleViewMode: this.onToggleViewMode });
-        this.props.getMessages(this.state.config);
+        // this.props.getMessages(this.state.config);
     }
 
     componentWillUnmount() {
@@ -196,7 +194,6 @@ class MessengerScreen extends React.Component {
 
 
     render() {
-        
 
         const { target, messages, user, isLoading } = this.props;
 

@@ -8,15 +8,14 @@ import {
 
 import UserCard from './UserCard';
 
-import { getList, setDisable } from '../../store/actions/messenger';
+import { setDisable } from '../../store/actions/messenger';
 import { CLEAN_MESSAGES } from '../../store/constants';
-// import { insertContactData } from '../../utility/contactsDatabase';
-
+import { getList } from '../../store/actions/list';
 
 const mapStateToProps = (state) => {
     return {
-        user: state.auth.user,
-        list: state.messenger.list
+        authData: state.auth.authData,
+        list: state.list.list
     };
 }
 
@@ -32,11 +31,10 @@ class UserList extends React.Component {
 
     constructor(props) {
         super(props);
-        const user = this.props.user;
-        this.props.getList({
-            id: user.id,
-            pw: user.pw
-        })
+    }
+
+    componentDidMount = () => {
+        this.props.getList(this.props.authData.username);
     }
 
     componentDidUpdate = () => {
@@ -52,7 +50,7 @@ class UserList extends React.Component {
     }
     
     onSelectUser = (user) => {
-        this.props.clearMessages();
+        // this.props.clearMessages();
         this.props.onSelectUser(user);
     }
 

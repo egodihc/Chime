@@ -39,9 +39,8 @@ class ViewProfileScreen extends React.Component {
     
 
     componentDidMount() {
-
         /* Call fetch profile API */
-        this.props.getProfile(this.props.user.id)
+        this.props.getProfile(this.props.user.username)
     }
 
     componentWillUnmount = () => {
@@ -85,10 +84,13 @@ class ViewProfileScreen extends React.Component {
     
                     <View style = {styles.secondaryDetailContainer}>
                         <MainText>
-                            { `About me : ${this.state.profile.blurb}` }
+                            { `About me : ${this.state.profile.about}` }
                         </MainText>
                         <MainText>
                             { `Occupation : ${this.state.profile.occupation}` }
+                        </MainText>
+                        <MainText>
+                            { `Location : ${this.state.profile.location}` }
                         </MainText>
                         <MainText>
                             { `Birthday : ${this.state.profile.birthday}` }

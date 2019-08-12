@@ -1,5 +1,5 @@
 import { uiStartLoading, uiStopLoading } from "./ui";
-import { LOAD_LIST, LOAD_MESSAGES, ADDRESS, CLEAR_DISABLE_CARD, SET_DISABLE_CARD, SET_TARGET } from "../constants";
+import { LOAD_LIST, LOAD_MESSAGES, ADDRESS, CLEAR_DISABLE_CARD, SET_DISABLE_CARD, LOAD_TARGET } from "../constants";
 
 export const getList = (authData) => (dispatch) => {
 
@@ -110,9 +110,9 @@ export const loadList = (list) => {
     }
 }
 
-export const setTarget = (target) => {
+export const loadTarget = (target) => {
     return {
-        type: SET_TARGET,
+        type: LOAD_TARGET,
         payload: target
     }
 }

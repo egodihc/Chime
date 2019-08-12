@@ -3,18 +3,17 @@ import { connect } from 'react-redux';
 
 import { 
     View,
-    Image,
     StyleSheet
 } from 'react-native';
 
 import UserList from '../../components/UserList/UserList';
 import { getTheme } from '../../utility/theme';
-import { setTarget } from '../../store/actions/messenger';
+import { loadTarget } from '../../store/actions/messenger';
 import ContactNavBar from './ContactNavBar';
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setTarget: (target) => dispatch(setTarget(target))
+        loadTarget: (target) => dispatch(loadTarget(target))
     }
 }
 
@@ -38,11 +37,7 @@ class UsersScreen extends React.Component {
 
     /* Passes target as props to messenger screen */
     onSelectUser = (user) => {
-
-        this.props.setTarget({
-            ...user,
-            isGroup: false
-        });
+        this.props.loadTarget(user);
         this.props.navigation.push('MessengerScreen');
     }
 
