@@ -1,29 +1,22 @@
-import { LOAD_LIST, LOAD_MESSAGES, CLEAR_MESSAGES, CLEAN_MESSAGES, SET_TARGET, RESET_APP_STATE } from "../constants";
+import { LOAD_MESSAGES, SET_MESSAGES_LOADED, CLEAN_MESSAGES, RESET_APP_STATE, LOAD_TARGET } from "../constants";
 
 
 const initialState = {
-    list: [],
     messages: [],
     messagesLoaded : true,
-    tempMessages: [],
     target: null
 }
 
 const reducer = (state = initialState, action) => {
 
     switch (action.type) {
-        case LOAD_LIST:
-            return {
-                ...state,
-                list: action.payload
-            }
         case LOAD_MESSAGES:
             return {
                 ...state,
                 messages: action.payload,
                 messagesLoaded: false
             }
-        case CLEAR_MESSAGES:
+        case SET_MESSAGES_LOADED:
             return {
                 ...state,
                 messagesLoaded: true
@@ -33,7 +26,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 messages: []
             }
-        case SET_TARGET:
+        case LOAD_TARGET:
             return {
                 ...state,
                 target: action.payload

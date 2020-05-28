@@ -7,7 +7,7 @@ import {
     TouchableNativeFeedback
 } from 'react-native';
 
-import { getTheme } from '../../utility/theme';
+import { getColor } from '../../utility/theme';
 import { epochToReadable } from '../../utility/date';
 
 class MessageCard extends React.Component {
@@ -29,18 +29,13 @@ class MessageCard extends React.Component {
 
     render() {
 
-        const { targetPic, isSending, message, fileCode, consecutiveMessage, isSent, timestamp } = this.props;
+        const { targetPic, userPic, isSending, message, isImage, consecutiveMessage, timestamp } = this.props;
         const { showDate } = this.state;
-
-        let isNotSent = false;
-        if (isSending && !isSent) {
-            isNotSent = true;
-        }
         
         let date;
         if (showDate) {
             date = 
-            <Text style = {{ color: getTheme('text')}}>
+            <Text style = {{ color: getColor(this.props.theme, 'color')}}>
                 { this.getDateString(timestamp) }
             </Text>
         }
@@ -54,11 +49,10 @@ class MessageCard extends React.Component {
                         style = { [ 
                             styles.card, 
                             (isSending) ? styles.sender : styles.receiver, 
-                            (isSending) ? { backgroundColor: getTheme(null)} : { backgroundColor: '#DEDEDE'},
-                            (isNotSent) ? { opacity: 0.6 } : null
+                            (isSending) ? { backgroundColor: getColor(this.props.theme, 'msgSender')} : { backgroundColor: getColor(this.props.theme, 'msgReceiver')},
                         ] }
                     >
-                        <Text style = {[ styles.message,(isSending ? { color: 'white'} : { color: 'black' })]}>
+                        <Text style = {[ styles.message,(isSending ? { color: getColor(this.props.theme, 'msgSenderColor')} : { color: getColor(this.props.theme, 'msgReceiverColor') })]}>
                             { message }
                         </Text>
                     </View>
@@ -67,7 +61,7 @@ class MessageCard extends React.Component {
             </View>;
         
         /* Check if message is image */
-        if (fileCode === 0 || fileCode === 1) {
+        if (isImage === 1) {
             finalMessage = 
             <View style = {[ (isSending) ? styles.sender : styles.receiver,  styles.card] }>
                 <Image  
@@ -79,16 +73,17 @@ class MessageCard extends React.Component {
     
         }
     
-    
-        /* Only display user avatar next to message if not consecutive message and is receiving */
-        let chatHead = <View style = { (isSending) ? {padding : 10 } : { padding : 27 } }></View>;
+        /* Only display user avatar next to message if not consecutive message */
+        let chatHead = <View style = { styles.chatHead}></View>;
         if (!consecutiveMessage) {
             if (!isSending) {
                 chatHead = <Image source = { { uri :  targetPic }} style = {styles.chatHead} />;
-            } 
+            }
+            else {
+                chatHead = <Image source = { { uri :  userPic }} style = {styles.chatHead} />;
+            }
         }
         
-
         return (
             <View style = { (!isSending) ? styles.container: styles.reverseContainer }>
                 {chatHead}

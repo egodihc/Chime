@@ -20,16 +20,16 @@ export const getContacts = () => {
 }
 
 
-export const insertContactData = (first, last, id, lastSeen, picture) => {
+export const insertContactData = (first, last, username, lastSeen, picture) => {
 
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'contactsChime.db', location: 'Library'})
         .then(DB => {
     
-            DB.executeSql(`SELECT * FROM CONTACTS WHERE id = ${id}`)
+            DB.executeSql(`SELECT * FROM CONTACTS WHERE username = "${username}"`)
             .then(([results]) => {
                 if (results.rows.length === 0) {
-                    DB.executeSql(`INSERT INTO Contacts (first, last, id, lastSeen, picture) VALUES("${first}","${last}", ${id}, "${lastSeen}", "${picture}")`)
+                    DB.executeSql(`INSERT INTO Contacts (first, last, username, lastSeen, picture) VALUES("${first}","${last}", "${username}", "${lastSeen}", "${picture}")`)
                     .then(() => {
                         console.log('Contact inserted');
                         resolve(true);
@@ -44,9 +44,8 @@ export const insertContactData = (first, last, id, lastSeen, picture) => {
                                     SET first = "${first}",
                                         last = "${last}",
                                         lastSeen = "${lastSeen}",
-                                        id = ${id},
                                         picture = "${picture}"
-                                        WHERE id  = ${id}`)
+                                        WHERE username  = "${username}"`)
                     .then(() => {
                         console.log('Contact updated');
                         resolve(true);

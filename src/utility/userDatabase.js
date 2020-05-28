@@ -22,12 +22,12 @@ export const getUser = () => {
 }
 
 
-export const insertUserData = (first, last, email, password, ID, picture) => {
+export const insertUserData = (first, last, username, password, picture) => {
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'userChime.db', location: 'Library'})
         .then(DB => {
     
-            DB.executeSql(`INSERT INTO User (first, last, email, pw, id, picture, theme) VALUES("${first}","${last}", "${email}", "${password}", ${ID}, "${picture}", "LIGHT")`)
+            DB.executeSql(`INSERT INTO User (first, last, username, password, picture, theme) VALUES("${first}","${last}", "${username}", "${password}", "${picture}", "DARK")`)
             .then(() => {
                 console.log('User data inserted');
                 resolve(true);
@@ -46,7 +46,7 @@ export const saveThemeToDB = (theme) => {
         SQLite.openDatabase({name: 'userChime.db', location: 'Library'})
         .then(DB => {
     
-            DB.executeSql(`UPDATE User SET Theme = "${theme}"`)
+            DB.executeSql(`UPDATE User SET theme = "${theme}"`)
             .then(() => {
                 console.log('Theme saved.', theme);
                 resolve(true);

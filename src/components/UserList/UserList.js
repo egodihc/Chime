@@ -1,22 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { 
-    ScrollView,
-    StyleSheet
-} from 'react-native';
+import { ScrollView,StyleSheet} from 'react-native';
 
 import UserCard from './UserCard';
 
-import { getList, setDisable } from '../../store/actions/messenger';
-import { CLEAN_MESSAGES } from '../../store/constants';
-// import { insertContactData } from '../../utility/contactsDatabase';
+import { getList } from '../../store/actions/list';
+import { CLEAR_MESSAGE_STATE } from '../../store/constants';
 
+import { insertContactData } from '../../utility/contactsDatabase';
 
 const mapStateToProps = (state) => {
     return {
-        user: state.auth.user,
-        list: state.messenger.list
+        authData: state.auth.authData,
+        list: state.list.list
     };
 }
 
@@ -24,51 +21,61 @@ const mapDispatchToProps = (dispatch) => {
 
     return {
         getList : (authData) => dispatch(getList(authData)),
-        clearMessages: () => dispatch({ type : CLEAN_MESSAGES })
+        clearMessages: () => dispatch({ type : CLEAR_MESSAGE_STATE })
     };
 }
 
 class UserList extends React.Component {
 
+    interval;
+
     constructor(props) {
         super(props);
-        const user = this.props.user;
-        this.props.getList({
-            id: user.id,
-            pw: user.pw
-        })
     }
 
+    componentDidMount = () => {
+        this.getList();
+        this.interval = setInterval(this.getList, 10000);
+    }
+
+    componentWillUnmount = () => {
+        clearInterval(this.interval);
+    }
+
+    getList = () => {
+        this.props.getList(this.props.authData.username);
+    }
+
+
     componentDidUpdate = () => {
-        // const { list } = this.props;
-        // if (list.length > 0) {
-        //     for (let i = 0; i < list.length; i++) {
-        //         console.log(i, list[i]);
-        //         const { first, last, id, lastSeen, picture } = list[i];
-        //         insertContactData(first, last, id, lastSeen, picture)
-        //         .then();
-        //     }
-        // }
+        /* Save contacts to DB every time user list updates */
+        const { list } = this.props;
+        if (list.length > 0) {
+            for (let i = 0; i < list.length; i++) {
+                const { first, last, username, lastSeen, picture } = list[i];
+                insertContactData(first, last, username, lastSeen, picture)
+                .then(() =>{})
+                .catch(err => alert(err));
+            }
+        }
     }
     
     onSelectUser = (user) => {
+        /* Clear messages when new user is selected */
         this.props.clearMessages();
         this.props.onSelectUser(user);
     }
 
 
     render() {
-
-        let userList = null;
-        
-        userList = this.props.list.map((user,i) => {
-            return <UserCard key = {i}
-                            onSelectUser = {this.onSelectUser}
-                            user = { user }
+        const userList = this.props.list.map((user) => {
+            return <UserCard 
+                        key = {`${Math.random()} ${Math.random()}`}
+                        onSelectUser = {this.onSelectUser}
+                        user = { user }
                              />
         });
 
-        
         return (
             <ScrollView style = {styles.container}>
                 { userList }
@@ -82,7 +89,7 @@ class UserList extends React.Component {
 const styles = StyleSheet.create({
     container: {
         paddingTop: 20,
-        height: '100%'
+        height: '80%'
     }
 })
 

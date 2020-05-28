@@ -1,36 +1,44 @@
-export const TRY_AUTH = 'TRY_AUTH';
-export const LOAD_USER = 'LOAD_USER';
-
 export const UI_START_LOADING = 'UI_START_LOADING';
 export const UI_STOP_LOADING = 'UI_STOP_LOADING';
 
-export const SET_CODE = 'SET_CODE';
-export const SET_LOGGED_IN = 'SET_LOGGED_IN';
-export const SET_TRANSITIONED = 'SET_TRANSITIONED';
+export const LOAD_USER = 'LOAD_USER';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const CLEAR_AUTH_CODE = 'CLEAR_AUTH_CODE';
 
+export const LOAD_ROUTE = 'LOAD_ROUTE';
+
+export const LIST_SUCCESS = 'LIST_SUCCESS';
 export const LOAD_LIST = 'LOAD_LIST';
+export const LIST_FAIL = 'LIST_FAIL';
 
+export const LOAD_TARGET = 'LOAD_TARGET';
+
+export const MSG_FETCH_PENDING = 'MSG_FETCH_PENDING';
+export const MSG_FETCH_SUCCESS = 'MSG_FETCH_SUCCESS';
+export const MSG_FETCH_FAIL = 'MSG_FETCH_FAIL';
+export const SET_MESSAGES_LOADED = 'SET_MESSAGES_LOADED';
 export const LOAD_MESSAGES = 'LOAD_MESSAGES';
-export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
-export const CLEAN_MESSAGES = 'CLEAN_MESSAGES';
+
+export const MSG_SEND_PENDING = 'MSG_SEND_PENDING';
+export const MSG_SEND_SUCCESS = 'MSG_SEND_SUCCESS';
+export const MSG_SEND_FAIL = 'MSG_SENT_FAIL';
+export const CLEAR_MESSAGE_STATE = 'CLEAR_MESSAGE_STATE';
+
+
+
+export const SET_PROFILE_TARGET = 'SET_PROFILE_TARGET';
+export const LOAD_PROFILE = 'LOAD_PROFILE';
+
+export const UPDATE_PROFILE_PENDING = 'UPDATE_PROFILE_PENDING';
+export const UPDATE_PROFILE_SUCCESS = 'UPDATE_PROFILE_SUCCESS';
+export const UPDATE_PROFILE_FAIL = 'UPDATE_PROFILE_FAIL';
+export const CLEAR_RESPONSE_CODE = 'CLEAR_RESPONSE_CODE';
+
+
+export const RESET_APP_STATE = 'RESET_APP_STATE';
 
 export const TOGGLE_THEME = 'TOGGLE_THEME';
 export const SET_THEME = 'SET_THEME';
 
-export const GET_PROFILE = 'GET_PROFILE';
-export const LOAD_PROFILE = 'LOAD_PROFILE';
-export const SET_FAIL_PROFILE = 'SET_FAIL_PROFILE';
-export const EDIT_PROFILE_SUCCESS = 'EDIT_PROFILE_SUCCESS';
-export const EDIT_PROFILE_FAILED = 'EDIT_PROFILE_FAILED';
-export const CLEAR_RESPONSE_CODE = 'CLEAR_RESPONSE_CODE';
-
-export const SET_TARGET = 'SET_TARGET';
-
-export const THEME = 'DARK';
-
-// export const ADDRESS = 'http://192.168.1.76:3001';
-
-export const ADDRESS = 'https://chat-time-api.herokuapp.com';
-
-export const RESET_APP_STATE = 'RESET_APP_STATE';
-
+export const ADDRESS = 'https://chimemsa.azurewebsites.net/';

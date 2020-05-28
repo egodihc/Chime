@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
     }
 }
 
-class MessengerNavBar extends React.Component {
+class ProfileNavBar extends React.Component {
 
     constructor(props) {
         super(props);
@@ -25,11 +25,8 @@ class MessengerNavBar extends React.Component {
                         <Icon name = {'md-arrow-back'} color = {getColor(this.props.theme, 'color')} size={30} />
                     </TouchableOpacity>
                 </View>
-                <View style = {[styles.subContainer, {backgroundColor: getColor(this.props.theme, 'backgroundColor')}]}>
-                    <Text style ={{color: getColor(this.props.theme, 'color')}}>{ `${this.props.target.first} ${this.props.target.last}`}</Text>
-                    <TouchableOpacity onPress = {this.props.toggleMode}>
-                        <Image source = {{uri: this.props.target.picture}} style = {styles.imageContainer}/>
-                    </TouchableOpacity>
+                <View style = {styles.titleContainer}>
+                    <Text style = {{color: getColor(this.props.theme, 'color')}}>My profile</Text>
                 </View>
             </View>
         )
@@ -37,32 +34,23 @@ class MessengerNavBar extends React.Component {
 }
 
 
-export default connect(mapStateToProps, null)(MessengerNavBar);
+export default connect(mapStateToProps, null)(ProfileNavBar);
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'row',
         height: '100%',
-        justifyContent: 'space-between'
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    titleContainer: {
+        paddingLeft: 10
     },
     backButton: {
         justifyContent: 'center',
         alignItems: 'center',
         paddingLeft: 20,
         paddingRight: 20
-    },
-    subContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '95%',
-        paddingRight: 10
-    },
-    imageContainer: {
-        width: 40,
-        height: 40,
-        borderRadius: 20
     }
 })

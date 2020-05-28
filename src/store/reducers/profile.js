@@ -1,9 +1,9 @@
-import { LOAD_PROFILE, SET_FAIL_PROFILE, RESET_APP_STATE, EDIT_PROFILE_SUCCESS, EDIT_PROFILE_FAILED, CLEAR_RESPONSE_CODE } from "../constants";
+import { LOAD_PROFILE, SET_FAIL_PROFILE, RESET_APP_STATE, CLEAR_RESPONSE_CODE, UPDATE_PROFILE_SUCCESS, UPDATE_PROFILE_FAIL, UPDATE_PROFILE_PENDING } from "../constants";
 
 const initialState = {
     profile: null,
     profileFetchResponse: -1,
-    profileEditResponse: -1
+    profileEdiState: null
 }
 
 export const reducer = (state = initialState, action) => {
@@ -11,7 +11,7 @@ export const reducer = (state = initialState, action) => {
     switch(action.type) {
         case LOAD_PROFILE:
             return {
-                profileEditResponse: -1,
+                ...state,
                 profile: action.payload,
                 profileFetchResponse: 0
             }
@@ -20,16 +20,22 @@ export const reducer = (state = initialState, action) => {
                 ...state,
                 profileFetchResponse: action.payload
             }
-        case EDIT_PROFILE_SUCCESS:
+        case UPDATE_PROFILE_PENDING:
+            return {
+                ...state,
+                profileFetchResponse: -1,
+                profileEditState: 'PENDING'
+            }
+        case UPDATE_PROFILE_SUCCESS:
             return {
                 profileFetchResponse: -1,
                 profile: action.payload,
-                profileEditResponse: 0
+                profileEditState: 'SUCCESS'
             }
-        case EDIT_PROFILE_FAILED:
+        case UPDATE_PROFILE_FAIL:
             return {
                 ...state,
-                profileEditResponse: action.payload
+                profileEditState: 'FAIL'
             }
         case CLEAR_RESPONSE_CODE: 
             return initialState;

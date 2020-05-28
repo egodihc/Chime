@@ -5,7 +5,6 @@ import {
     View,
     StyleSheet,
     ScrollView,
-    TouchableOpacity,
     Dimensions,
     Text,
     ActivityIndicator
@@ -14,25 +13,23 @@ import {
 import OtherProfile from '../OtherProfile/OtherProfile';
 import MessengerNavBar from './MessengerNavBar';
 import MessageCard from './MessageCard';
-import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 
 import ImagePicker from 'react-native-image-picker';
-// import RNFetchBlob from 'react-native-fetch-blob';
-import Icon from 'react-native-vector-icons/Ionicons';
 
-import { getTheme } from '../../utility/theme';
+import { getColor } from '../../utility/theme';
 import { getMessages, sendMessage } from '../../store/actions/messenger';
-import { CLEAR_MESSAGES } from '../../store/constants';
-
-
+import { SET_MESSAGES_LOADED } from '../../store/constants';
+import MessengerInput from '../../components/Messenger/MessengerInput/MessengerInput';
 
 const mapStateToProps = (state) => {
     return {
+        authData: state.auth.authData,
         user: state.auth.user,
         messages: state.messenger.messages,
         messagesLoaded: state.messenger.messagesLoaded,
         isLoading: state.ui.isLoading,
-        target: state.messenger.target
+        target: state.messenger.target,
+        theme: state.theme.theme
     };
 }
 
@@ -41,14 +38,15 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getMessages : (config) => dispatch(getMessages(config)),
         sendMessage: (config) => dispatch(sendMessage(config)),
-        clearMessages : () => dispatch({ type : CLEAR_MESSAGES })
+        setMessagesLoaded : () => dispatch({ type : SET_MESSAGES_LOADED })
     };
 }
 
 class MessengerScreen extends React.Component {
 
     static navigationOptions = ({ navigation }) => ({
-        headerTitle: <MessengerNavBar toggleMode = {navigation.getParam('onToggleViewMode')} />
+        headerTitle: <MessengerNavBar toggleMode = {navigation.getParam('onToggleViewMode')} goBack = {navigation.getParam('goBack')}/>,
+        headerLeft: null
     });
 
     constructor(props) {
@@ -58,10 +56,9 @@ class MessengerScreen extends React.Component {
             messageField: null,
             firstLoad: true,
             config: {
-                sender: this.props.user.id,
-                destination: this.props.target.id,
-                isGroup: this.props.target.isGroup,
-                pw: this.props.user.pw
+                sender: this.props.authData.username,
+                destination: this.props.target.username,
+                password: this.props.authData.password
             },
             tempMessages: [],
             mode: 'messenger',
@@ -70,56 +67,52 @@ class MessengerScreen extends React.Component {
         Dimensions.addEventListener('change',this.updateStyles);
     }
 
+    componentDidMount() {
+        this.props.navigation.setParams({ onToggleViewMode: this.onToggleViewMode, goBack: () => { this.props.navigation.goBack()} });
+        this.updateMessages();
+        this.interval = setInterval(() => { this.updateMessages(); }, 3000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+        Dimensions.removeEventListener('change',this.updateStyles);
+    }
+
     updateStyles = (dims) => {
         this.setState({
             viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
         })
     }
 
-    componentDidMount() {
-        this.props.navigation.setParams({ onToggleViewMode: this.onToggleViewMode });
+    updateMessages = () => {
         this.props.getMessages(this.state.config);
     }
 
-    componentWillUnmount() {
-        Dimensions.removeEventListener('change',this.updateStyles);
-    }
-
     componentDidUpdate() {
-
         /* Update the component every time new messages are fetched */
         if (!this.props.messagesLoaded) {
             this.setState(prevState => {
                 return {
                     ...prevState,
                     messages: this.props.messages,
-                    tempMessages: [],
                     firstLoad: false
                 }
             })
             /* Lock this loop */
-            this.props.clearMessages();
-            this.scrollView.scrollToEnd({animated: true});
+            this.props.setMessagesLoaded();
+            if (this.state.mode === 'messenger') {
+                this.scrollView.scrollToEnd({animated: true});
+            }
         }
     }
 
     onToggleViewMode = () => {
-        this.setState(prevState => {
-            return {
-                ...prevState,
-                mode: (prevState.mode === 'messenger') ? 'profile' : 'messenger'
-            }
-        })
+        this.setState({mode: (this.state.mode === 'messenger') ? 'profile' : 'messenger'});
     }
 
     /* Input field handler */
     updateMessageField = (text) => {
-        this.setState(prevState => {
-            return {
-                ...prevState,
-                messageField: text
-            }
-        })
+        this.setState({messageField: text});
     }
 
     sendMessage = () => {
@@ -131,40 +124,13 @@ class MessengerScreen extends React.Component {
             /* Call API to send message */
             this.props.sendMessage({
                 ...config,
-                isFile: 0,
+                isImage: 0,
                 message: messageField
             });
 
-            /* Add temp message */
-            let tempMessages = this.state.tempMessages;
-            const tempMessage = {
-                ...config,
-                isFile: 0,
-                message: messageField,
-                isTemp: true
-            };
-
-            tempMessages.push(tempMessage);
-            let messages = this.state.messages;
-            messages.push({
-                ...tempMessage,
-                filecode: 10
-            });
-            this.setState(prevState => {
-                return {
-                    ...prevState,
-                    tempMessages: tempMessages,
-                    messages: messages
-                }
-            })
-
             /* Clear message input field */
-            this.setState(prevState => {
-                return {
-                    ...prevState,
-                    messageField: null
-                }
-            });
+            this.setState({messageField: ""});
+
             this.scrollView.scrollToEnd({animated: true});
         }
     }
@@ -188,7 +154,7 @@ class MessengerScreen extends React.Component {
         else {
             this.props.sendMessage({
                 ...this.state.config,
-                isFile: 1,
+                isImage: 1,
                 message: `data:image/png;base64,${res.data}`
             });
         }
@@ -196,9 +162,8 @@ class MessengerScreen extends React.Component {
 
 
     render() {
-        
 
-        const { target, messages, user, isLoading } = this.props;
+        const { messages, user, isLoading } = this.props;
 
         if (this.state.firstLoad) {
             this.conversation = <ActivityIndicator />;
@@ -216,39 +181,23 @@ class MessengerScreen extends React.Component {
                             consecutiveMessage = true;
                         }
                     }
-    
-                    let isSending = (message.sender === user.id);
-                    let targetPic = target.picture;
 
-                    /* Check if message was sent */
-                    let isSent = false;
-                    if (message.isTemp === undefined) {
-                        isSent = true;
-                    }
-                    
-                    /* Change target picture according to group chat */
-                    if (target.isGroup) {
-                        for (var j = 0; j < members.length; j++) {
-                            if (members[j].id === message.sender) {
-                                targetPic = members[j].picture;
-                            }
-                        }
-                    }
-    
-                    return <MessageCard key = {i}
-                                    targetPic = { targetPic } 
-                                    isSending = { isSending }
-                                    consecutiveMessage = { consecutiveMessage } 
-                                    message = { message.message } 
-                                    fileCode = { message.filecode }
-                                    isSent = {isSent}
-                                    timestamp = { message.timestamp }
+                    return <MessageCard 
+                                    key = {i}
+                                    targetPic = {this.props.target.picture} 
+                                    userPic = {this.props.user.picture}
+                                    isSending = {(message.sender === user.username)}
+                                    consecutiveMessage = {consecutiveMessage} 
+                                    message = {message.message} 
+                                    isImage = {message.isImage}
+                                    theme={this.props.theme}
+                                    timestamp = {message.timestamp}
                                      />
                 });
             }
             else {
                 this.conversation = 
-                <Text style = {[styles.intro, { color : getTheme('text')}]}>
+                <Text style = {[styles.intro, { color : getColor(this.props.theme, 'color')}]}>
                     This is the beginning of your chat history with { `${this.props.target.first} ${this.props.target.last}`}
                 </Text>
             }
@@ -257,51 +206,37 @@ class MessengerScreen extends React.Component {
 
         if (this.state.mode === 'messenger') {
             return (
+            
                 
-                
-                <View style = {[styles.container, { backgroundColor : getTheme('bg')}]}>
+                <View style = {[styles.container, { backgroundColor : getColor(this.props.theme, 'backgroundColor')}]}>
 
                     {/* Message list section  */}
                     <ScrollView style = {styles.scrollView}
                         ref = {ref => this.scrollView = ref}
-                        onContentSizeChange={(contentWidth, contentHeight)=>{        
-                            this.scrollView.scrollToEnd({animated: true});
+                        onContentSizeChange={(contentWidth, contentHeight)=>{    
+                            if (contentHeight > 0){
+                                this.scrollView.scrollToEnd({animated: true});
+                            }    
                         }}>
                         { this.conversation }
                     </ScrollView>
                     
-
                     {/* Message input section  */}
-                    <View style = { styles.inputContainer }>
-                        <View style = {[styles.media, (this.state.viewMode === 'portrait') ? null : styles.landscapeMediaContainer ]}>
-                            <TouchableOpacity onPress = {this.onLaunchCamera}>
-                                <Icon name = { 'md-camera' } color = { getTheme(null) } size = {30}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress = {this.onLaunchImageLibrary}>
-                                <Icon name = { 'md-image' } color = { getTheme(null) } size = {30}/>
-                            </TouchableOpacity>
-                        </View>
-                        <View style = {[styles.textArea , (this.state.viewMode === 'portrait') ? null : styles.landscapeTextAreaContainer ]}>
-                            <DefaultInput 
-                                style = {styles.messageInput} 
-                                placeholder = 'Send a message'
-                                onChangeText = { (text) => { this.updateMessageField(text) }}
-                                value = { this.state.messageField }
-                            />
-                            <TouchableOpacity onPress = {this.sendMessage}>
-                                <Icon name = { 'md-send' } color = { getTheme(null) } size = {30}/>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-    
+                    <MessengerInput 
+                        onChangeText = {this.updateMessageField} 
+                        value = {this.state.messageField}
+                        onSend={this.sendMessage}
+                        theme={this.props.theme}
+                        viewMode = {this.state.viewMode}
+                        onLaunchCamera={this.onLaunchCamera}
+                        onLaunchImageLibrary={this.onLaunchImageLibrary}
+                    />
                 </View>
             )
         }
         else {
             return <OtherProfile user = {this.props.target} onBack = {this.onBacktoMessengerMode}></OtherProfile>
         }
-
-
     }
 }
 
@@ -312,41 +247,14 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'space-between'
     },
-    media: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '20%'
-    },
     scrollView: {
         marginTop: 10
     },
     conversation: {
         justifyContent: 'flex-start'
     },
-    inputContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        marginLeft: 10,
-    },
     intro: {
         textAlign: 'center'
-    },  
-    messageInput: {
-        borderRadius: 5,
-        width: '85%'
-    },
-    textArea: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center'
-    },
-    landscapeMediaContainer: {
-        width: '10%'
-    },
-    landscapeTextAreaContainer: {
-        width: '90%'
     }
 })
 

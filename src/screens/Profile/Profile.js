@@ -1,32 +1,40 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { View, Image, StyleSheet, ActivityIndicator, TouchableOpacity, Dimensions, Keyboard } from 'react-native';
+import { View, Text, Image, StyleSheet, ActivityIndicator, TouchableOpacity, Dimensions, Keyboard } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import ImagePicker from 'react-native-image-picker';
+
 import Button from '../../components/UI/Button/Button';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
-import MainText from '../../components/UI/MainText/MainText';
 
-import { getTheme } from '../../utility/theme';
+import { getColor } from '../../utility/theme';
 import { getProfile, saveProfile } from '../../store/actions/profile';
+import ProfileNavBar from './ProfileNavBar';
 
 const mapStateToProps = (state) => {
     return {
-        user: state.auth.user,
-        profileAPIState: state.profile
+        authData: state.auth.authData,
+        profileAPIState: state.profile,
+        theme: state.theme.theme
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getProfile : (id) => dispatch(getProfile(id)),
+        getProfile : (username) => dispatch(getProfile(username)),
         saveProfile: (params) => dispatch(saveProfile(params))
     }
 }
 
 class ProfileScreen extends React.Component {
+
+    static navigationOptions = ({ navigation }) => ({
+        headerTitle: <ProfileNavBar goBack = {navigation.getParam('goBack')}/>,
+        headerLeft: null
+    });
 
     constructor(props) {
         super(props);
@@ -37,10 +45,11 @@ class ProfileScreen extends React.Component {
             mode: 'view',
             keyboard: 'hide',
             controls: {
-                blurb: '',
+                about: '',
                 occupation: '',
                 birthday: '',
-                location: ''
+                location: '',
+                picture: ''
             },
             editPending: false
         }
@@ -50,8 +59,46 @@ class ProfileScreen extends React.Component {
     }
 
     componentDidMount() {
+        this.props.navigation.setParams({ goBack: () => {this.props.navigation.goBack()} });
         /* Call fetch profile API */
-        this.props.getProfile(this.props.user.id);
+        this.props.getProfile(this.props.authData.username);
+    }
+
+    componentDidUpdate() {
+
+        /* Load the profile if successfully fetched */
+        const { profile, profileFetchResponse, profileEditState } = this.props.profileAPIState;
+        if (!this.state.profileLoaded) {
+            if (profileFetchResponse === 0 && !this.state.editPending) {
+                this.setState(prevState => {
+                    return {
+                        ...prevState,
+                        profile: profile,
+                        controls: {
+                            birthday: profile.birthday,
+                            location: profile.location,
+                            occupation: profile.occupation,
+                            about: profile.about
+                        },
+                        profileLoaded: true
+                    }
+                })
+            }
+            else if (profileEditState === 'SUCCESS' && this.state.editPending) {
+                this.setState(prevState => {
+                    return {
+                        ...prevState,
+                        mode: 'view',
+                        profile: profile,
+                        controls: {
+                            ...profile
+                        },
+                        profileLoaded: true,
+                        editPending: false
+                    }
+                })
+            }
+        }
     }
 
     keyboardDidShow = () => {
@@ -80,38 +127,7 @@ class ProfileScreen extends React.Component {
         });
     }
 
-    componentDidUpdate() {
 
-        /* Load the profile if successfully fetched */
-        const { profile, profileFetchResponse, profileEditResponse } = this.props.profileAPIState;
-        if (!this.state.profileLoaded) {
-            if (profileFetchResponse === 0 && !this.state.editPending) {
-                this.setState(prevState => {
-                    return {
-                        ...prevState,
-                        profile: profile,
-                        controls: {
-                            ...profile
-                        },
-                        profileLoaded: true
-                    }
-                })
-            }
-            else if (profileEditResponse === 0 && this.state.editPending) {
-                this.setState(prevState => {
-                    return {
-                        ...prevState,
-                        profile: profile,
-                        controls: {
-                            ...profile
-                        },
-                        profileLoaded: true,
-                        editPending: false
-                    }
-                })
-            }
-        }
-    }
 
     updateDimensions = (dims) => {
         this.setState({
@@ -132,55 +148,71 @@ class ProfileScreen extends React.Component {
         this.setState(prevState => {
             return {
                 ...prevState,
-                profile: null,
                 profileLoaded: false,
-                mode: 'view',
                 editPending: true
             }
         });
         this.props.saveProfile({ 
             ...this.state.controls,
-            picture: null,
-            id: this.props.user.id,
-            pw: this.props.user.pw
+            username: this.props.authData.username,
+            password: this.props.authData.password
+        });
+    }
+
+    
+    pickImageHandler = () => {
+        ImagePicker.showImagePicker({ title: 'Upload a new profile picture'}, res => {
+            if (res.didCancel) {
+                console.log('User cancelled');
+            }
+            else if (res.error) {
+                console.log('Error', res.error);
+            }
+            else {
+                this.setState(prevState => {
+                    return {
+                        ...prevState,
+                        profile: {
+                            ...prevState.profile,
+                            picture: res.uri
+                        },
+                        controls: {
+                            ...prevState.controls,
+                            picture: `data:image/png;base64,${res.data}`
+                        }
+                    }
+                })
+            }
         });
     }
 
     render() {
         if (this.state.profile === null) {
             return (
-                <View style = {styles.loadingContainer}>
+                <View style = {[styles.loadingContainer, { backgroundColor: getColor(this.props.theme, 'backgroundColor')}]}>
                     <ActivityIndicator></ActivityIndicator>
                 </View>
             )
         }
         else if (this.state.mode === 'view') {
             return (
-                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme('bg')} ]}>
+                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getColor(this.props.theme, 'backgroundColor')} ]}>
 
                     <View style = {styles.primaryDetailContainer}>
-                        <View style = { [styles.avatarBox, { borderColor: getTheme('text')}] }>
+                        <View style = { [styles.avatarBox, { borderColor: getColor(this.props.theme, 'border')}] }>
                             <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
                         </View>
-                        <MainText>
-                            { `${this.state.profile.first} ${this.state.profile.last}` }
-                        </MainText>
+                        <Text style = {{color:getColor(this.props.theme, 'color')}}>{ `${this.state.profile.first} ${this.state.profile.last}` }</Text>
                     </View>
-
 
                     <View style = {styles.secondaryDetailContainer}>
-                        <MainText>
-                            { `About me : ${this.state.profile.blurb}` }
-                        </MainText>
-                        <MainText>
-                            { `Occupation : ${this.state.profile.occupation}` }
-                        </MainText>
-                        <MainText>
-                            { `Birthday : ${this.state.profile.birthday}` }
-                        </MainText>
+                        <Text style = {{color:getColor(this.props.theme, 'color')}}>{ `About me : ${this.state.profile.about}` }</Text>
+                        <Text style = {{color:getColor(this.props.theme, 'color')}}>{ `Occupation : ${this.state.profile.occupation}` }</Text>
+                        <Text style = {{color:getColor(this.props.theme, 'color')}}>{ `Location : ${this.state.profile.location}` }</Text>
+                        <Text style = {{color:getColor(this.props.theme, 'color')}}>{ `Birthday : ${this.state.profile.birthday}` }</Text>
                     </View>
                     <View style = {styles.itemTopContainer}>
-                        <View style = {styles.iconContainer}>
+                        <View style = {[styles.iconContainer, { borderColor: getColor(this.props.theme, 'border')}]}>
                             <TouchableOpacity onPress = {this.onToggleEditMode}>
                                 <Icon name = { Platform.OS === 'android' ? 'md-create' : 'ios-create'} size = {30} color = '#bbb' />
                             </TouchableOpacity>
@@ -191,41 +223,61 @@ class ProfileScreen extends React.Component {
         }
         else {
             return (
-                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme('bg')} ]}>
+                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getColor(this.props.theme, 'backgroundColor')} ]}>
                     {(this.state.keyboard === 'hide') ? 
                         <View style = {styles.primaryDetailContainer}>
-                            <View style = { [styles.avatarBox, { borderColor: getTheme('text')}] }>
-                                <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
-                            </View>
-                            <MainText>
-                                { `${this.state.profile.first} ${this.state.profile.last}` }
-                            </MainText>
+                            <TouchableOpacity onPress={this.pickImageHandler}>
+                                <View style = { [styles.avatarBox, { borderColor: getColor(this.props.theme, 'border')}] }>
+                                    <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
+                                </View>
+                            </TouchableOpacity>
+                            <Text style = {{color:getColor(this.props.theme, 'color')}}>{ `${this.state.profile.first} ${this.state.profile.last}` }</Text>
                         </View>
                         :
                         null
                     }
-                    <View style = {styles.secondaryDetailContainer}>
+                    <View style = {[styles.secondaryDetailContainer, (this.state.viewMode==='portrait') ? {marginTop: 30}: null]}>
                         <DefaultInput 
                             placeholder = {'About me'} 
                             style = {styles.input} 
-                            defaultValue = {this.state.profile.blurb}
-                            onChangeText = { (text) => { this.editItem('blurb',text)}}
+                            theme={this.props.theme}
+                            defaultValue = {this.state.profile.about}
+                            onChangeText = { (text) => { this.editItem('about',text)}}
                         />
                         <DefaultInput 
                             placeholder = {'Occupation'} 
                             style = {styles.input} 
+                            theme={this.props.theme}
                             defaultValue = {this.state.profile.occupation} 
                             onChangeText = { (text) => { this.editItem('occupation',text)}}
                         />
                         <DefaultInput 
+                            placeholder = {'Location'} 
+                            style = {styles.input}
+                            theme={this.props.theme}
+                            defaultValue = {this.state.profile.location} 
+                            onChangeText = { (text) => { this.editItem('location',text)}}
+                        />
+                        <DefaultInput 
                             placeholder = {'Birthday'} 
                             style = {styles.input}
+                            theme={this.props.theme}
                             defaultValue = {this.state.profile.birthday} 
                             onChangeText = { (text) => { this.editItem('birthday',text)}}
                         />
                     </View>
                     <View style = {styles.itemTopContainer}>
-                        <Button style = {styles.button} onPress = {this.onSaveProfile} textColor = {'white'}>Save</Button>
+                        {(this.state.editPending === true) ?
+                        <View style = {[styles.loadingContainer, { flex: 0, backgroundColor: getColor(this.props.theme, 'backgroundColor')}]}>
+                            <ActivityIndicator></ActivityIndicator>
+                        </View>
+                        :
+                        <Button 
+                            style = {[styles.button, {borderColor: getColor(this.props.theme, 'border')}]} 
+                            onPress = {this.onSaveProfile} 
+                            textColor = {getColor(this.props.theme, 'color')}
+                            >Save</Button>
+                        }
                     </View>
                 </View>
             )
@@ -238,8 +290,7 @@ const styles = StyleSheet.create({
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: getTheme('bg')
+        alignItems: 'center'
     },
     itemTopContainer: {
         flex: 1,
@@ -251,7 +302,6 @@ const styles = StyleSheet.create({
         width: '70%'
     },
     iconContainer: {
-        borderColor: '#eee',
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
@@ -259,7 +309,6 @@ const styles = StyleSheet.create({
         height: 40
     },
     button: {
-        borderColor: 'white',
         width: '40%'
     },
     portraitContainer: {

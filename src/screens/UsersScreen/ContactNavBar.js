@@ -1,8 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import MainText from '../../components/UI/MainText/MainText';
+import { getColor } from '../../utility/theme';
+
+const mapStateToProps = (state) => {
+    return {
+        theme: state.theme.theme
+    }
+}
 
 class ContactNavBar extends React.Component {
 
@@ -12,13 +19,13 @@ class ContactNavBar extends React.Component {
 
     render() {
         return (
-            <View style = {styles.container}>
+            <View style = {[styles.container, {backgroundColor: getColor(this.props.theme, 'backgroundColor')}]}>
                 <View style = {styles.subContainer}>
-                <TouchableOpacity onPress = {this.props.toggleDrawer}>
+                <TouchableOpacity onPress = {this.props.openDrawer}>
                     <Icon style = {styles.drawerItemIcon} name = { Platform.OS === 'android' ? 'md-menu' : 'ios-menu'} size = {30} color = '#bbb' />
                 </TouchableOpacity>
-                <View>
-                    <MainText>CONTACTS</MainText>
+                <View style = {styles.title}>
+                    <Text style = {{color: getColor(this.props.theme, 'color')}}>CONTACTS</Text>
                 </View>           
                 </View>
             </View>
@@ -27,7 +34,7 @@ class ContactNavBar extends React.Component {
 }
 
 
-export default ContactNavBar;
+export default connect(mapStateToProps, null)(ContactNavBar);
 
 const styles = StyleSheet.create({
     container: {
@@ -35,10 +42,14 @@ const styles = StyleSheet.create({
     },
     subContainer: {
         flex: 1,
+        paddingLeft: 20,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         width: '95%'
+    },
+    title: {
+        marginLeft: 20
     },
     imageContainer: {
         width: 40,

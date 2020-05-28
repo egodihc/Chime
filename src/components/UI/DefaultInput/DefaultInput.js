@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
-import { getTheme } from '../../../utility/theme';
+import { getColor } from '../../../utility/theme';
 
 const DefaultInput = (props) => {
 
@@ -8,7 +8,14 @@ const DefaultInput = (props) => {
         <TextInput placeholderTextColor = {'#787878'}
             underlineColorAndroid = 'transparent'
             {...props} 
-            style = {[styles.input, props.style, (!props.valid && props.touched)? styles.invalid : null ]}
+            style = {[
+                styles.input, 
+                props.style, 
+                {
+                    color: getColor(props.theme, 'color'),
+                    backgroundColor: getColor(props.theme, 'backgroundColor'),
+                    borderColor: getColor(props.theme, 'border')
+                }]}
         />
     );
 }
@@ -19,15 +26,9 @@ const styles = StyleSheet.create({
     input: {
         width: '100%',
         borderWidth: 1,
-        color: getTheme('text'),
-        backgroundColor: getTheme('input'),
         borderColor: '#eee',
         padding: 5,
         marginTop: 8,
         marginBottom: 8
-    },
-    invalid: {
-        backgroundColor: '#f9c0c0',
-        borderColor: 'red'
     }
 });

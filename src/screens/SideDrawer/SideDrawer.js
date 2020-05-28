@@ -1,22 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { View, Image, Dimensions, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Alert, Text, Image, Dimensions, StyleSheet, TouchableOpacity, Platform, Switch } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import MainText from '../../components/UI/MainText/MainText';
 
 import { resetDB } from '../../utility/database';
-import { RESET_APP_STATE } from '../../store/constants';
+import { RESET_APP_STATE, TOGGLE_THEME, ADDRESS } from '../../store/constants';
+import { getColor } from '../../utility/theme';
+import { saveThemeToDB } from '../../utility/userDatabase';
 
 const mapStateToProps = (state) => {
     return {
-        user: state.auth.user
+        user: state.auth.user,
+        authData: state.auth.authData,
+        theme: state.theme.theme
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        resetAppState: () => dispatch({ type: RESET_APP_STATE })
+        resetAppState: () => dispatch({ type: RESET_APP_STATE }),
+        toggleTheme: () => dispatch({ type: TOGGLE_THEME })
     }
 }
 
@@ -25,7 +29,8 @@ class SideDrawer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
+            viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape',
+            switchValue: false
         }
         Dimensions.addEventListener('change',this.updateStyles);
     }
@@ -36,17 +41,62 @@ class SideDrawer extends React.Component {
         })
     }
 
+    componentDidUpdate() {
+        saveThemeToDB(this.props.theme)
+        .then(() => {});
+    }
+
     componentWillUnmount() {
         Dimensions.removeEventListener('change',this.updateStyles);
+    }
+
+    onDeleteAccount = () => {
+        Alert.alert(
+            'Delete account',
+            'Are you sure you want to delete your account? You cannot undo this action.',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => {},
+                    style: 'cancel',
+                },
+                {text: 'Yes', onPress: () => {this.deleteAccount()}}
+            ]
+        );
+        
+
+    }
+
+    deleteAccount = () => {
+        fetch(ADDRESS+'users', {
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify({
+                ...this.props.authData
+            }),
+            method : 'delete'
+        })
+        /* Parse the json response */
+        .then(response => response.json())
+        .then(res => {
+            if (res.code === 0) {
+                this.onSignOut();
+            }
+        })
+        .catch(err => {
+        });
     }
 
     onSignOut = () => {
         resetDB()
         .then((complete) => {
-            
             this.props.navigation.navigate('Startup');
             this.props.resetAppState();
         })
+    }
+
+    onValueChange = () => {
+        this.props.toggleTheme();
+        this.setState({switchValue: (this.state.switchValue) ? false: true});
     }
 
     onViewProfile = () => {
@@ -56,25 +106,40 @@ class SideDrawer extends React.Component {
     render() {
         const { viewMode } = this.state;
         return (
-            <View style = {[{ width: (viewMode === 'portrait') ? Dimensions.get('window').width * 0.8 : Dimensions.get('window').width * 0.41}, styles.container]}>
+            <View style = {[{ width: (viewMode === 'portrait') ? Dimensions.get('window').width * 0.78 : Dimensions.get('window').width * 0.41}, styles.container, {backgroundColor: getColor(this.props.theme, 'backgroundColor')}]}>
                 <View style = {styles.profileIconContainer}>
                     <Image source = {{uri: this.props.user.picture}} style = {styles.imageContainer}/>
                     <View style = {styles.nameContainer}>
-                        <MainText>{`${this.props.user.first} ${this.props.user.last}`}</MainText>
+                        <Text style = {{color:getColor(this.props.theme, 'color')}}>{`${this.props.user.first} ${this.props.user.last}`}</Text>
                     </View>
                 </View>
                 <TouchableOpacity onPress = {this.onViewProfile}>
                     <View style = {styles.drawerItem}>
                         <Icon style = {styles.drawerItemIcon} name = { Platform.OS === 'android' ? 'md-person' : 'ios-person'} size = {30} color = '#bbb' />
-                        <MainText>My Profile</MainText>
+                        <Text style = {{color:getColor(this.props.theme, 'color')}}>My Profile</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress = {this.onDeleteAccount}>
+                    <View style = {styles.drawerItem}>
+                        <Icon style = {styles.drawerItemIcon} name = { Platform.OS === 'android' ? 'md-trash' : 'ios-trash'} size = {30} color = '#bbb' />
+                        <Text style = {{color:getColor(this.props.theme, 'color')}}>Delete account</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress = {this.onSignOut}>
                     <View style = {styles.drawerItem}>
                         <Icon style = {styles.drawerItemIcon} name = { Platform.OS === 'android' ? 'md-log-out' : 'ios-log-out'} size = {30} color = '#bbb' />
-                        <MainText>Sign out</MainText>
+                        <Text style = {{color:getColor(this.props.theme, 'color')}}>Sign out</Text>
                     </View>
                 </TouchableOpacity>
+                <View style = {styles.drawerItem}>
+                    <Switch 
+                            onValueChange = {this.onValueChange} 
+                            value = {this.state.switchValue}
+                            trackColor = {{false: 'white', true: 'black'}}
+                            thumbColor = {'white'}
+                        />
+                    <Text style = {{color: getColor(this.props.theme, 'color')}}>Toggle theme</Text>
+                </View>
             </View>
         );
     }
@@ -85,7 +150,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(SideDrawer);
 const styles = StyleSheet.create({
     container: {
         paddingTop: 25,
-        backgroundColor: '#333',
         flex: 1
     },
     profileIconContainer: {
@@ -103,10 +167,10 @@ const styles = StyleSheet.create({
     drawerItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#333'
+        padding: 10
     },
     drawerItemIcon: {
+        width: 30,
         marginLeft: 10,
         marginRight: 10
     },

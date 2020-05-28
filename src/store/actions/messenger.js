@@ -1,46 +1,17 @@
 import { uiStartLoading, uiStopLoading } from "./ui";
-import { LOAD_LIST, LOAD_MESSAGES, ADDRESS, CLEAR_DISABLE_CARD, SET_DISABLE_CARD, SET_TARGET } from "../constants";
-
-export const getList = (authData) => (dispatch) => {
-
-    dispatch(uiStartLoading());
-
-    fetch(`${ADDRESS}/getList`, {
-        method :'post',
-		headers: {'Content-Type' : 'application/json'},
-		body: JSON.stringify({
-			id: authData.id,
-            pw: authData.pw
-        })
-    })
-    .then(res => res.json())
-    .then(res => {
-        if (res.code === 0) {
-            dispatch({ type: LOAD_LIST, payload: res.users });
-        }
-        else {
-            dispatch(uiStopLoading());
-        }
-    })
-    .catch(err => {
-        dispatch(uiStopLoading());
-    });
-
-}
-
+import { LOAD_MESSAGES, ADDRESS, CLEAR_DISABLE_CARD, SET_DISABLE_CARD, LOAD_TARGET } from "../constants";
 
 export const getMessages = (config) => (dispatch) => {
     
     dispatch(uiStartLoading());
-
-    fetch(`${ADDRESS}/getMessages`, {
+    
+    fetch(`${ADDRESS}/messages/fetch`, {
         method :'post',
 		headers: {'Content-Type' : 'application/json'},
 		body: JSON.stringify({
             sender: config.sender,
             destination: config.destination,
-            isGroup: config.isGroup,
-            pw: config.pw
+            password: config.password
         })
     })
     .then(res => res.json())
@@ -60,16 +31,15 @@ export const getMessages = (config) => (dispatch) => {
 export const sendMessage = (config) => (dispatch) => {
 
 
-    fetch(`${ADDRESS}/sendMessage`, {
+    fetch(`${ADDRESS}/messages/send`, {
         method :'post',
 		headers: {'Content-Type' : 'application/json'},
 		body: JSON.stringify({
             sender: config.sender,
             destination: config.destination,
             message: config.message,
-            isGroup: config.isGroup,
-            pw: config.pw,
-            isFile: config.isFile
+            password: config.password,
+            isImage: config.isImage
         })
     })
     .then(res => res.json())
@@ -103,16 +73,9 @@ export const setDisable = () => {
     }
 }
 
-export const loadList = (list) => {
+export const loadTarget = (target) => {
     return {
-        type: LOAD_LIST,
-        payload: list
-    }
-}
-
-export const setTarget = (target) => {
-    return {
-        type: SET_TARGET,
+        type: LOAD_TARGET,
         payload: target
     }
 }

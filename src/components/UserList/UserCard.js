@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { 
 	View, 
 	Text, 
@@ -8,8 +9,14 @@ import {
 	Dimensions
 } from 'react-native';
 
-import { getTheme } from '../../utility/theme';
+import { getColor } from '../../utility/theme';
 import { getLastOnline } from '../../utility/date';
+
+const mapStateToProps = (state) => {
+	return {
+		theme: state.theme.theme
+	}
+}
 
 class UserCard extends React.Component {
 
@@ -28,8 +35,18 @@ class UserCard extends React.Component {
         })
 	}
 	
+    wasRecentlyOnline = (lastSeen) => {
+		const timeNow = (new Date()).getTime();
+		return (timeNow - (lastSeen) <= 55*1000);
+	}
+	
 	getLastSeen = () => {
-		return getLastOnline(this.props.user.lastSeen);
+		if (this.wasRecentlyOnline(this.props.user.lastSeen)) {
+			return <View style = {styles.activityIndicator}></View>;
+		}
+		else {
+			return <Text style = {{color: getColor(this.props.theme, 'color')}}>{getLastOnline(this.props.user.lastSeen)}</Text>;	
+		}
 	}
 
 	componentWillUnmount() {
@@ -38,17 +55,18 @@ class UserCard extends React.Component {
     }
 
 	render() {
+		const activity = this.getLastSeen();
 		return (
 			<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user)}}>
-				<View style = {[styles.card, { backgroundColor : getTheme('bg')} ]}>
+				<View style = {[styles.card, { backgroundColor : getColor(this.props.theme, 'backgroundColor')} ]}>
 					<View style = {styles.dpContainer}>
 							<Image resizeMode="cover" source = { { uri : this.props.user.picture }} style = {styles.dp} ></Image>
 						</View>
 						<View style = {styles.textContainer}>
-							<Text style = {styles.text}> { `${this.props.user.first} ${this.props.user.last}` }</Text>
+							<Text style = {{color: getColor(this.props.theme, 'color')}}> { `${this.props.user.first} ${this.props.user.last}` }</Text>
 						</View>
 					<View style = {styles.lastSeenContainer}>
-						<Text style = {styles.text}>{this.getLastSeen()}</Text>			
+						{activity}
 					</View>
 				</View>
 			</TouchableNativeFeedback>
@@ -56,7 +74,7 @@ class UserCard extends React.Component {
 	} 
 }
 
-export default UserCard;
+export default connect(mapStateToProps, null)(UserCard);
 
 const styles = StyleSheet.create({
 	card: {
@@ -66,16 +84,21 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between'
 	},
 	textContainer: {
-		flex: 1
-	},
-	text: {
-		color : 'white'
+		flex: 1,
+		paddingLeft: 5
 	},
 	dpContainer: {
 		width: 50
 	},
 	lastSeenContainer: {
-		width: '10%'
+		width: '15%',
+		alignItems: 'center'
+	},
+	activityIndicator: {
+		height: 8,
+		width: 8,
+		borderRadius: 8/2,
+		backgroundColor: '#42b72a'
 	},
 	dp: {
 		width: '100%',

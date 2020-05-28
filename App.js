@@ -2,21 +2,14 @@ import React from "react";
 import { createStackNavigator, createAppContainer, createSwitchNavigator, createDrawerNavigator } from "react-navigation";
 import UsersScreen from "./src/screens/UsersScreen/UsersScreen";
 import MessengerScreen from './src/screens/Messenger/MessengerScreen';
-import { getTheme } from "./src/utility/theme";
 import SideDrawer from './src/screens/SideDrawer/SideDrawer';
 import Startup from "./src/screens/Startup/Startup";
 import ProfileScreen from './src/screens/Profile/Profile';
 
 const UserTab = createStackNavigator(
 	{
-		UsersScreen: {
-			screen: UsersScreen,
-			navigationOptions: {
-				header: null
-			}
-		}
+		UsersScreen
 	}
-
 )
 
 const DrawerNavigator = createDrawerNavigator(
@@ -32,33 +25,23 @@ const DrawerNavigator = createDrawerNavigator(
 const UsersTab = createStackNavigator(
 	{
 		UsersScreen: {
-			screen: DrawerNavigator,
+			screen: DrawerNavigator,		
 			navigationOptions: {
-				title: 'CONTACTS',
-				headerTintColor: getTheme('text')
+				header:null,
 			}
 		},
 		MessengerScreen:  {
-			screen: MessengerScreen,
-			navigationOptions: {
-				headerTintColor: getTheme('text')
-			}
+			screen: MessengerScreen
 		},
 		ProfileScreen: {
 			screen: ProfileScreen,
 			navigationOptions: {
-				title: 'My profile',
-				headerTintColor: getTheme('text')
+				title: 'My profile'
 			}
 		}
 	},
 	{
-		initialRouteName: 'UsersScreen',
-		defaultNavigationOptions: {
-			headerStyle: {
-				backgroundColor: getTheme('bg')
-			}
-		}
+		initialRouteName: 'UsersScreen'
 	}
 );
 

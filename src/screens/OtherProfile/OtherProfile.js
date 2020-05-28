@@ -3,27 +3,27 @@ import { connect } from 'react-redux';
 import { 
     View,
     Image,
+    Text,
     StyleSheet,
     Dimensions,
     ActivityIndicator
 } from 'react-native';
 
-import MainText from '../../components/UI/MainText/MainText';
-import { getTheme } from '../../utility/theme';
+import { getColor } from '../../utility/theme';
 import { getProfile } from '../../store/actions/profile';
 
 const mapStateToProps = (state) => {
     return {
-        profileState: state.profile
+        profileState: state.profile,
+        theme: state.theme.theme
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getProfile : (id) => dispatch(getProfile(id))
+        getProfile : (username) => dispatch(getProfile(username))
     }
 }
-
 
 class ViewProfileScreen extends React.Component {
 
@@ -39,9 +39,8 @@ class ViewProfileScreen extends React.Component {
     
 
     componentDidMount() {
-
         /* Call fetch profile API */
-        this.props.getProfile(this.props.user.id)
+        this.props.getProfile(this.props.user.username)
     }
 
     componentWillUnmount = () => {
@@ -71,36 +70,28 @@ class ViewProfileScreen extends React.Component {
     render() {
         if (this.state.profileLoaded) {
             return (
-                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getTheme('bg')} ]}>
+                <View style = {[ (this.state.viewMode === 'portrait') ? styles.portraitContainer : styles.landScapeContainer, {backgroundColor: getColor(this.props.theme,'backgroundColor')} ]}>
     
                     <View style = {styles.primaryDetailContainer}>
-                        <View style = { [styles.avatarBox, { borderColor: getTheme('text')}] }>
+                        <View style = { [styles.avatarBox, { borderColor: getColor(this.props.theme,'border')}] }>
                             <Image source = { { uri : this.state.profile.picture } } style = { styles.previewImage } />
                         </View>
-                        <MainText>
-                            { `${this.state.profile.first} ${this.state.profile.last}` }
-                        </MainText>
+                        <Text style = {{color: getColor(this.props.theme, 'color')}}>{ `${this.state.profile.first} ${this.state.profile.last}` }</Text>
                     </View>
     
-    
                     <View style = {styles.secondaryDetailContainer}>
-                        <MainText>
-                            { `About me : ${this.state.profile.blurb}` }
-                        </MainText>
-                        <MainText>
-                            { `Occupation : ${this.state.profile.occupation}` }
-                        </MainText>
-                        <MainText>
-                            { `Birthday : ${this.state.profile.birthday}` }
-                        </MainText>
+                        <Text style = {{color: getColor(this.props.theme, 'color')}}>{ `About me : ${this.state.profile.about}` }</Text>
+                        <Text style = {{color: getColor(this.props.theme, 'color')}}>{ `Occupation : ${this.state.profile.occupation}` }</Text>
+                        <Text style = {{color: getColor(this.props.theme, 'color')}}>{ `Location : ${this.state.profile.location}` }</Text>
+                        <Text style = {{color: getColor(this.props.theme, 'color')}}>{ `Birthday : ${this.state.profile.birthday}` }</Text>
                     </View>
                 </View>
             )
         }
         else {
             return (
-                <View style = {styles.loadingContainer}>
-                    <ActivityIndicator></ActivityIndicator>
+                <View style = {[styles.loadingContainer, {backgroundColor: getColor(this.props.theme, 'backgroundColor')}]}>
+                    <ActivityIndicator />
                 </View>
             )
         }
@@ -137,8 +128,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
-    loadingContainer: {
-        backgroundColor: getTheme('bg'), 
+    loadingContainer: { 
         flex: 1, 
         justifyContent: 'center'
     }

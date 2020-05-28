@@ -3,12 +3,14 @@ import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 import { login, loadUser } from '../../store/actions/auth';
-import { loadList } from '../../store/actions/messenger';
+import { loadList } from '../../store/actions/list';
 
 import { resetDB, initDB } from '../../utility/database';
 import { getContacts } from '../../utility/contactsDatabase';
 import { getUser, insertUserData } from '../../utility/userDatabase';
-import Login from '../Login/Login';
+import Auth from '../Auth/Auth';
+import { constructList } from '../../utility/contacts';
+import { SET_THEME } from '../../store/constants';
 
 const FLAG = 0;
 
@@ -16,7 +18,8 @@ export const mapDispatchToProps = (dispatch) => {
     return {
         login : (authData) => dispatch(login(authData)),
         loadUser: (user) => dispatch(loadUser(user)),
-        loadList: (list) => dispatch(loadList(list))
+        loadList: (list) => dispatch(loadList(list)),
+        setTheme: (theme) => dispatch({type: SET_THEME, payload: theme})
     }
 }
 
@@ -37,15 +40,21 @@ class StartScreen extends React.Component {
 
         if (FLAG === 0) {
             initDB()
-            .then(complete => {
+            .then(() => {
                 getUser()
                 .then(user => {
                     if (user) {
                         getContacts()
                         .then(contacts => {
-                            this.props.login({ ...user });
-                            this.props.loadUser({ ...user });
-                            const list = this.constructList(contacts);
+                            this.props.login({ username: user.username, password: user.password });
+                            this.props.loadUser({ 
+                                username: user.username,
+                                password: user.password,
+                                first: user.first,
+                                last: user.last
+                            });
+                            this.props.setTheme(user.theme);
+                            const list = constructList(contacts);
                             this.props.loadList(list);
                             this.props.navigation.navigate('MainTab');
                         });
@@ -71,8 +80,8 @@ class StartScreen extends React.Component {
     }
 
     onLoginSuccess = (user) => {
-        const { first, last, id, email, picture, pw } = user;
-        insertUserData(first, last, email, pw, id, picture)
+        const { first, last, username, picture, password } = user;
+        insertUserData(first, last, username, password, picture)
         .then(complete => {
             if (complete) {
                 this.props.navigation.navigate('MainTab');
@@ -83,14 +92,6 @@ class StartScreen extends React.Component {
         })
     }
 
-    constructList = (contacts) => {
-        const list = [];
-        for (let i = 0;i < contacts.length; i++) {
-            const user = contacts.item(i);
-            list.push({ ...user });
-        }
-        return list;
-    }
 
     render() {
 
@@ -98,7 +99,7 @@ class StartScreen extends React.Component {
 
         if (this.state.showAuth) {
             mainSection = 
-            <Login onLoginSuccess = {this.onLoginSuccess}/>
+            <Auth onLoginSuccess = {this.onLoginSuccess}/>
         }
 
         return (

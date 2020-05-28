@@ -6,16 +6,16 @@ export const initDB = () => {
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'userChime.db', location: 'Library'})
         .then(DB => {
-            DB.executeSql('CREATE table IF NOT EXISTS User(first TEXT, last TEXT, email TEXT, pw TEXT, id INTEGER, picture TEXT, theme TEXT)')
+            DB.executeSql('CREATE table IF NOT EXISTS User(first TEXT, last TEXT, username TEXT, password TEXT, picture TEXT, theme TEXT)')
             .then(() => {
                 SQLite.openDatabase({name: 'messagesChime.db', location: 'Library'})
                 .then(DB => {
-                    DB.executeSql('CREATE table IF NOT EXISTS Messages(Message text, Sender integer, Destination integer)')
+                    DB.executeSql('CREATE table IF NOT EXISTS Messages(message TEXT, sender TEXT, destination TEXT, timestamp TEXT)')
                     .then(() => {
                         SQLite.openDatabase({name: 'contactsChime.db', location: 'Library'})
                         .then(DB => {
         
-                            DB.executeSql('CREATE TABLE IF NOT EXISTS Contacts(first TEXT, last TEXT, id INTEGER, lastSeen TEXT, picture TEXT)')
+                            DB.executeSql('CREATE TABLE IF NOT EXISTS Contacts(first TEXT, last TEXT, username text, lastSeen TEXT, picture TEXT)')
                             .then(() => {
                                 console.log('Databases initialised.');
                                 resolve(true);
@@ -45,7 +45,7 @@ export const checkMessages = () => {
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'messagesChime.db', location: 'Library'})
         .then(DB => {
-            DB.executeSql('CREATE table IF NOT EXISTS Messages(Message text, Sender integer, Destination integer)')
+            DB.executeSql('CREATE table IF NOT EXISTS Messages(messages TEXT, sender TEXT, destination TEXT)')
             .then(() => {
                 DB.executeSql("SELECT * from Messages", [])
                 .then(([results]) => {

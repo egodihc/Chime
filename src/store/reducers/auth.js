@@ -1,37 +1,42 @@
-import { SET_LOGGED_IN, SET_CODE, SET_TRANSITIONED, LOAD_USER, RESET_APP_STATE } from '../constants';
+import { LOGIN_SUCCESS, RESET_APP_STATE, CLEAR_AUTH_CODE, LOAD_USER } from '../constants';
 
 const initialState = {
-    isLoggedIn: false,
-    user : null,
-    alreadyTransitioned : false
+    authData: {
+        username: "",
+        password: ""
+    },
+    user: {
+        username: "",
+        picture: "",
+        first: "",
+        last: ""
+    },
+    code: -1
 }
 
 const reducer = (state = initialState, action) => {
-
     switch(action.type) {
-        case SET_LOGGED_IN:
+        case LOGIN_SUCCESS:
             return {
                 ...state,
-                isLoggedIn: true,
-                user : action.payload.user
+                ...action.payload
             }
-        case SET_CODE:
+        case CLEAR_AUTH_CODE:
             return {
                 ...state,
-                code: action.payload
-            }
-        case SET_TRANSITIONED:
-            return {
-                ...state,
-                alreadyTransitioned: true
+                code: -1
             }
         case LOAD_USER:
             return {
                 ...state,
-                user: action.payload
+                user: action.payload,
+                authData: {
+                    username: action.payload.username,
+                    password: action.payload.password
+                }
             }
-        case RESET_APP_STATE: 
-            return initialState
+        case RESET_APP_STATE:
+            return initialState;
         default:
             return state;
     }
