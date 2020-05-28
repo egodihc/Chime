@@ -4,11 +4,8 @@ import { epochToReadable } from '../../utility/date';
 import { getColor } from '../../utility/theme';
 
 class MessageCard extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showDate: false
-        }
+    state = {
+        showDate: false
     }
 
     toggleDate = () => {
@@ -133,8 +130,8 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start'
     },
     image: {
-        minHeight: 300,
-        maxHeight: 300,
+        minWidth: 100,
+        minHeight: 100,
         height: '100%',
         width: '100%',
         borderRadius: 10
