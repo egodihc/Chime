@@ -12,11 +12,6 @@ const mapStateToProps = (state) => {
 }
 
 class ContactNavBar extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <View style = {[styles.container, {backgroundColor: getColor(this.props.theme, 'backgroundColor')}]}>
@@ -32,7 +27,6 @@ class ContactNavBar extends React.Component {
         )
     }
 }
-
 
 export default connect(mapStateToProps, null)(ContactNavBar);
 

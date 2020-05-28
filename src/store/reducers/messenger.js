@@ -1,5 +1,4 @@
-import { LOAD_MESSAGES, SET_MESSAGES_LOADED, CLEAN_MESSAGES, RESET_APP_STATE, LOAD_TARGET } from "../constants";
-
+import { CLEAN_MESSAGES, LOAD_MESSAGES, LOAD_TARGET, RESET_APP_STATE, SET_MESSAGES_LOADED } from "../constants";
 
 const initialState = {
     messages: [],
@@ -8,7 +7,6 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-
     switch (action.type) {
         case LOAD_MESSAGES:
             return {

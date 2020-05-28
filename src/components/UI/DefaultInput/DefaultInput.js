@@ -3,7 +3,6 @@ import { TextInput, StyleSheet } from 'react-native';
 import { getColor } from '../../../utility/theme';
 
 const DefaultInput = (props) => {
-
     return (
         <TextInput placeholderTextColor = {'#787878'}
             underlineColorAndroid = 'transparent'

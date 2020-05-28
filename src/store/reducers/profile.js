@@ -1,4 +1,4 @@
-import { LOAD_PROFILE, SET_FAIL_PROFILE, RESET_APP_STATE, CLEAR_RESPONSE_CODE, UPDATE_PROFILE_SUCCESS, UPDATE_PROFILE_FAIL, UPDATE_PROFILE_PENDING } from "../constants";
+import { CLEAR_RESPONSE_CODE, LOAD_PROFILE, RESET_APP_STATE, SET_FAIL_PROFILE, UPDATE_PROFILE_FAIL, UPDATE_PROFILE_PENDING, UPDATE_PROFILE_SUCCESS } from "../constants";
 
 const initialState = {
     profile: null,
@@ -7,7 +7,6 @@ const initialState = {
 }
 
 export const reducer = (state = initialState, action) => {
-
     switch(action.type) {
         case LOAD_PROFILE:
             return {

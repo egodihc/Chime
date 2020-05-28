@@ -1,17 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import { View, Text, Image, StyleSheet, ActivityIndicator, TouchableOpacity, Dimensions, Keyboard } from 'react-native';
-
-import Icon from 'react-native-vector-icons/Ionicons';
-
+import { ActivityIndicator, Dimensions, Image, Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-
+import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
 import Button from '../../components/UI/Button/Button';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
-
-import { getColor } from '../../utility/theme';
 import { getProfile, saveProfile } from '../../store/actions/profile';
+import { getColor } from '../../utility/theme';
 import ProfileNavBar from './ProfileNavBar';
 
 const mapStateToProps = (state) => {
@@ -30,7 +25,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class ProfileScreen extends React.Component {
-
     static navigationOptions = ({ navigation }) => ({
         headerTitle: <ProfileNavBar goBack = {navigation.getParam('goBack')}/>,
         headerLeft: null
@@ -127,8 +121,6 @@ class ProfileScreen extends React.Component {
         });
     }
 
-
-
     updateDimensions = (dims) => {
         this.setState({
             viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
@@ -158,7 +150,6 @@ class ProfileScreen extends React.Component {
             password: this.props.authData.password
         });
     }
-
     
     pickImageHandler = () => {
         ImagePicker.showImagePicker({ title: 'Upload a new profile picture'}, res => {
@@ -285,7 +276,6 @@ class ProfileScreen extends React.Component {
     }
 }
 
-
 const styles = StyleSheet.create({
     loadingContainer: {
         flex: 1,
@@ -344,6 +334,5 @@ const styles = StyleSheet.create({
         height: '100%'
     }
 })
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

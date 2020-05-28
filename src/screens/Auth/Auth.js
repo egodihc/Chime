@@ -1,9 +1,8 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-
+import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
-import Login from '../Login/Login';
 import { getColor } from '../../utility/theme';
+import Login from '../Login/Login';
 import Register from '../Register/Register';
 
 const mapStateToProps = (state) => {
@@ -12,9 +11,7 @@ const mapStateToProps = (state) => {
     }
 }
 
-
 class Auth extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {

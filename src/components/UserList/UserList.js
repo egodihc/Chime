@@ -1,14 +1,10 @@
 import React from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-
-import { ScrollView,StyleSheet} from 'react-native';
-
-import UserCard from './UserCard';
-
 import { getList } from '../../store/actions/list';
 import { CLEAR_MESSAGE_STATE } from '../../store/constants';
-
 import { insertContactData } from '../../utility/contactsDatabase';
+import UserCard from './UserCard';
 
 const mapStateToProps = (state) => {
     return {
@@ -18,7 +14,6 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-
     return {
         getList : (authData) => dispatch(getList(authData)),
         clearMessages: () => dispatch({ type : CLEAR_MESSAGE_STATE })
@@ -26,7 +21,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class UserList extends React.Component {
-
     interval;
 
     constructor(props) {
@@ -45,7 +39,6 @@ class UserList extends React.Component {
     getList = () => {
         this.props.getList(this.props.authData.username);
     }
-
 
     componentDidUpdate = () => {
         /* Save contacts to DB every time user list updates */
@@ -84,14 +77,11 @@ class UserList extends React.Component {
     }
 }
 
-
-
 const styles = StyleSheet.create({
     container: {
         paddingTop: 20,
         height: '80%'
     }
 })
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserList);

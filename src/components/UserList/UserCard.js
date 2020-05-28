@@ -19,7 +19,6 @@ const mapStateToProps = (state) => {
 }
 
 class UserCard extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -30,12 +29,12 @@ class UserCard extends React.Component {
 	}
 
 	updateStyles = (dims) => {
-        this.setState({
-            viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
-        })
+		this.setState({
+				viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
+		})
 	}
 	
-    wasRecentlyOnline = (lastSeen) => {
+  wasRecentlyOnline = (lastSeen) => {
 		const timeNow = (new Date()).getTime();
 		return (timeNow - (lastSeen) <= 55*1000);
 	}
@@ -50,12 +49,13 @@ class UserCard extends React.Component {
 	}
 
 	componentWillUnmount() {
-        /* Prevent memory leak */
-        Dimensions.removeEventListener('change',this.updateStyles);
-    }
+		/* Prevent memory leak */
+		Dimensions.removeEventListener('change',this.updateStyles);
+	}
 
 	render() {
 		const activity = this.getLastSeen();
+		
 		return (
 			<TouchableNativeFeedback onPress = {()=> { this.props.onSelectUser(this.props.user)}}>
 				<View style = {[styles.card, { backgroundColor : getColor(this.props.theme, 'backgroundColor')} ]}>

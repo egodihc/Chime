@@ -1,11 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import { View, Alert, Text, Image, Dimensions, StyleSheet, TouchableOpacity, Platform, Switch } from 'react-native';
+import { Alert, Dimensions, Image, Platform, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { connect } from 'react-redux';
+import { ADDRESS, RESET_APP_STATE, TOGGLE_THEME } from '../../store/constants';
 import { resetDB } from '../../utility/database';
-import { RESET_APP_STATE, TOGGLE_THEME, ADDRESS } from '../../store/constants';
 import { getColor } from '../../utility/theme';
 import { saveThemeToDB } from '../../utility/userDatabase';
 
@@ -25,7 +23,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class SideDrawer extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -63,12 +60,10 @@ class SideDrawer extends React.Component {
                 {text: 'Yes', onPress: () => {this.deleteAccount()}}
             ]
         );
-        
-
     }
 
     deleteAccount = () => {
-        fetch(ADDRESS+'users', {
+        fetch(`${ADDRESS}/users`, {
             headers: {'Content-Type' : 'application/json'},
             body: JSON.stringify({
                 ...this.props.authData
@@ -88,7 +83,7 @@ class SideDrawer extends React.Component {
 
     onSignOut = () => {
         resetDB()
-        .then((complete) => {
+        .then(() => {
             this.props.navigation.navigate('Startup');
             this.props.resetAppState();
         })
@@ -133,11 +128,11 @@ class SideDrawer extends React.Component {
                 </TouchableOpacity>
                 <View style = {styles.drawerItem}>
                     <Switch 
-                            onValueChange = {this.onValueChange} 
-                            value = {this.state.switchValue}
-                            trackColor = {{false: 'white', true: 'black'}}
-                            thumbColor = {'white'}
-                        />
+                        onValueChange = {this.onValueChange} 
+                        value = {this.state.switchValue}
+                        trackColor = {{false: 'white', true: 'black'}}
+                        thumbColor = {'white'}
+                    />
                     <Text style = {{color: getColor(this.props.theme, 'color')}}>Toggle theme</Text>
                 </View>
             </View>

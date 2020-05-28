@@ -25,8 +25,6 @@ export const MSG_SEND_SUCCESS = 'MSG_SEND_SUCCESS';
 export const MSG_SEND_FAIL = 'MSG_SENT_FAIL';
 export const CLEAR_MESSAGE_STATE = 'CLEAR_MESSAGE_STATE';
 
-
-
 export const SET_PROFILE_TARGET = 'SET_PROFILE_TARGET';
 export const LOAD_PROFILE = 'LOAD_PROFILE';
 
@@ -35,10 +33,9 @@ export const UPDATE_PROFILE_SUCCESS = 'UPDATE_PROFILE_SUCCESS';
 export const UPDATE_PROFILE_FAIL = 'UPDATE_PROFILE_FAIL';
 export const CLEAR_RESPONSE_CODE = 'CLEAR_RESPONSE_CODE';
 
-
 export const RESET_APP_STATE = 'RESET_APP_STATE';
 
 export const TOGGLE_THEME = 'TOGGLE_THEME';
 export const SET_THEME = 'SET_THEME';
 
-export const ADDRESS = 'https://chimemsa.azurewebsites.net/';
+export const ADDRESS = 'https://chime-api-v2.herokuapp.com';

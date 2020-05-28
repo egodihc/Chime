@@ -1,5 +1,4 @@
 const validate = (val, rules, connectedValue) => {
-
     let isValid = true;
 
     for (let rule in rules) {
@@ -22,7 +21,6 @@ const validate = (val, rules, connectedValue) => {
                 break;
         }
     }
-
     return isValid;
 }
 

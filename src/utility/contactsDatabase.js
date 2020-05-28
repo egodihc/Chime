@@ -19,9 +19,7 @@ export const getContacts = () => {
     })
 }
 
-
 export const insertContactData = (first, last, username, lastSeen, picture) => {
-
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'contactsChime.db', location: 'Library'})
         .then(DB => {
@@ -61,8 +59,6 @@ export const insertContactData = (first, last, username, lastSeen, picture) => {
                 console.log('Could not insert contact.');
                 reject(e);
             });
-
         })
     })
 }
-

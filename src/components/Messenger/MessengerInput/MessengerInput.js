@@ -1,13 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { connect } from 'react-redux';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
-import DefaultInput from '../../UI/DefaultInput/DefaultInput';
+import { connect } from 'react-redux';
 import { getColor } from '../../../utility/theme';
+import DefaultInput from '../../UI/DefaultInput/DefaultInput';
 
 class MessengerInput extends React.Component {
-    
     render() {
         return (
             <View style = { styles.inputContainer }>
@@ -33,8 +31,6 @@ class MessengerInput extends React.Component {
                     </TouchableOpacity>
                 </View>
             </View>
-
-
         )
     }
 }

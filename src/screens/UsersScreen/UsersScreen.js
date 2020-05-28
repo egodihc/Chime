@@ -1,14 +1,9 @@
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
-
-import { 
-    View,
-    StyleSheet
-} from 'react-native';
-
 import UserList from '../../components/UserList/UserList';
-import { getColor } from '../../utility/theme';
 import { loadTarget } from '../../store/actions/messenger';
+import { getColor } from '../../utility/theme';
 import ContactNavBar from './ContactNavBar';
 
 const mapDispatchToState = (state) => {
@@ -24,14 +19,9 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class UsersScreen extends React.Component {
-
     static navigationOptions = ({ navigation }) => ({
         headerTitle: <ContactNavBar openDrawer = {navigation.getParam('openDrawer')} />
     });
-    
-    constructor(props) {
-        super(props);
-    }
 
     componentDidMount() {
         this.props.navigation.setParams({ openDrawer: this.openDrawer });
@@ -47,7 +37,6 @@ class UsersScreen extends React.Component {
         this.props.navigation.push('MessengerScreen');
     }
 
-
     render() {
         return (
             <View style = {[styles.container, { backgroundColor: getColor(this.props.theme, 'backgroundColor')}]}>
@@ -57,10 +46,10 @@ class UsersScreen extends React.Component {
     }
 }
 
+export default connect(mapDispatchToState, mapDispatchToProps)(UsersScreen);
+
 const styles = StyleSheet.create({
     container: {
         flex: 1
     }
 })
-
-export default connect(mapDispatchToState, mapDispatchToProps)(UsersScreen);

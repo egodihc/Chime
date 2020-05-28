@@ -1,16 +1,8 @@
 import React from 'react';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import { 
-    View,
-    Image,
-    Text,
-    StyleSheet,
-    Dimensions,
-    ActivityIndicator
-} from 'react-native';
-
-import { getColor } from '../../utility/theme';
 import { getProfile } from '../../store/actions/profile';
+import { getColor } from '../../utility/theme';
 
 const mapStateToProps = (state) => {
     return {
@@ -26,7 +18,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class ViewProfileScreen extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -36,7 +27,6 @@ class ViewProfileScreen extends React.Component {
         }
         Dimensions.addEventListener('change',this.updateDimensions);
     }
-    
 
     componentDidMount() {
         /* Call fetch profile API */
@@ -48,7 +38,6 @@ class ViewProfileScreen extends React.Component {
     }
 
     componentDidUpdate() {
-
         /* Load the profile if successfully fetched */
         const { profile, profileFetchResponse } = this.props.profileState;
         if (!this.state.profileLoaded) {
@@ -65,7 +54,6 @@ class ViewProfileScreen extends React.Component {
             }
         }
     }
-
 
     render() {
         if (this.state.profileLoaded) {
@@ -97,8 +85,6 @@ class ViewProfileScreen extends React.Component {
         }
     }
 }
-
-
 
 const styles = StyleSheet.create({
     portraitContainer: {
@@ -133,6 +119,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     }
 })
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewProfileScreen);

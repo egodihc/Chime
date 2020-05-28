@@ -1,16 +1,14 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
-
-import { login, loadUser } from '../../store/actions/auth';
+import { loadUser, login } from '../../store/actions/auth';
 import { loadList } from '../../store/actions/list';
-
-import { resetDB, initDB } from '../../utility/database';
+import { SET_THEME } from '../../store/constants';
+import { constructList } from '../../utility/contacts';
 import { getContacts } from '../../utility/contactsDatabase';
+import { initDB, resetDB } from '../../utility/database';
 import { getUser, insertUserData } from '../../utility/userDatabase';
 import Auth from '../Auth/Auth';
-import { constructList } from '../../utility/contacts';
-import { SET_THEME } from '../../store/constants';
 
 const FLAG = 0;
 
@@ -24,12 +22,8 @@ export const mapDispatchToProps = (dispatch) => {
 }
 
 class StartScreen extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            showAuth: false
-        }
+    state = {
+        showAuth: false
     }
 
     showAuthScreen = () => {
@@ -37,7 +31,6 @@ class StartScreen extends React.Component {
     }
 
     componentDidMount() {
-
         if (FLAG === 0) {
             initDB()
             .then(() => {
@@ -92,14 +85,12 @@ class StartScreen extends React.Component {
         })
     }
 
-
     render() {
-
         let mainSection;
 
         if (this.state.showAuth) {
             mainSection = 
-            <Auth onLoginSuccess = {this.onLoginSuccess}/>
+                <Auth onLoginSuccess = {this.onLoginSuccess} />
         }
 
         return (
@@ -109,7 +100,6 @@ class StartScreen extends React.Component {
         )
     }
 }
-
 
 export default connect(null, mapDispatchToProps)(StartScreen);
 

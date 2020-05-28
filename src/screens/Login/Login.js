@@ -1,11 +1,8 @@
 import React from 'react';
+import { ActivityIndicator, Dimensions, Keyboard, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { connect } from 'react-redux';
-
-import { View, Dimensions, StyleSheet, ActivityIndicator, Text, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-
-import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import Button from '../../components/UI/Button/Button';
-
+import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import { login } from '../../store/actions/auth';
 import { getColor } from '../../utility/theme';
 
@@ -24,10 +21,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 }
 
-
 class Login extends React.Component {
-
-
     constructor(props) {
         super(props);
         this.state = {
@@ -67,6 +61,7 @@ class Login extends React.Component {
     }
 
     onLogin = () => {
+        console.log('hi')
         const authData = {
             username: this.state.controls.username.value,
             password: this.state.controls.password.value

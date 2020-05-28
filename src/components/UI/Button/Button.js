@@ -1,15 +1,7 @@
 import React from 'react';
-import { 
-    TouchableOpacity, 
-    TouchableNativeFeedback, 
-    Text, 
-    View, 
-    StyleSheet,
-    Platform 
-} from 'react-native';
+import { Platform, StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View } from 'react-native';
 
 const Button = (props) => {
-
     const content = (
         <View style = {[styles.button, (props.disabled) ? styles.disabled : null, props.style ]}>
             <Text style = {[ styles.text,  { color : props.textColor } , (props.disabled) ? styles.disabledText : null]}>

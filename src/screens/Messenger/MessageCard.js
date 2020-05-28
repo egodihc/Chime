@@ -1,17 +1,9 @@
 import React from 'react';
-import {
-    View, 
-    Text, 
-    Image, 
-    StyleSheet,
-    TouchableNativeFeedback
-} from 'react-native';
-
-import { getColor } from '../../utility/theme';
+import { Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { epochToReadable } from '../../utility/date';
+import { getColor } from '../../utility/theme';
 
 class MessageCard extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -28,7 +20,6 @@ class MessageCard extends React.Component {
     }
 
     render() {
-
         const { targetPic, userPic, isSending, message, isImage, consecutiveMessage, timestamp } = this.props;
         const { showDate } = this.state;
         
@@ -94,7 +85,6 @@ class MessageCard extends React.Component {
 }
 
 export default MessageCard;
-
 
 const styles = StyleSheet.create({
     fullContainer: {

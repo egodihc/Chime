@@ -1,4 +1,4 @@
-import { LIST_SUCCESS, LIST_FAIL, RESET_APP_STATE, LOAD_LIST } from "../constants";
+import { LIST_FAIL, LIST_SUCCESS, LOAD_LIST, RESET_APP_STATE } from "../constants";
 
 const initialState = {
     list: [],
@@ -6,7 +6,6 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-
     switch(action.type) {
         case LIST_SUCCESS:
             return {

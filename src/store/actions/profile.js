@@ -1,8 +1,8 @@
-import { ADDRESS, SET_FAIL_PROFILE, LOAD_PROFILE, CLEAR_RESPONSE_CODE, UPDATE_PROFILE_SUCCESS, UPDATE_PROFILE_FAIL, UPDATE_PROFILE_PENDING } from "../constants";
+import { ADDRESS, LOAD_PROFILE, SET_FAIL_PROFILE, UPDATE_PROFILE_FAIL, UPDATE_PROFILE_PENDING, UPDATE_PROFILE_SUCCESS } from "../constants";
 
 export const getProfile = (target) => (dispatch) => {
 
-    fetch(`${ADDRESS}profile?username=${target}`, {
+    fetch(`${ADDRESS}/profile?username=${target}`, {
 		method :'get',
 		headers: {'Content-Type' : 'application/json'}
     })
@@ -19,9 +19,7 @@ export const getProfile = (target) => (dispatch) => {
 
 }
 
-
 export const saveProfile = (config) => (dispatch) => {
-
     dispatch({ type: UPDATE_PROFILE_PENDING });
 
     fetch(`${ADDRESS}/profile`, {

@@ -1,7 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Image, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
 import { getColor } from '../../utility/theme';
 
 const mapStateToProps = (state) => {
@@ -12,11 +12,6 @@ const mapStateToProps = (state) => {
 }
 
 class ProfileNavBar extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <View style = {[styles.container, {backgroundColor: getColor(this.props.theme, 'backgroundColor')}]}>
@@ -32,7 +27,6 @@ class ProfileNavBar extends React.Component {
         )
     }
 }
-
 
 export default connect(mapStateToProps, null)(ProfileNavBar);
 

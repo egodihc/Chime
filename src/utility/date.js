@@ -1,5 +1,4 @@
 export const epochToReadable = (ts) => {
-
     let date = new Date(+ts);
     let day =  +date.getDate();
     let month = +date.getMonth() + 1;
@@ -14,7 +13,6 @@ export const epochToReadable = (ts) => {
 }
 
 export const getLastOnline = (lastSeen) => {
-    
     const timeNow = (new Date()).getTime();
 
     let lastOn = Math.floor((timeNow - (+lastSeen))/(60*1000));
@@ -37,5 +35,4 @@ export const getLastOnline = (lastSeen) => {
     else {
         return `${lastOn}m`;
     }
-    
 }

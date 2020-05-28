@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, RESET_APP_STATE, CLEAR_AUTH_CODE, LOAD_USER } from '../constants';
+import { CLEAR_AUTH_CODE, LOAD_USER, LOGIN_SUCCESS, RESET_APP_STATE } from '../constants';
 
 const initialState = {
     authData: {

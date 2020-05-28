@@ -43,7 +43,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class MessengerScreen extends React.Component {
-
     static navigationOptions = ({ navigation }) => ({
         headerTitle: <MessengerNavBar toggleMode = {navigation.getParam('onToggleViewMode')} goBack = {navigation.getParam('goBack')}/>,
         headerLeft: null
@@ -91,13 +90,15 @@ class MessengerScreen extends React.Component {
     componentDidUpdate() {
         /* Update the component every time new messages are fetched */
         if (!this.props.messagesLoaded) {
-            this.setState(prevState => {
-                return {
-                    ...prevState,
-                    messages: this.props.messages,
-                    firstLoad: false
-                }
-            })
+            if (this.state.messages.length !== this.props.messages) {
+                this.setState(prevState => {
+                    return {
+                        ...prevState,
+                        messages: this.props.messages,
+                        firstLoad: false
+                    }
+                })
+            }
             /* Lock this loop */
             this.props.setMessagesLoaded();
             if (this.state.mode === 'messenger') {
@@ -107,7 +108,7 @@ class MessengerScreen extends React.Component {
     }
 
     onToggleViewMode = () => {
-        this.setState({mode: (this.state.mode === 'messenger') ? 'profile' : 'messenger'});
+        this.setState({ mode: (this.state.mode === 'messenger') ? 'profile' : 'messenger' });
     }
 
     /* Input field handler */
@@ -116,7 +117,6 @@ class MessengerScreen extends React.Component {
     }
 
     sendMessage = () => {
-        
         /* Get configs for this chat session */
         const { config, messageField } = this.state;
         
@@ -160,18 +160,19 @@ class MessengerScreen extends React.Component {
         }
     }
 
-
     render() {
-
-        const { messages, user, isLoading } = this.props;
+        const { user } = this.props;
+        const { messages } = this.state;
+        
+        let conversation;
 
         if (this.state.firstLoad) {
-            this.conversation = <ActivityIndicator />;
+            conversation = <ActivityIndicator />;
         }
-        /* If messages are loaded */
-		if (!isLoading) {
+        else {
+            /* If messages are loaded */
             if (messages.length > 0) {
-                this.conversation = messages.map((message,i) => {
+                conversation = messages.map((message,i) => {
 
                     /* Determine if chathead avatar should be displayed,
                         based off consecutive messages  */
@@ -192,11 +193,11 @@ class MessengerScreen extends React.Component {
                                     isImage = {message.isImage}
                                     theme={this.props.theme}
                                     timestamp = {message.timestamp}
-                                     />
+                                        />
                 });
             }
             else {
-                this.conversation = 
+                conversation = 
                 <Text style = {[styles.intro, { color : getColor(this.props.theme, 'color')}]}>
                     This is the beginning of your chat history with { `${this.props.target.first} ${this.props.target.last}`}
                 </Text>
@@ -204,10 +205,10 @@ class MessengerScreen extends React.Component {
 
         }
 
+        
+
         if (this.state.mode === 'messenger') {
             return (
-            
-                
                 <View style = {[styles.container, { backgroundColor : getColor(this.props.theme, 'backgroundColor')}]}>
 
                     {/* Message list section  */}
@@ -218,7 +219,7 @@ class MessengerScreen extends React.Component {
                                 this.scrollView.scrollToEnd({animated: true});
                             }    
                         }}>
-                        { this.conversation }
+                        { conversation }
                     </ScrollView>
                     
                     {/* Message input section  */}

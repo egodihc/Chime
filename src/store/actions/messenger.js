@@ -1,8 +1,7 @@
+import { ADDRESS, CLEAR_DISABLE_CARD, LOAD_MESSAGES, LOAD_TARGET, SET_DISABLE_CARD } from "../constants";
 import { uiStartLoading, uiStopLoading } from "./ui";
-import { LOAD_MESSAGES, ADDRESS, CLEAR_DISABLE_CARD, SET_DISABLE_CARD, LOAD_TARGET } from "../constants";
 
 export const getMessages = (config) => (dispatch) => {
-    
     dispatch(uiStartLoading());
     
     fetch(`${ADDRESS}/messages/fetch`, {
@@ -29,8 +28,6 @@ export const getMessages = (config) => (dispatch) => {
 
 
 export const sendMessage = (config) => (dispatch) => {
-
-
     fetch(`${ADDRESS}/messages/send`, {
         method :'post',
 		headers: {'Content-Type' : 'application/json'},

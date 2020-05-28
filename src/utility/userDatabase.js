@@ -1,7 +1,6 @@
 import SQLite from "react-native-sqlite-storage";
 
 export const getUser = () => {
-
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'userChime.db', location: 'Library'})
         .then(DB => {
@@ -21,7 +20,6 @@ export const getUser = () => {
     })
 }
 
-
 export const insertUserData = (first, last, username, password, picture) => {
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'userChime.db', location: 'Library'})
@@ -39,7 +37,6 @@ export const insertUserData = (first, last, username, password, picture) => {
         })
     })
 }
-
 
 export const saveThemeToDB = (theme) => {
     return new Promise((resolve, reject) => {

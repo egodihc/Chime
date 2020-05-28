@@ -1,4 +1,5 @@
 import SQLite from "react-native-sqlite-storage";
+
 SQLite.DEBUG(true);
 SQLite.enablePromise(true);
 
@@ -40,7 +41,6 @@ export const initDB = () => {
     })
 }
 
-
 export const checkMessages = () => {
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'messagesChime.db', location: 'Library'})
@@ -63,27 +63,22 @@ export const checkMessages = () => {
     })
 }
 
-
 export const resetDB = () => {
     return new Promise((resolve, reject) => {
         SQLite.openDatabase({name: 'userChime.db', location: 'Library'})
         .then(DB => {
             DB.executeSql(`DROP TABLE User`)
             .then(() => {
-
                 console.log('Dropped TABLE "User".');
 
                 SQLite.openDatabase({name: 'messagesChime.db', location: 'Library'})
                 .then(DB => {
-
                     DB.executeSql('DROP TABLE Messages')
                     .then(() => {
-
                         console.log('Dropped TABLE "Messages".');
 
                         SQLite.openDatabase({name: 'contactsChime.db', location: 'Library'})
                         .then(DB => {
-        
                             DB.executeSql('DROP TABLE Contacts')
                             .then(() => {
                                 console.log('Dropped TABLE "Contacts".');

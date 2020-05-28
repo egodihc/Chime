@@ -1,11 +1,8 @@
 import React from 'react';
+import { ActivityIndicator, Dimensions, Keyboard, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { connect } from 'react-redux';
-
-import { View, Dimensions, StyleSheet, ActivityIndicator, Text, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-
-import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import Button from '../../components/UI/Button/Button';
-
+import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import { register } from '../../store/actions/auth';
 import { getColor } from '../../utility/theme';
 
@@ -24,10 +21,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 }
 
-
 class Register extends React.Component {
-
-
     constructor(props) {
         super(props);
         this.state = {

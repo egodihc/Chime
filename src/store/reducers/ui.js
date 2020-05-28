@@ -1,11 +1,10 @@
-import { UI_START_LOADING ,UI_STOP_LOADING, RESET_APP_STATE } from '../constants';
+import { RESET_APP_STATE, UI_START_LOADING, UI_STOP_LOADING } from '../constants';
 
 const initialState = {
     isLoading: false
 }
 
 const reducer = (state = initialState, action) => {
-
     switch(action.type) {
         case UI_START_LOADING:
             return {

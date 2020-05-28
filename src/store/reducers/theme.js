@@ -1,11 +1,10 @@
-import { TOGGLE_THEME, RESET_APP_STATE, SET_THEME } from "../constants";
+import { RESET_APP_STATE, SET_THEME, TOGGLE_THEME } from "../constants";
 
 const initialState = {
     theme: 'LIGHT'
 }
 
 const reducer = (state = initialState, action) => {
-
     switch(action.type) {
         case TOGGLE_THEME:
             return {

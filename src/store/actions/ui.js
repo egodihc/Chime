@@ -1,7 +1,6 @@
-import { UI_START_LOADING , UI_STOP_LOADING } from '../constants';
+import { UI_START_LOADING, UI_STOP_LOADING } from '../constants';
 
 export const uiStartLoading = () => {
-
     return {
         type: UI_START_LOADING
     }

@@ -1,10 +1,10 @@
 import React from "react";
-import { createStackNavigator, createAppContainer, createSwitchNavigator, createDrawerNavigator } from "react-navigation";
-import UsersScreen from "./src/screens/UsersScreen/UsersScreen";
+import { createAppContainer, createDrawerNavigator, createStackNavigator, createSwitchNavigator } from "react-navigation";
 import MessengerScreen from './src/screens/Messenger/MessengerScreen';
+import ProfileScreen from './src/screens/Profile/Profile';
 import SideDrawer from './src/screens/SideDrawer/SideDrawer';
 import Startup from "./src/screens/Startup/Startup";
-import ProfileScreen from './src/screens/Profile/Profile';
+import UsersScreen from "./src/screens/UsersScreen/UsersScreen";
 
 const UserTab = createStackNavigator(
 	{
@@ -44,8 +44,6 @@ const UsersTab = createStackNavigator(
 		initialRouteName: 'UsersScreen'
 	}
 );
-
-
 
 const RootNavigator = createSwitchNavigator(
 	{
